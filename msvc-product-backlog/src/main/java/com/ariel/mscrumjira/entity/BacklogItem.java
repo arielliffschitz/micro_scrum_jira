@@ -30,6 +30,21 @@ public class BacklogItem {
     @Column(name = "create_at")
     private LocalDateTime createdAt;
 
+    
+
+    public BacklogItem() {
+    }
+
+    public BacklogItem(String title, String description, Integer priority, Integer estimate, String createdBy,
+            LocalDateTime createdAt) {
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.estimate = estimate;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
+
     public String getTitle() {
         return title;
     }

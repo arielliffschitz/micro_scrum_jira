@@ -11,7 +11,7 @@ public interface BacklogService {
 
     Optional<BacklogItemDto> findById(Long id);
 
-    BacklogItemDto save (BacklogItemDto backlogItem);
+    BacklogItemDto save (BacklogItemDto backlogItemDto);
 
     void deleteById(Long id);
 

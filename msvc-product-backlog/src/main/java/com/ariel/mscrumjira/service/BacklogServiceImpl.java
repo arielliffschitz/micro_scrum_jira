@@ -1,6 +1,5 @@
 package com.ariel.mscrumjira.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.ariel.mscrumjira.dto.BacklogItemDto;
 import com.ariel.mscrumjira.entity.BacklogItem;
 import com.ariel.mscrumjira.repository.BacklogRepository;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BacklogServiceImpl implements BacklogService {
@@ -21,37 +22,52 @@ public class BacklogServiceImpl implements BacklogService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BacklogItemDto> findAll() {
         return ((List<BacklogItem>) repository.findAll())
                 .stream()
-                .map(item-> new BacklogItemDto(                   
+                .map(this:: mapToDto)
+                .collect(Collectors.toList());        
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<BacklogItemDto> findById(Long id) {
+       Optional<BacklogItem> itemOptional = repository.findById(id);
+       return itemOptional.map(this::mapToDto);
+    }
+
+    @Override
+    @Transactional
+    public BacklogItemDto save(BacklogItemDto backlogItemDto) {
+       return mapToDto(repository.save(mapToDao(backlogItemDto)));
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+    
+    private BacklogItemDto mapToDto(BacklogItem item){
+        return  new BacklogItemDto(                   
                                         item.getTitle(),
                                         item.getDescription(),                   
                                         item.getPriority(),
                                         item.getEstimate(),
                                         item.getCreatedBy(),
-                                        LocalDateTime.now()
-                    )).collect(Collectors.toList());        
+                                        item.getCreatedAt()
+                    );
     }
-
-    @Override
-    public Optional<BacklogItemDto> findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    private BacklogItem mapToDao(BacklogItemDto itemDto){
+        return  new BacklogItem(                   
+                                        itemDto.getTitle(),
+                                        itemDto.getDescription(),                   
+                                        itemDto.getPriority(),
+                                        itemDto.getEstimate(),
+                                        itemDto.getCreatedBy(),
+                                        itemDto.getCreatedAt()
+                    );
     }
-
-    @Override
-    public BacklogItemDto save(BacklogItemDto backlogItem) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
-    }
-    
-    
 
 }
