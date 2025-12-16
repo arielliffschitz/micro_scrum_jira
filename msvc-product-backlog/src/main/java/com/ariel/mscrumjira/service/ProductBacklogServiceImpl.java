@@ -59,8 +59,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
             if (StringUtils.hasText(dto.getDescription())) item.setDescription(dto.getDescription());
             item.setPriority(dto.getPriority());
             item.setEstimate(dto.getEstimate());
-            item.setCreatedBy(dto.getCreatedBy());
-            item.setCreatedAt(dto.getCreatedAt());
+            
         repository.save(item);
 
         return mapToDto(item);
@@ -76,15 +75,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         item.getCreatedAt()
                     );
     }
-    private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
+     private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
         return  new ProductBacklogItem(                   
                                         itemDto.getTitle(),
                                         itemDto.getDescription(),                   
                                         itemDto.getPriority(),
-                                        itemDto.getEstimate(),
-                                        itemDto.getCreatedBy(),
-                                        itemDto.getCreatedAt()
+                                        itemDto.getEstimate()                                      
                     );
-    }    
+    }        
 }
  

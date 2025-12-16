@@ -1,6 +1,5 @@
 package com.ariel.mscrumjira.domain.entity;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -11,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product_backlog_items")
-public class ProductBacklogItem {
+public class ProductBacklogItem extends BaseEntity{
     
     @Id
     @GeneratedValue
@@ -24,29 +23,19 @@ public class ProductBacklogItem {
     
     private Integer priority;
     
-    private Integer estimate;
-    
-    @Column(name = "created_by")
-    private String createdBy;
-    
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
+    private Integer estimate;     
     
 
     public ProductBacklogItem() {
     }
 
-    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate, String createdBy,
-            LocalDateTime createdAt) {
+    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate ) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.estimate = estimate;
-        this.createdBy = createdBy;
-        this.createdAt = createdAt;
+        this.estimate = estimate;      
     }
-
+  
     public String getTitle() {
         return title;
     }
@@ -76,24 +65,8 @@ public class ProductBacklogItem {
     }
 
     public void setEstimate(Integer estimate) {
-        this.estimate = estimate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+        this.estimate = estimate;    }
+   
 
     public UUID getId() {
         return id;
