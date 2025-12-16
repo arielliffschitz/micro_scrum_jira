@@ -1,22 +1,38 @@
 package com.ariel.mscrumjira.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
-public class BacklogItemDto {
+public class ProductBacklogItemDto {
 
-    private String title;    
-    private String description;    
-    private Integer priority;    
-    private Integer estimate;    
+    private UUID id;
+
+    @NotBlank
+    @Size(max=50)
+    private String title;  
+
+    @Size(max=250)
+    private String description; 
+
+    @NotNull   
+    private Integer priority; 
+    @NotNull   
+    private Integer estimate;  
+
     private String createdBy;        
     private LocalDateTime createdAt;          
 
-    public BacklogItemDto() {
+    public ProductBacklogItemDto() {
     }
 
-    public BacklogItemDto(String title, String description, Integer priority, Integer estimate, String createdBy,
+    public ProductBacklogItemDto(UUID id, String title, String description, Integer priority, Integer estimate, String createdBy,
             LocalDateTime createdAt) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -24,7 +40,12 @@ public class BacklogItemDto {
         this.createdBy = createdBy;
         this.createdAt = createdAt;
     }
-
+    public UUID getId() {
+        return id;
+    }
+    public void setId(UUID id) {
+        this.id = id;
+    }
     public String getTitle() {
         return title;
     }
@@ -72,6 +93,8 @@ public class BacklogItemDto {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    
 
     
 

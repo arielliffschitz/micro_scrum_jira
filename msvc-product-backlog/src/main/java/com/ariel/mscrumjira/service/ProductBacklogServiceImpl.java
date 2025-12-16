@@ -1,0 +1,90 @@
+package com.ariel.mscrumjira.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
+import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
+import com.ariel.mscrumjira.repository.ProductBacklogRepository;
+
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+@Service
+public class ProductBacklogServiceImpl implements ProductBacklogService {
+
+    final private ProductBacklogRepository repository;
+
+    public ProductBacklogServiceImpl(ProductBacklogRepository repository){
+        this.repository = repository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductBacklogItemDto> findAll() {
+        return ((List<ProductBacklogItem>) repository.findAll())
+                .stream()
+                .map(this:: mapToDto)
+                .collect(Collectors.toList());        
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<ProductBacklogItemDto> findById(UUID id) {
+       Optional<ProductBacklogItem> itemOptional = repository.findById(id);
+       return itemOptional.map(this::mapToDto);
+    }
+
+    @Override
+    @Transactional
+    public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto) {
+       return mapToDto(repository.save(mapToDao(backlogItemDto)));
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(UUID id) {
+        repository.deleteById(id);
+    }
+    @Override
+    @Transactional
+    public ProductBacklogItemDto update(UUID id, ProductBacklogItemDto dto) {
+        Optional<ProductBacklogItem> itemOptional = repository.findById(id);
+        ProductBacklogItem item = itemOptional.orElseThrow();
+            item.setTitle(dto.getTitle());
+            if (StringUtils.hasText(dto.getDescription())) item.setDescription(dto.getDescription());
+            item.setPriority(dto.getPriority());
+            item.setEstimate(dto.getEstimate());
+            item.setCreatedBy(dto.getCreatedBy());
+            item.setCreatedAt(dto.getCreatedAt());
+        repository.save(item);
+
+        return mapToDto(item);
+    }    
+    private ProductBacklogItemDto mapToDto(ProductBacklogItem item){
+        return  new ProductBacklogItemDto(         
+                                        item.getId(),
+                                        item.getTitle(),
+                                        item.getDescription(),                   
+                                        item.getPriority(),
+                                        item.getEstimate(),
+                                        item.getCreatedBy(),
+                                        item.getCreatedAt()
+                    );
+    }
+    private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
+        return  new ProductBacklogItem(                   
+                                        itemDto.getTitle(),
+                                        itemDto.getDescription(),                   
+                                        itemDto.getPriority(),
+                                        itemDto.getEstimate(),
+                                        itemDto.getCreatedBy(),
+                                        itemDto.getCreatedAt()
+                    );
+    }    
+}
+ 

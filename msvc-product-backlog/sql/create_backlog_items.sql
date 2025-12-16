@@ -1,4 +1,4 @@
-CREATE TABLE db_mscrum_jira.backlog_items ( id INT NOT NULL AUTO_INCREMENT, 
+CREATE TABLE db_mscrum_jira.product_backlog_items ( id INT NOT NULL AUTO_INCREMENT, 
 title VARCHAR(45) NOT NULL, 
 description VARCHAR(255) NULL,
  priority INT NOT NULL, 

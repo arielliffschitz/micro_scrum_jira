@@ -1,21 +1,22 @@
-package com.ariel.mscrumjira.entity;
+package com.ariel.mscrumjira.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "backlog_items")
-public class BacklogItem {
+@Table(name = "product_backlog_items")
+public class ProductBacklogItem {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String title;
     
@@ -25,17 +26,18 @@ public class BacklogItem {
     
     private Integer estimate;
     
+    @Column(name = "created_by")
     private String createdBy;
     
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     
 
-    public BacklogItem() {
+    public ProductBacklogItem() {
     }
 
-    public BacklogItem(String title, String description, Integer priority, Integer estimate, String createdBy,
+    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate, String createdBy,
             LocalDateTime createdAt) {
         this.title = title;
         this.description = description;
@@ -92,6 +94,12 @@ public class BacklogItem {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+   
 
     
 }
