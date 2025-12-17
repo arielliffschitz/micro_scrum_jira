@@ -1,28 +1,15 @@
-package com.ariel.mscrumjira.domain.entity;
+package com.ariel.mscrumjira.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "sprint_backlog_items")
-public class SprintBacklogItem extends BaseEntity{
+public class SprintBacklogItemDto {
 
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
-
-    @Column(name = "product_backlog_id")
+   
     private UUID productBacklogId;
 
     private String title;
@@ -31,19 +18,27 @@ public class SprintBacklogItem extends BaseEntity{
     
     private Integer priority;
     
-    private Integer estimate;
+    private Integer estimate;    
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "task_state")
-    private TaskState taskState;        
-
-    @Column(name = "start_date")
+    private TaskState taskState; 
+    
     private LocalDateTime startDate;
-
-    @Column(name = "end_date")
-    private LocalDateTime endDate;    
     
-    public SprintBacklogItem() {
+    private LocalDateTime endDate;   
+    
+    private String createdBy;     
+
+    private LocalDateTime createdAt;
+
+    public SprintBacklogItemDto() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UUID getProductBacklogId() {
@@ -108,6 +103,23 @@ public class SprintBacklogItem extends BaseEntity{
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }       
+    }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }   
+
+    
 }

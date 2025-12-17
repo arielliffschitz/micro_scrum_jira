@@ -21,7 +21,7 @@ import com.ariel.mscrumjira.service.ProductBacklogService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/backlog-items")
+@RequestMapping("/product-backlog-items")
 public class ProductBacklogController {
     final private ProductBacklogService service;
     private final Logger logger = LoggerFactory.getLogger((ProductBacklogController.class));
