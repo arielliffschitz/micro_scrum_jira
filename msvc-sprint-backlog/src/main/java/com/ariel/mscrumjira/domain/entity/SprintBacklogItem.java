@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -44,7 +45,21 @@ public class SprintBacklogItem extends BaseEntity{
     private LocalDateTime endDate;    
     
     public SprintBacklogItem() {
-    }
+    }        
+
+    public SprintBacklogItem(UUID productBacklogId, String title, String description, Integer priority,
+            Integer estimate, TaskState taskState) {
+        this.productBacklogId = productBacklogId;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.estimate = estimate;
+        this.taskState = taskState;
+    }   
+    
+    public UUID getSprintBacklogId() {
+        return id;
+    }   
 
     public UUID getProductBacklogId() {
         return productBacklogId;
@@ -108,6 +123,5 @@ public class SprintBacklogItem extends BaseEntity{
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }       
-
+    }        
 }

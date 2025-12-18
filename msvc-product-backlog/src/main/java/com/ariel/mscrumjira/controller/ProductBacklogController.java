@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class ProductBacklogController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<ProductBacklogItemDto> details(@PathVariable UUID id)  {        
-        logger.info("Fetching BacklogItem with id={}", id);
+        logger.info("Fetching ProductBacklogItem with id={}", id);
         return  service.findById(id)
                 .map(dto->ResponseEntity.ok(dto) )
                 .orElseGet(()->ResponseEntity.notFound().build());                   
@@ -48,8 +49,14 @@ public class ProductBacklogController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<ProductBacklogItemDto> update(@PathVariable UUID id, @RequestBody ProductBacklogItemDto dto) {
-        logger.info("Updating BacklogItem: {}", dto);
+        logger.info("Updating ProductBacklogItem: {}", dto);
         return ResponseEntity.ok(service.update(id, dto));
          
-    }        
+    }  
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id)  {
+      logger.info("Deleting ProductBacklogItem with ID: {}", id);
+      service.deleteById(id);
+      return ResponseEntity.noContent().build();
+   }
 }

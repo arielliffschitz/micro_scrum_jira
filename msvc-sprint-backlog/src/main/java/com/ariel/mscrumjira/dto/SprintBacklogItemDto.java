@@ -33,6 +33,40 @@ public class SprintBacklogItemDto {
     public SprintBacklogItemDto() {
     }
 
+    
+
+    public SprintBacklogItemDto(UUID productBacklogId, String title, String description, Integer priority,
+            Integer estimate, String createdBy, LocalDateTime createdAt) {
+        this.productBacklogId = productBacklogId;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.estimate = estimate;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
+
+    
+
+
+    public SprintBacklogItemDto(UUID id, UUID productBacklogId, String title, String description, Integer priority,
+            Integer estimate, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate, String createdBy,
+            LocalDateTime createdAt) {
+        this.id = id;
+        this.productBacklogId = productBacklogId;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.estimate = estimate;
+        this.taskState = taskState;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
+
+
+
     public UUID getId() {
         return id;
     }

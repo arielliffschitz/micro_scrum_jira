@@ -16,10 +16,9 @@ public interface SprintBacklogItemService {
 
     Optional<SprintBacklogItemDto>updateTaskState(UUID id, TaskState taskState);
 
-    void deleteById(UUID id);
+    void deleteSprintById(UUID id);    
 
-    SprintBacklogItemDto create(UUID id);
-
-    ProductBacklogItemDto findProductById(UUID id);
+    SprintBacklogItemDto create(UUID  productBacklogId);
+   
   
 }
