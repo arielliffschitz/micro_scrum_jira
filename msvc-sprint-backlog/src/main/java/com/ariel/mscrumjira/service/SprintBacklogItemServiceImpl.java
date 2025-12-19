@@ -1,11 +1,13 @@
 package com.ariel.mscrumjira.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.client.ProductBacklogFeignClient;
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
@@ -14,14 +16,11 @@ import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 
-//import feign.FeignException;
-
 @Service
 public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
-    private ProductBacklogFeignClient client;
-    private SprintBacklogItemRepository repository;   
-    
+    private final ProductBacklogFeignClient client;
+    private final SprintBacklogItemRepository repository;
 
     public SprintBacklogItemServiceImpl(ProductBacklogFeignClient client, SprintBacklogItemRepository repository) {
         this.client = client;
@@ -29,81 +28,112 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<SprintBacklogItemDto> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        return ((List<SprintBacklogItem>) repository.findAll())
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SprintBacklogItemDto> findSprintById(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findSprintById'");
+    @Transactional(readOnly = true)
+    public Optional<SprintBacklogItemDto> findById(UUID id) {
+        return repository.findById(id).map(this::mapToDto);
     }
 
     @Override
-    public Optional<SprintBacklogItemDto> updateTaskState(UUID id, TaskState taskState) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateTaskState'");
+    @Transactional
+    public Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState) {
+        return repository.findById(id)
+                .map(dao -> {
+                    dao = actualizeTaskStateAndDate(taskState, dao);
+                    return mapToDto(repository.save(dao));
+                });
     }
 
     @Override
-    public void deleteSprintById(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+    @Transactional
+    public SprintBacklogItemDto moveFromProduct(UUID productBacklogId) {
+        ProductBacklogItemDto productDto = findProductById(productBacklogId);
+
+        SprintBacklogItem daoSprint = repository.save(mapFromProductDtoToSprintDao(productDto));
+
+        deleteProductById(productBacklogId);
+
+        return mapToDto(daoSprint);
     }
 
     @Override
-    public SprintBacklogItemDto create(UUID productBacklogId) {
-
-       ProductBacklogItemDto productBacklogItemDto = findProductById( productBacklogId);     
-
-       SprintBacklogItem     daoSprint  =  repository.save(mapFromProductDtoToSprintDao(productBacklogItemDto));
-
-       deleteProductById( productBacklogId);
-
-       return mapToDto(daoSprint);
+    @Transactional
+    public void moveBackToProduct(UUID sprintBacklogItemId) {
+        repository.findById(sprintBacklogItemId).ifPresent(daoSprint -> {
+            client.create(mapFromSprintToProductDto(daoSprint));
+            repository.deleteById(sprintBacklogItemId);
+        });
     }
 
-    private SprintBacklogItem mapFromProductDtoToSprintDao(ProductBacklogItemDto productBacklogItemDto) {
-       
+    // --- Mapping Methods ---
+    private ProductBacklogItemDto mapFromSprintToProductDto(SprintBacklogItem daoSprint) {
+        return new ProductBacklogItemDto(
+                null,
+                daoSprint.getTitle(),
+                daoSprint.getDescription(),
+                daoSprint.getPriority(),
+                daoSprint.getEstimate(),
+                daoSprint.getCreatedBy(),
+                daoSprint.getCreatedAt()
+        );
+    }
+
+    private SprintBacklogItem mapFromProductDtoToSprintDao(ProductBacklogItemDto productDto) {
         return new SprintBacklogItem(
-                                        productBacklogItemDto.getId(),
-                                        productBacklogItemDto.getTitle(),
-                                        productBacklogItemDto.getDescription(),                   
-                                        productBacklogItemDto.getPriority(),
-                                        productBacklogItemDto.getEstimate(),
-                                        TaskState.PENDING
+                productDto.getId(),
+                productDto.getTitle(),
+                productDto.getDescription(),
+                productDto.getPriority(),
+                productDto.getEstimate(),
+                TaskState.PENDING
         );
     }
 
     private ProductBacklogItemDto findProductById(UUID productBacklogId) {
-        
-           return client.findProductById(productBacklogId);        
-    }    
+        return client.findProductById(productBacklogId);
+    }
 
-   
-    private void deleteProductById(UUID productBacklogId){
+    private void deleteProductById(UUID productBacklogId) {
         client.deleteProductById(productBacklogId);
     }
+
     private SprintBacklogItemDto mapToDto(SprintBacklogItem daoSprint) {
-        return  new SprintBacklogItemDto(  
-                                        daoSprint.getSprintBacklogId(),
-                                        daoSprint.getProductBacklogId(),
-                                        daoSprint.getTitle(),
-                                        daoSprint.getDescription(),                   
-                                        daoSprint.getPriority(),  
-                                        daoSprint.getEstimate(),                                        
-                                        daoSprint.getTaskState(),
-                                        daoSprint.getStartDate(),
-                                        daoSprint.getEndDate(),
-                                        daoSprint.getCreatedBy(),
-                                        daoSprint.getCreatedAt()
-                        );
-    }          
+        return new SprintBacklogItemDto(
+                daoSprint.getSprintBacklogId(),
+                daoSprint.getProductBacklogId(),
+                daoSprint.getTitle(),
+                daoSprint.getDescription(),
+                daoSprint.getPriority(),
+                daoSprint.getEstimate(),
+                daoSprint.getTaskState(),
+                daoSprint.getStartDate(),
+                daoSprint.getEndDate(),
+                daoSprint.getCreatedBy(),
+                daoSprint.getCreatedAt()
+        );
+    }
 
-    
-
-    
-
-
+    private SprintBacklogItem actualizeTaskStateAndDate(TaskState taskState, SprintBacklogItem sprintBacklogItem) {
+        if (sprintBacklogItem.getTaskState() == TaskState.PENDING) {
+            if (taskState == TaskState.IN_PROGRESS) {
+                sprintBacklogItem.setTaskState(taskState);
+                sprintBacklogItem.setStartDate(LocalDateTime.now());
+            } else if (taskState == TaskState.DONE) {
+                sprintBacklogItem.setTaskState(taskState);
+                sprintBacklogItem.setEndDate(LocalDateTime.now());
+            }
+        } else if (sprintBacklogItem.getTaskState() == TaskState.IN_PROGRESS && taskState == TaskState.DONE) {
+            sprintBacklogItem.setTaskState(taskState);
+            sprintBacklogItem.setEndDate(LocalDateTime.now());
+        }
+        return sprintBacklogItem;
+    }
 }

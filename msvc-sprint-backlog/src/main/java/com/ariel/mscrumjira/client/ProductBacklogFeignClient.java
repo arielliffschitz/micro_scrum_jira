@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
-
-import jakarta.validation.Valid;
-
 @FeignClient(name = "msvc-product-backlog", url = "http://localhost:8081/product-backlog-items")
 public interface ProductBacklogFeignClient {
 

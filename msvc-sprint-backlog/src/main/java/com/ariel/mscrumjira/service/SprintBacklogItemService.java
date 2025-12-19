@@ -5,20 +5,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
-import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-
 public interface SprintBacklogItemService {
 
     List<SprintBacklogItemDto> findAll();
 
-    Optional<SprintBacklogItemDto>findSprintById(UUID id);
+    Optional<SprintBacklogItemDto> findById(UUID id);
 
-    Optional<SprintBacklogItemDto>updateTaskState(UUID id, TaskState taskState);
+    Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState);
 
-    void deleteSprintById(UUID id);    
+    SprintBacklogItemDto moveFromProduct(UUID productBacklogId);
 
-    SprintBacklogItemDto create(UUID  productBacklogId);
-   
-  
+    void moveBackToProduct(UUID sprintBacklogItemId);
 }
+  
+
