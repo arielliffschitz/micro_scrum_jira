@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
-@FeignClient(name = "msvc-product-backlog", url = "http://localhost:8081/product-backlog-items")
+@FeignClient(name = "msvc-product-backlog", path = "/product-backlog-items")
 public interface ProductBacklogFeignClient {
 
     @GetMapping("/{id}")
