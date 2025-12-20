@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://msvc-product-backlog
+          predicates:
+            - Path=/product/**
+          filters:
+            - StripPrefix=1
+        - id: sprint-service
+          uri: lb://msvc-sprint-backlog
+          predicates:
+            - Path=/sprint/**
+          filters:
+            - StripPrefix=1
+
