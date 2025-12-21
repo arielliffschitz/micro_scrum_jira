@@ -12,6 +12,8 @@ public interface ProductBacklogService {
 
     Optional<ProductBacklogItemDto> findById(UUID id);
 
+    Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber);
+
     ProductBacklogItemDto save (ProductBacklogItemDto backlogItemDto);
 
     void deleteById(UUID id);

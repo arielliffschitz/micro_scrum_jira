@@ -64,7 +64,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
         repository.save(item);
 
         return mapToDto(item);
-    }    
+    }
+    @Override
+     public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {
+       Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
+       return itemOptional.map(this::mapToDto);
+     }      
+
     private ProductBacklogItemDto mapToDto(ProductBacklogItem item){
         return  new ProductBacklogItemDto(         
                                         item.getId(),
@@ -85,6 +91,8 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         itemDto.getEstimate(),
                                         itemDto.getTaskNumber()                                    
                     );
-    }        
+    }
+
+     
 }
  

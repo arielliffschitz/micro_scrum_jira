@@ -22,8 +22,8 @@ public class SprintBacklogItem extends BaseEntity{
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "product_backlog_id")
-    private UUID productBacklogId;
+    @Column(name = "task_number")
+    private Integer taskNumber;
 
     private String title;
     
@@ -46,9 +46,9 @@ public class SprintBacklogItem extends BaseEntity{
     public SprintBacklogItem() {
     }        
 
-    public SprintBacklogItem(UUID productBacklogId, String title, String description, Integer priority,
+    public SprintBacklogItem(Integer taskNumber, String title, String description, Integer priority,
             Integer estimate, TaskState taskState) {
-        this.productBacklogId = productBacklogId;
+        this. taskNumber =  taskNumber;
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -58,14 +58,14 @@ public class SprintBacklogItem extends BaseEntity{
     
     public UUID getSprintBacklogId() {
         return id;
-    }   
+    }     
 
-    public UUID getProductBacklogId() {
-        return productBacklogId;
+    public Integer getTaskNumber() {
+        return taskNumber;
     }
 
-    public void setProductBacklogId(UUID productBacklogId) {
-        this.productBacklogId = productBacklogId;
+    public void setTaskNumber(Integer taskNumber) {
+        this.taskNumber = taskNumber;
     }
 
     public String getTitle() {

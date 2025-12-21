@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.service.ProductBacklogService;
-import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 
 import jakarta.validation.Valid;
 
@@ -40,6 +39,13 @@ public class ProductBacklogController {
     public ResponseEntity<ProductBacklogItemDto> findById(@PathVariable UUID id)  {        
         logger.info("Fetching ProductBacklogItem with id={}", id);
         return  service.findById(id)
+                .map(dto->ResponseEntity.ok(dto) )
+                .orElseGet(()->ResponseEntity.notFound().build());                   
+    }
+    @GetMapping("/task-number/{taskNumber}")
+    public ResponseEntity<ProductBacklogItemDto> findByTaskNumber(@PathVariable Integer taskNumber)  {        
+        logger.info("Fetching ProductBacklogItem with taskNumber={}", taskNumber);
+        return  service.findByTaskNumber(taskNumber)
                 .map(dto->ResponseEntity.ok(dto) )
                 .orElseGet(()->ResponseEntity.notFound().build());                   
     }

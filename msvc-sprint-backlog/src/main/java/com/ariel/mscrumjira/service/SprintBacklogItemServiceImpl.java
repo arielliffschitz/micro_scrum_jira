@@ -52,17 +52,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
                 });
     }
 
-    @Override
-    @Transactional
-    public SprintBacklogItemDto moveFromProduct(UUID productBacklogId) {
-        ProductBacklogItemDto productDto = findProductById(productBacklogId);
-
-        SprintBacklogItem daoSprint = repository.save(mapFromProductDtoToSprintDao(productDto));
-
-        deleteProductById(productBacklogId);
-
-        return mapToDto(daoSprint);
-    }
+    
 
     @Override
     @Transactional
@@ -76,7 +66,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     // --- Mapping Methods ---
     private ProductBacklogItemDto mapFromSprintToProductDto(SprintBacklogItem daoSprint) {
         return new ProductBacklogItemDto(
-                null,
+                daoSprint.,
                 daoSprint.getTitle(),
                 daoSprint.getDescription(),
                 daoSprint.getPriority(),

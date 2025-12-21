@@ -14,9 +14,7 @@ public interface SprintBacklogItemService {
 
     Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState);
 
-    SprintBacklogItemDto moveFromProduct(UUID productBacklogId);
-
-    void moveBackToProduct(UUID sprintBacklogItemId);
+   
 }
   
 

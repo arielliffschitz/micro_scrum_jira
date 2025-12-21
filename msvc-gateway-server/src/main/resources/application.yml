@@ -14,4 +14,9 @@ spring:
             - Path=/sprint/**
           filters:
             - StripPrefix=1
-
+        - id: task
+          uri: lb://msvc-task
+          predicates:
+            - Path=/task/**
+          filters:
+            - StripPrefix=0

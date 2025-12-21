@@ -1,4 +1,4 @@
-package com.ariel.mscrumjira.controllers;
+package com.ariel.mscrumjira.controller;
 
 import java.util.List;
 import java.util.UUID;
