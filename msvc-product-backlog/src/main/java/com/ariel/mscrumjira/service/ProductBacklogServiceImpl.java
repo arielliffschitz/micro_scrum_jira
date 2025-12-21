@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,9 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductBacklogItemDto> findAll() {
-        return ((List<ProductBacklogItem>) repository.findAll())
-                .stream()
-                .map(this:: mapToDto)
+        return StreamSupport.stream(repository.findAll()
+                .spliterator(), false)                
+                .map(this::mapToDto)
                 .collect(Collectors.toList());        
     }
 
@@ -72,7 +73,8 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         item.getPriority(),
                                         item.getEstimate(),
                                         item.getCreatedBy(),
-                                        item.getCreatedAt()
+                                        item.getCreatedAt(),
+                                        item.getTaskNumber()
                     );
     }
      private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
@@ -80,7 +82,8 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         itemDto.getTitle(),
                                         itemDto.getDescription(),                   
                                         itemDto.getPriority(),
-                                        itemDto.getEstimate()                                      
+                                        itemDto.getEstimate(),
+                                        itemDto.getTaskNumber()                                    
                     );
     }        
 }

@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -16,6 +17,10 @@ public class ProductBacklogItem extends BaseEntity{
     @GeneratedValue
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
+    
+    @Column(name = "task_number", nullable = false, unique = true)
+    private Integer taskNumber;
+
 
     private String title;
     
@@ -29,11 +34,12 @@ public class ProductBacklogItem extends BaseEntity{
     public ProductBacklogItem() {
     }
 
-    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate ) {
+    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate , Integer taskNumber) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.estimate = estimate;      
+        this.estimate = estimate;  
+        this.taskNumber = taskNumber;    
     }
   
     public String getTitle() {
@@ -70,6 +76,14 @@ public class ProductBacklogItem extends BaseEntity{
 
     public UUID getId() {
         return id;
+    }
+
+    public Integer getTaskNumber() {
+        return taskNumber;
+    }
+
+    public void setTaskNumber(Integer taskNumber) {
+        this.taskNumber = taskNumber;
     }
 
    

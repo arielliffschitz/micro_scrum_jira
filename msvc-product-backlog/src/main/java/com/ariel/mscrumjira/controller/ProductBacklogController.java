@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.service.ProductBacklogService;
+import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 
 import jakarta.validation.Valid;
 
@@ -31,12 +32,12 @@ public class ProductBacklogController {
         this.service = service;
     }
     @GetMapping
-    public ResponseEntity <List<ProductBacklogItemDto>>list() {
+    public ResponseEntity <List<ProductBacklogItemDto>>findAll() {
         logger.info("Fetching all BacklogItems, count={}", service.findAll().size());      
         return ResponseEntity.ok(this.service.findAll());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductBacklogItemDto> details(@PathVariable UUID id)  {        
+    public ResponseEntity<ProductBacklogItemDto> findById(@PathVariable UUID id)  {        
         logger.info("Fetching ProductBacklogItem with id={}", id);
         return  service.findById(id)
                 .map(dto->ResponseEntity.ok(dto) )
@@ -44,11 +45,14 @@ public class ProductBacklogController {
     }
     @PostMapping
     public ResponseEntity<ProductBacklogItemDto> create(@Valid @RequestBody ProductBacklogItemDto dto) {
-        logger.info("Creating product: {}", dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
+    ProductBacklogItemDto saved = service.save(dto);
+    logger.info("Created ProductBacklogItem with id={}", saved.getId());
+    return ResponseEntity.status(HttpStatus.CREATED)
+                         .body(service.findById(saved.getId()).orElseThrow());
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<ProductBacklogItemDto> update(@PathVariable UUID id, @RequestBody ProductBacklogItemDto dto) {
+    public ResponseEntity<ProductBacklogItemDto> update(@PathVariable UUID id, @Valid @RequestBody ProductBacklogItemDto dto) {
         logger.info("Updating ProductBacklogItem: {}", dto);
         return ResponseEntity.ok(service.update(id, dto));
          

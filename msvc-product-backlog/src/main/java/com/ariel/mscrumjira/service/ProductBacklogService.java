@@ -16,6 +16,6 @@ public interface ProductBacklogService {
 
     void deleteById(UUID id);
 
-    ProductBacklogItemDto update(UUID id, ProductBacklogItemDto dtbacklogItemDtoo);
+    ProductBacklogItemDto update(UUID id, ProductBacklogItemDto backlogItemDto);
 
 }
