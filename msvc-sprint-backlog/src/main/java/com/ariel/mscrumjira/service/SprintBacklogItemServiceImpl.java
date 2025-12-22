@@ -9,21 +9,18 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ariel.mscrumjira.client.ProductBacklogFeignClient;
+
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
-import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 
 @Service
 public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
-
-    private final ProductBacklogFeignClient client;
+   
     private final SprintBacklogItemRepository repository;
 
-    public SprintBacklogItemServiceImpl(ProductBacklogFeignClient client, SprintBacklogItemRepository repository) {
-        this.client = client;
+    public SprintBacklogItemServiceImpl( SprintBacklogItemRepository repository) {       
         this.repository = repository;
     }
 
@@ -41,6 +38,13 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     public Optional<SprintBacklogItemDto> findById(UUID id) {
         return repository.findById(id).map(this::mapToDto);
     }
+    @Override
+    @Transactional
+    public SprintBacklogItemDto save(SprintBacklogItemDto dto) {
+        if (dto.getTaskState()==null)dto.setTaskState(TaskState.PENDING);        
+        SprintBacklogItem dao =repository.save(mapToDao(dto));
+        return mapToDto(dao);        
+    }
 
     @Override
     @Transactional
@@ -50,64 +54,35 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
                     dao = actualizeTaskStateAndDate(taskState, dao);
                     return mapToDto(repository.save(dao));
                 });
-    }
+    }        
 
-    
-
-    @Override
-    @Transactional
-    public void moveBackToProduct(UUID sprintBacklogItemId) {
-        repository.findById(sprintBacklogItemId).ifPresent(daoSprint -> {
-            client.create(mapFromSprintToProductDto(daoSprint));
-            repository.deleteById(sprintBacklogItemId);
-        });
-    }
-
-    // --- Mapping Methods ---
-    private ProductBacklogItemDto mapFromSprintToProductDto(SprintBacklogItem daoSprint) {
-        return new ProductBacklogItemDto(
-                daoSprint.,
-                daoSprint.getTitle(),
-                daoSprint.getDescription(),
-                daoSprint.getPriority(),
-                daoSprint.getEstimate(),
-                daoSprint.getCreatedBy(),
-                daoSprint.getCreatedAt()
+   private SprintBacklogItem mapToDao( SprintBacklogItemDto dto) {
+        return new SprintBacklogItem( 
+                dto.getTaskNumber(),             
+                dto.getTitle(),
+                dto.getDescription(),
+                dto.getPriority(),
+                dto.getEstimate(),
+                dto.getTaskState()               
         );
-    }
+    }        
 
-    private SprintBacklogItem mapFromProductDtoToSprintDao(ProductBacklogItemDto productDto) {
-        return new SprintBacklogItem(
-                productDto.getId(),
-                productDto.getTitle(),
-                productDto.getDescription(),
-                productDto.getPriority(),
-                productDto.getEstimate(),
-                TaskState.PENDING
-        );
-    }
-
-    private ProductBacklogItemDto findProductById(UUID productBacklogId) {
-        return client.findProductById(productBacklogId);
-    }
-
-    private void deleteProductById(UUID productBacklogId) {
+   /*  private void deleteProductById(UUID productBacklogId) {
         client.deleteProductById(productBacklogId);
-    }
+    } */
 
-    private SprintBacklogItemDto mapToDto(SprintBacklogItem daoSprint) {
+    private SprintBacklogItemDto mapToDto(SprintBacklogItem dao) {
         return new SprintBacklogItemDto(
-                daoSprint.getSprintBacklogId(),
-                daoSprint.getProductBacklogId(),
-                daoSprint.getTitle(),
-                daoSprint.getDescription(),
-                daoSprint.getPriority(),
-                daoSprint.getEstimate(),
-                daoSprint.getTaskState(),
-                daoSprint.getStartDate(),
-                daoSprint.getEndDate(),
-                daoSprint.getCreatedBy(),
-                daoSprint.getCreatedAt()
+                dao.getTaskNumber(),
+                dao.getTitle(),
+                dao.getDescription(),
+                dao.getPriority(),
+                dao.getEstimate(),
+                dao.getTaskState(),
+                dao.getStartDate(),
+                dao.getEndDate(),
+                dao.getCreatedBy(),
+                dao.getCreatedAt()
         );
     }
 
@@ -126,4 +101,6 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
         }
         return sprintBacklogItem;
     }
+
+   
 }

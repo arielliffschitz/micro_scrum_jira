@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.service.SprintBacklogItemService;
+
 
 
 
@@ -30,10 +32,10 @@ public class SprintBacklogItemController {
         this.service = service;
 }
 
-    @PostMapping("/from-product/{productBacklogId}")
-    public ResponseEntity<SprintBacklogItemDto> moveFromProductToSprint(@PathVariable("productBacklogId") UUID productBacklogId) {  
-        logger.info("Creating sprintItem id: {}", productBacklogId);
-        return ResponseEntity.ok(service.moveFromProduct(productBacklogId));
+    @PostMapping
+    public ResponseEntity<SprintBacklogItemDto> save (@RequestBody SprintBacklogItemDto dto) {  
+        logger.info("Creating sprintItem taskNumber: {}", dto.getTaskNumber());
+        return ResponseEntity.ok(service.save(dto));
     }
 
     @GetMapping
@@ -58,12 +60,5 @@ public class SprintBacklogItemController {
        return service.updateState(id, taskState)
                   .map(ResponseEntity::ok)
                   .orElse(ResponseEntity.notFound().build());         
-    } 
-   @PostMapping("/{id}/back-to-product")
-    public ResponseEntity<?> moveBackToProduct(@PathVariable UUID id) {
-         logger.info("return item from Sprint to product id: {}", id);
-         service.moveBackToProduct(id);
-        return ResponseEntity.ok().build();
-    }
-     
+    }       
 }

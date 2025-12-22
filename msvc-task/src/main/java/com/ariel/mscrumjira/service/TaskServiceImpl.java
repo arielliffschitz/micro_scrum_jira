@@ -6,63 +6,60 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.ariel.mscrumjira.client.ProductBacklogFeignClient;
+import com.ariel.mscrumjira.client.SprintBacklogFeignClient;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-
-
-
 @Service
 public class TaskServiceImpl implements TaskService{    
     
     private final ProductBacklogFeignClient clientProduct;
+    private final SprintBacklogFeignClient  clientSprint;        
 
-    
-    public TaskServiceImpl(ProductBacklogFeignClient clientProduct) {
+
+    public TaskServiceImpl(ProductBacklogFeignClient clientProduct, SprintBacklogFeignClient clientSprint) {
         this.clientProduct = clientProduct;
+        this.clientSprint = clientSprint;
     }
 
+
     @Override
-   
-    public List<SprintBacklogItemDto> findAll() {
+    public List<ProductBacklogItemDto> findAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
-    @Override
 
-    public Optional<SprintBacklogItemDto> findSprintByTaskNumber(Integer taskNumber) {
+    @Override
+    public Optional<ProductBacklogItemDto> findTaskByTaskNumber(Integer taskNumber) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByTaskNumber'");
-    }
-
-    @Override
-    
-    public SprintBacklogItemDto moveToSprint(Integer taskNumber) {
-        // ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(taskNumber);
-
-       /*  SprintBacklogItem daoSprint = repository.save(mapFromProductDtoToSprintDao(productDto));
-
-        deleteProductById(productBacklogId);
-
-        return mapToDto(daoSprint); */
-        return null;
-    }
-   
- @Override
-    public ProductBacklogItemDto test(Integer taskNumber) {
-         return clientProduct.findProductByTaskNumber(taskNumber);          
+        throw new UnsupportedOperationException("Unimplemented method 'findTaskByTaskNumber'");
     }
 
 
     @Override
-    public void moveToProduct(Integer taskNumber) {
+    public SprintBacklogItemDto moveFromProductToSprint(Integer taskNumber) {
+        ProductBacklogItemDto productDto = clientProduct.findTaskByTaskNumber(taskNumber);
+        SprintBacklogItemDto  SprintDto  = clientSprint.save(mapFromProductDtoToSprintDto(productDto));
+        clientProduct.deleteProductByTaskNumber(taskNumber);
+        return SprintDto;
+    }
+
+    @Override
+    public ProductBacklogItemDto moveFromSprintToProduct(Integer taskNumber) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveToProduct'");
+        throw new UnsupportedOperationException("Unimplemented method 'moveFromSprintToProduct'");
     }
 
-    @Override
-    public Optional<ProductBacklogItemDto> findProductByTaskNumber(Integer taskNumber) {
-         throw new UnsupportedOperationException("Unimplemented method 'moveToProduct'");
+    private SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
+        return new SprintBacklogItemDto(
+                productDto.getTaskNumber(),
+                productDto.getTitle(),
+                productDto.getDescription(),
+                productDto.getPriority(),
+                productDto.getEstimate(),              
+                productDto.getCreatedBy(),
+                productDto.getCreatedAt()
+                
+        );
     }
-
 }

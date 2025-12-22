@@ -11,5 +11,7 @@ import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 
 public interface ProductBacklogRepository extends CrudRepository<ProductBacklogItem, UUID>{
 
-    public  Optional<ProductBacklogItem> findByTaskNumber(Integer taskNumber);
+    Optional<ProductBacklogItem> findByTaskNumber(Integer taskNumber);
+
+    void deleteByTaskNumber(Integer taskNumber);
 }

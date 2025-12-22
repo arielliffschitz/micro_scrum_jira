@@ -14,6 +14,8 @@ public interface SprintBacklogItemService {
 
     Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState);
 
+    SprintBacklogItemDto save(SprintBacklogItemDto dto);
+
    
 }
   

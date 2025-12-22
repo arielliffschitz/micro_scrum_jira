@@ -18,6 +18,8 @@ public interface ProductBacklogService {
 
     void deleteById(UUID id);
 
+    void deleteByTaskNumber(Integer taskNumber);
+
     ProductBacklogItemDto update(UUID id, ProductBacklogItemDto backlogItemDto);
 
 }

@@ -8,15 +8,11 @@ import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 
 public interface TaskService {
 
-    List<SprintBacklogItemDto> findAll();
+    List<ProductBacklogItemDto> findAll();
 
-    Optional<ProductBacklogItemDto> findProductByTaskNumber(Integer taskNumber);
+    Optional<ProductBacklogItemDto> findTaskByTaskNumber(Integer taskNumber);   
 
-    public Optional<SprintBacklogItemDto> findSprintByTaskNumber(Integer taskNumber);
+    SprintBacklogItemDto moveFromProductToSprint(Integer taskNumber);
 
-    SprintBacklogItemDto moveToSprint(Integer taskNumber);
-
-    void moveToProduct(Integer taskNumber);
-
-    ProductBacklogItemDto test(Integer taskNumber);
+    ProductBacklogItemDto moveFromSprintToProduct(Integer taskNumber);   
 }

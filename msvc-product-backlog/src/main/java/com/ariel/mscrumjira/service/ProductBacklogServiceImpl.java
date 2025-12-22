@@ -51,6 +51,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void deleteByTaskNumber(Integer taskNumber) {
+       repository.deleteByTaskNumber(taskNumber);
+     }
+
     @Override
     @Transactional
     public ProductBacklogItemDto update(UUID id, ProductBacklogItemDto dto) {
@@ -65,6 +72,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
         return mapToDto(item);
     }
+
     @Override
      public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {
        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
@@ -72,8 +80,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
      }      
 
     private ProductBacklogItemDto mapToDto(ProductBacklogItem item){
-        return  new ProductBacklogItemDto(         
-                                        item.getId(),
+        return  new ProductBacklogItemDto(                                                 
                                         item.getTitle(),
                                         item.getDescription(),                   
                                         item.getPriority(),
@@ -83,6 +90,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         item.getTaskNumber()
                     );
     }
+
      private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
         return  new ProductBacklogItem(                   
                                         itemDto.getTitle(),
@@ -91,8 +99,6 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
                                         itemDto.getEstimate(),
                                         itemDto.getTaskNumber()                                    
                     );
-    }
-
-     
+    }         
 }
  

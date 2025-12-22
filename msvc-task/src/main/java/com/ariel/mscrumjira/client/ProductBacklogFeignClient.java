@@ -18,12 +18,12 @@ public interface ProductBacklogFeignClient {
     ProductBacklogItemDto findProductById(@PathVariable UUID id);
 
     @GetMapping("/task-number/{taskNumber}")
-    ProductBacklogItemDto findProductByTaskNumber(@PathVariable Integer taskNumber);
+    ProductBacklogItemDto findTaskByTaskNumber(@PathVariable Integer taskNumber);
 
-    @DeleteMapping("/{id}")
-    void deleteProductById(@PathVariable UUID id);
+    @DeleteMapping("/task-number/{taskNumber}")
+    void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
     
     @PostMapping
-    public ResponseEntity<ProductBacklogItemDto> create(@RequestBody ProductBacklogItemDto dto);
+    public ResponseEntity<ProductBacklogItemDto> save(@RequestBody ProductBacklogItemDto dto);
 
 }

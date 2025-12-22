@@ -52,9 +52,9 @@ public class ProductBacklogController {
     @PostMapping
     public ResponseEntity<ProductBacklogItemDto> create(@Valid @RequestBody ProductBacklogItemDto dto) {
     ProductBacklogItemDto saved = service.save(dto);
-    logger.info("Created ProductBacklogItem with id={}", saved.getId());
+    logger.info("Created ProductBacklogItem with taskNumber={}", saved.getTaskNumber());
     return ResponseEntity.status(HttpStatus.CREATED)
-                         .body(service.findById(saved.getId()).orElseThrow());
+                         .body(service.findByTaskNumber(saved.getTaskNumber()).orElseThrow());
     }
 
     @PutMapping("/{id}")
@@ -67,6 +67,12 @@ public class ProductBacklogController {
     public ResponseEntity<Void> delete(@PathVariable UUID id)  {
       logger.info("Deleting ProductBacklogItem with ID: {}", id);
       service.deleteById(id);
+      return ResponseEntity.noContent().build();
+   }
+   @DeleteMapping("/task-number/{taskNumber}")
+    public ResponseEntity<Void> deleteByTaskNumber(@PathVariable  Integer taskNumber)  {
+      logger.info("Deleting ProductBacklogItem taskNumber ID: {}", taskNumber);
+      service.deleteByTaskNumber( taskNumber);
       return ResponseEntity.noContent().build();
    }
 }
