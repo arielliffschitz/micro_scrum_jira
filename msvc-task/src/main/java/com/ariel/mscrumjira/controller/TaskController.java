@@ -3,6 +3,7 @@ package com.ariel.mscrumjira.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.service.TaskService;
 
@@ -32,5 +33,9 @@ public class TaskController {
     @PostMapping("/move-product-to-sprint/{taskNumber}")
     public ResponseEntity<SprintBacklogItemDto> moveFromProductToSprint(@PathVariable Integer taskNumber) {                
         return ResponseEntity.ok( service.moveFromProductToSprint(taskNumber));                       
-    }           
+    }    
+    @PostMapping("/move-sprint-to-product/{taskNumber}")
+    public ResponseEntity<ProductBacklogItemDto> moveFromSprintToProduct(@PathVariable Integer taskNumber) {                
+        return ResponseEntity.ok( service.moveFromSprintToProduct(taskNumber));                       
+    }             
 }

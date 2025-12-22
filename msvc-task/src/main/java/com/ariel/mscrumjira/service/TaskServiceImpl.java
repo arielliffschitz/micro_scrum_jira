@@ -46,9 +46,24 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public ProductBacklogItemDto moveFromSprintToProduct(Integer taskNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveFromSprintToProduct'");
+        SprintBacklogItemDto  SprintDto  = clientSprint.findTaskByTaskNumber(taskNumber);
+        ProductBacklogItemDto productDto = clientProduct.save(mapFromSprintDtoToProductDto(SprintDto));
+        clientSprint.deleteProductByTaskNumber(taskNumber);
+        return productDto;
     }
+
+    private ProductBacklogItemDto mapFromSprintDtoToProductDto(SprintBacklogItemDto sprintDto) {
+        return new ProductBacklogItemDto(                
+                sprintDto.getTitle(),
+                sprintDto.getDescription(),
+                sprintDto.getPriority(),
+                sprintDto.getEstimate(),              
+                sprintDto.getCreatedBy(),
+                sprintDto.getCreatedAt(),
+                sprintDto.getTaskNumber()
+        );
+    }
+
 
     private SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
         return new SprintBacklogItemDto(

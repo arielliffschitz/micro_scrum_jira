@@ -1,8 +1,12 @@
 package com.ariel.mscrumjira.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 
@@ -10,6 +14,12 @@ import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 public interface SprintBacklogFeignClient {
 
     @PostMapping
-    public  SprintBacklogItemDto save(@RequestBody SprintBacklogItemDto dto);
+    SprintBacklogItemDto save(@RequestBody SprintBacklogItemDto dto);
+
+    @GetMapping("/task-number/{taskNumber}")
+    SprintBacklogItemDto findTaskByTaskNumber(@PathVariable Integer taskNumber);
+
+    @DeleteMapping("/task-number/{taskNumber}")
+    void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
 } 
 

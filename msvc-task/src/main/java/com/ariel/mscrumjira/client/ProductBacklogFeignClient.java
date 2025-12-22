@@ -24,6 +24,6 @@ public interface ProductBacklogFeignClient {
     void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
     
     @PostMapping
-    public ResponseEntity<ProductBacklogItemDto> save(@RequestBody ProductBacklogItemDto dto);
+    public ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto);
 
 }

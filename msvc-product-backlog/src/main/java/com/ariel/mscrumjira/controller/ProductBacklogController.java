@@ -50,7 +50,7 @@ public class ProductBacklogController {
                 .orElseGet(()->ResponseEntity.notFound().build());                   
     }
     @PostMapping
-    public ResponseEntity<ProductBacklogItemDto> create(@Valid @RequestBody ProductBacklogItemDto dto) {
+    public ResponseEntity<ProductBacklogItemDto> save(@Valid @RequestBody ProductBacklogItemDto dto) {
     ProductBacklogItemDto saved = service.save(dto);
     logger.info("Created ProductBacklogItem with taskNumber={}", saved.getTaskNumber());
     return ResponseEntity.status(HttpStatus.CREATED)

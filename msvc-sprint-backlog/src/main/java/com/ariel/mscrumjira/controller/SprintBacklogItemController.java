@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
+import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.service.SprintBacklogItemService;
 
@@ -53,6 +55,15 @@ public class SprintBacklogItemController {
                 .orElseGet(()->ResponseEntity.notFound().build());                   
     }
 
+    @GetMapping("/task-number/{taskNumber}")
+    public ResponseEntity<SprintBacklogItemDto> findByTaskNumber(@PathVariable Integer taskNumber)  {        
+        logger.info("Fetching SprintBacklogItem with taskNumber={}", taskNumber);
+        return  service.findByTaskNumber(taskNumber)
+                .map(dto->ResponseEntity.ok(dto) )
+                .orElseGet(()->ResponseEntity.notFound().build());                   
+    }
+
+
     @PutMapping("/{id}/state/{taskState}")
     public ResponseEntity<SprintBacklogItemDto> updateState(@PathVariable UUID id,  @PathVariable TaskState taskState) {
        logger.info("Updating SprintBacklogItem id: {} in: {}",id , taskState);
@@ -60,5 +71,11 @@ public class SprintBacklogItemController {
        return service.updateState(id, taskState)
                   .map(ResponseEntity::ok)
                   .orElse(ResponseEntity.notFound().build());         
-    }       
+    }  
+    @DeleteMapping("/task-number/{taskNumber}")
+     public ResponseEntity<Void> deleteByTaskNumber(@PathVariable  Integer taskNumber)  {
+       logger.info("Deleting SprintBacklogItem taskNumber ID: {}", taskNumber);
+       service.deleteByTaskNumber( taskNumber);
+       return ResponseEntity.noContent().build();
+   }   
 }

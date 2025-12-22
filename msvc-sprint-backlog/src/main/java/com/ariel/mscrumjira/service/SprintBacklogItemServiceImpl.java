@@ -38,6 +38,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     public Optional<SprintBacklogItemDto> findById(UUID id) {
         return repository.findById(id).map(this::mapToDto);
     }
+
     @Override
     @Transactional
     public SprintBacklogItemDto save(SprintBacklogItemDto dto) {
@@ -54,7 +55,20 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
                     dao = actualizeTaskStateAndDate(taskState, dao);
                     return mapToDto(repository.save(dao));
                 });
-    }        
+    }  
+
+    @Override
+    @Transactional
+    public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
+        Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
+        return itemOptional.map(this::mapToDto);
+    }          
+
+    @Override
+    @Transactional
+    public void deleteByTaskNumber(Integer taskNumber) {
+        repository.deleteByTaskNumber(taskNumber);
+    }      
 
    private SprintBacklogItem mapToDao( SprintBacklogItemDto dto) {
         return new SprintBacklogItem( 
@@ -101,6 +115,8 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
         }
         return sprintBacklogItem;
     }
+
+    
 
    
 }

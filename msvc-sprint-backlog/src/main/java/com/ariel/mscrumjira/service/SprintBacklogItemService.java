@@ -12,9 +12,13 @@ public interface SprintBacklogItemService {
 
     Optional<SprintBacklogItemDto> findById(UUID id);
 
+    Optional<SprintBacklogItemDto>findByTaskNumber(Integer taskNumber);
+
     Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState);
 
     SprintBacklogItemDto save(SprintBacklogItemDto dto);
+
+    void deleteByTaskNumber(Integer taskNumber);
 
    
 }
