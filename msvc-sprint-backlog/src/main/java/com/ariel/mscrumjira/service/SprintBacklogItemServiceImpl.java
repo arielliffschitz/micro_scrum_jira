@@ -3,12 +3,11 @@ package com.ariel.mscrumjira.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
@@ -27,18 +26,12 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     @Override
     @Transactional(readOnly = true)
     public List<SprintBacklogItemDto> findAll() {
-        return ((List<SprintBacklogItem>) repository.findAll())
-                .stream()
+        return StreamSupport.stream(repository.findAll()
+                .spliterator(),false)
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<SprintBacklogItemDto> findById(UUID id) {
-        return repository.findById(id).map(this::mapToDto);
-    }
-
+    }  
+     
     @Override
     @Transactional
     public SprintBacklogItemDto save(SprintBacklogItemDto dto) {
@@ -49,8 +42,8 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
     @Override
     @Transactional
-    public Optional<SprintBacklogItemDto> updateState(UUID id, TaskState taskState) {
-        return repository.findById(id)
+    public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState) {
+        return repository.findByTaskNumber(taskNumber)
                 .map(dao -> {
                     dao = actualizeTaskStateAndDate(taskState, dao);
                     return mapToDto(repository.save(dao));
@@ -58,7 +51,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     }  
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
         Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
         return itemOptional.map(this::mapToDto);
@@ -79,11 +72,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
                 dto.getEstimate(),
                 dto.getTaskState()               
         );
-    }        
-
-   /*  private void deleteProductById(UUID productBacklogId) {
-        client.deleteProductById(productBacklogId);
-    } */
+    }          
 
     private SprintBacklogItemDto mapToDto(SprintBacklogItem dao) {
         return new SprintBacklogItemDto(
@@ -114,9 +103,5 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
             sprintBacklogItem.setEndDate(LocalDateTime.now());
         }
         return sprintBacklogItem;
-    }
-
-    
-
-   
+    }       
 }

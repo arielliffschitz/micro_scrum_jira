@@ -30,45 +30,35 @@ public class ProductBacklogController {
     public ProductBacklogController(ProductBacklogService service) {
         this.service = service;
     }
+
     @GetMapping
-    public ResponseEntity <List<ProductBacklogItemDto>>findAll() {
+    public ResponseEntity <List<ProductBacklogItemDto>> findAll() {
         logger.info("Fetching all BacklogItems, count={}", service.findAll().size());      
-        return ResponseEntity.ok(this.service.findAll());
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductBacklogItemDto> findById(@PathVariable UUID id)  {        
-        logger.info("Fetching ProductBacklogItem with id={}", id);
-        return  service.findById(id)
-                .map(dto->ResponseEntity.ok(dto) )
-                .orElseGet(()->ResponseEntity.notFound().build());                   
-    }
+        return ResponseEntity.ok(this.service.findAll());    }   
+
     @GetMapping("/task-number/{taskNumber}")
     public ResponseEntity<ProductBacklogItemDto> findByTaskNumber(@PathVariable Integer taskNumber)  {        
         logger.info("Fetching ProductBacklogItem with taskNumber={}", taskNumber);
-        return  service.findByTaskNumber(taskNumber)
-                .map(dto->ResponseEntity.ok(dto) )
-                .orElseGet(()->ResponseEntity.notFound().build());                   
+        return   service.findByTaskNumber(taskNumber)
+                        .map(dto->ResponseEntity.ok(dto) )
+                        .orElseGet(()->ResponseEntity.notFound().build());                   
     }
+
     @PostMapping
     public ResponseEntity<ProductBacklogItemDto> save(@Valid @RequestBody ProductBacklogItemDto dto) {
     ProductBacklogItemDto saved = service.save(dto);
     logger.info("Created ProductBacklogItem with taskNumber={}", saved.getTaskNumber());
     return ResponseEntity.status(HttpStatus.CREATED)
-                         .body(service.findByTaskNumber(saved.getTaskNumber()).orElseThrow());
+                         .body(service.findByTaskNumber(saved.getTaskNumber())
+                         .orElseThrow());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductBacklogItemDto> update(@PathVariable UUID id, @Valid @RequestBody ProductBacklogItemDto dto) {
+    @PutMapping("/{taskNumber}")
+    public ResponseEntity<ProductBacklogItemDto> update(@PathVariable Integer taskNumber, @Valid @RequestBody ProductBacklogItemDto dto) {
         logger.info("Updating ProductBacklogItem: {}", dto);
-        return ResponseEntity.ok(service.update(id, dto));
-         
-    }  
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id)  {
-      logger.info("Deleting ProductBacklogItem with ID: {}", id);
-      service.deleteById(id);
-      return ResponseEntity.noContent().build();
-   }
+        return ResponseEntity.ok(service.update(taskNumber, dto));         
+    }    
+
    @DeleteMapping("/task-number/{taskNumber}")
     public ResponseEntity<Void> deleteByTaskNumber(@PathVariable  Integer taskNumber)  {
       logger.info("Deleting ProductBacklogItem taskNumber ID: {}", taskNumber);

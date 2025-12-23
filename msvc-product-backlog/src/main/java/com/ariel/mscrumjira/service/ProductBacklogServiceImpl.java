@@ -2,7 +2,6 @@ package com.ariel.mscrumjira.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -20,7 +19,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
     final private ProductBacklogRepository repository;
 
-    public ProductBacklogServiceImpl(ProductBacklogRepository repository){
+    public ProductBacklogServiceImpl(ProductBacklogRepository repository) {
         this.repository = repository;
     }
 
@@ -28,29 +27,16 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     @Transactional(readOnly = true)
     public List<ProductBacklogItemDto> findAll() {
         return StreamSupport.stream(repository.findAll()
-                .spliterator(), false)                
-                .map(this::mapToDto)
-                .collect(Collectors.toList());        
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<ProductBacklogItemDto> findById(UUID id) {
-       Optional<ProductBacklogItem> itemOptional = repository.findById(id);
-       return itemOptional.map(this::mapToDto);
-    }
+                            .spliterator(), false)                
+                            .map(this::mapToDto)
+                            .collect(Collectors.toList());        
+    }   
 
     @Override
     @Transactional
     public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto) {
        return mapToDto(repository.save(mapToDao(backlogItemDto)));
-    }
-
-    @Override
-    @Transactional
-    public void deleteById(UUID id) {
-        repository.deleteById(id);
-    }
+    }   
 
     @Override
     @Transactional
@@ -60,16 +46,17 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
     @Override
     @Transactional
-    public ProductBacklogItemDto update(UUID id, ProductBacklogItemDto dto) {
-        Optional<ProductBacklogItem> itemOptional = repository.findById(id);
-        ProductBacklogItem item = itemOptional.orElseThrow();
-            item.setTitle(dto.getTitle());
-            if (StringUtils.hasText(dto.getDescription())) item.setDescription(dto.getDescription());
-            item.setPriority(dto.getPriority());
-            item.setEstimate(dto.getEstimate());
-            
-        repository.save(item);
+    public ProductBacklogItemDto update(Integer taskNumber, ProductBacklogItemDto dto) {
+        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
+        ProductBacklogItem  item = itemOptional.orElseThrow();
 
+        item.setTitle(dto.getTitle());
+        if (StringUtils.hasText(dto.getDescription())) 
+             item.setDescription(dto.getDescription());
+        item.setPriority(dto.getPriority());
+        item.setEstimate(dto.getEstimate());   
+
+        repository.save(item);
         return mapToDto(item);
     }
 
@@ -81,24 +68,24 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
     private ProductBacklogItemDto mapToDto(ProductBacklogItem item){
         return  new ProductBacklogItemDto(                                                 
-                                        item.getTitle(),
-                                        item.getDescription(),                   
-                                        item.getPriority(),
-                                        item.getEstimate(),
-                                        item.getCreatedBy(),
-                                        item.getCreatedAt(),
-                                        item.getTaskNumber()
-                    );
+                    item.getTitle(),
+                    item.getDescription(),                   
+                    item.getPriority(),
+                    item.getEstimate(),
+                    item.getCreatedBy(),
+                    item.getCreatedAt(),
+                    item.getTaskNumber()
+                );
     }
 
      private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
         return  new ProductBacklogItem(                   
-                                        itemDto.getTitle(),
-                                        itemDto.getDescription(),                   
-                                        itemDto.getPriority(),
-                                        itemDto.getEstimate(),
-                                        itemDto.getTaskNumber()                                    
-                    );
+                    itemDto.getTitle(),
+                    itemDto.getDescription(),                   
+                    itemDto.getPriority(),
+                    itemDto.getEstimate(),
+                    itemDto.getTaskNumber()                                    
+                );
     }         
 }
  

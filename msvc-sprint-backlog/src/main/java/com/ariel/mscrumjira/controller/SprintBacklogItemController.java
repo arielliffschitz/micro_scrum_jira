@@ -1,8 +1,6 @@
 package com.ariel.mscrumjira.controller;
 
 import java.util.List;
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
-import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.service.SprintBacklogItemService;
-
-
-
-
 @RestController
 @RequestMapping("/sprint-backlog-items")
 public class SprintBacklogItemController {
-    private final Logger logger = LoggerFactory.getLogger((SprintBacklogItemController.class));
+    private final Logger logger = LoggerFactory.getLogger(SprintBacklogItemController.class);
     private final SprintBacklogItemService service;
 
     public SprintBacklogItemController(SprintBacklogItemService service) {
@@ -44,16 +37,7 @@ public class SprintBacklogItemController {
     public ResponseEntity <List<SprintBacklogItemDto>>list() {
         logger.info("Fetching all SprintBacklogItems, count={}", service.findAll().size());      
         return ResponseEntity.ok(this.service.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<SprintBacklogItemDto> findById(@PathVariable UUID id)  {        
-        logger.info("Fetching SprintBacklogItem with id={}", id);
-
-        return  service.findById(id)
-                .map(dto->ResponseEntity.ok(dto) )
-                .orElseGet(()->ResponseEntity.notFound().build());                   
-    }
+    }    
 
     @GetMapping("/task-number/{taskNumber}")
     public ResponseEntity<SprintBacklogItemDto> findByTaskNumber(@PathVariable Integer taskNumber)  {        
@@ -63,18 +47,18 @@ public class SprintBacklogItemController {
                 .orElseGet(()->ResponseEntity.notFound().build());                   
     }
 
+    @PutMapping("/{taskNumber}/state/{taskState}")
+    public ResponseEntity<SprintBacklogItemDto> updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState) {
+       logger.info("Updating SprintBacklogItem taskNumber: {} in: {}",taskNumber , taskState);
 
-    @PutMapping("/{id}/state/{taskState}")
-    public ResponseEntity<SprintBacklogItemDto> updateState(@PathVariable UUID id,  @PathVariable TaskState taskState) {
-       logger.info("Updating SprintBacklogItem id: {} in: {}",id , taskState);
-
-       return service.updateState(id, taskState)
+       return service.updateState(taskNumber, taskState)
                   .map(ResponseEntity::ok)
                   .orElse(ResponseEntity.notFound().build());         
     }  
+
     @DeleteMapping("/task-number/{taskNumber}")
      public ResponseEntity<Void> deleteByTaskNumber(@PathVariable  Integer taskNumber)  {
-       logger.info("Deleting SprintBacklogItem taskNumber ID: {}", taskNumber);
+       logger.info("Deleting SprintBacklogItem taskNumber : {}", taskNumber);
        service.deleteByTaskNumber( taskNumber);
        return ResponseEntity.noContent().build();
    }   
