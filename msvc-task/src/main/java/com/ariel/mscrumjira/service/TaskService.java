@@ -5,12 +5,13 @@ import java.util.Optional;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.TaskDto;
 
-public interface TaskService {
+public interface TaskService {    
 
-    List<ProductBacklogItemDto> findAll();
+    List<TaskDto> findAll();
 
-    Optional<ProductBacklogItemDto> findTaskByTaskNumber(Integer taskNumber);   
+    Optional<TaskDto> findByTaskNumber(Integer taskNumber);   
 
     SprintBacklogItemDto moveFromProductToSprint(Integer taskNumber);
 

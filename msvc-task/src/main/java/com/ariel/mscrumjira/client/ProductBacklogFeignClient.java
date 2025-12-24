@@ -1,5 +1,7 @@
 package com.ariel.mscrumjira.client;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +14,14 @@ import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 public interface ProductBacklogFeignClient {   
 
     @GetMapping("/task-number/{taskNumber}")
-    ProductBacklogItemDto findTaskByTaskNumber(@PathVariable Integer taskNumber);
+    ProductBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber);
 
     @DeleteMapping("/task-number/{taskNumber}")
     void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
     
     @PostMapping
-    public ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto);
+    ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto);
 
+    @GetMapping
+    List<ProductBacklogItemDto> findAll();
 }

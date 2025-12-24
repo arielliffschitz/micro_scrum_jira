@@ -36,7 +36,7 @@ public class SprintBacklogItemController {
     @GetMapping
     public ResponseEntity <List<SprintBacklogItemDto>>list() {
         logger.info("Fetching all SprintBacklogItems, count={}", service.findAll().size());      
-        return ResponseEntity.ok(this.service.findAll());
+        return ResponseEntity.ok(service.findAll());
     }    
 
     @GetMapping("/task-number/{taskNumber}")

@@ -1,7 +1,6 @@
 package com.ariel.mscrumjira.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,8 @@ public class ProductBacklogController {
     @GetMapping
     public ResponseEntity <List<ProductBacklogItemDto>> findAll() {
         logger.info("Fetching all BacklogItems, count={}", service.findAll().size());      
-        return ResponseEntity.ok(this.service.findAll());    }   
+        return ResponseEntity.ok(this.service.findAll()); 
+    }   
 
     @GetMapping("/task-number/{taskNumber}")
     public ResponseEntity<ProductBacklogItemDto> findByTaskNumber(@PathVariable Integer taskNumber)  {        
