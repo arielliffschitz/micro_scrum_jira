@@ -1,8 +1,8 @@
 package com.ariel.mscrumjira.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -12,15 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.mapper.SprintBacklogItemMapper;
 import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 
 @Service
 public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
    
     private final SprintBacklogItemRepository repository;
+    private final SprintTaskStateService stateService;    
 
-    public SprintBacklogItemServiceImpl( SprintBacklogItemRepository repository) {       
+    public SprintBacklogItemServiceImpl(SprintBacklogItemRepository repository, SprintTaskStateService stateService) {
         this.repository = repository;
+        this.stateService = stateService;
     }
 
     @Override
@@ -28,25 +31,28 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     public List<SprintBacklogItemDto> findAll() {
         return StreamSupport.stream(repository.findAll()
                 .spliterator(),false)
-                .map(this::mapToDto)
+                .map(SprintBacklogItemMapper::mapToDto)
                 .collect(Collectors.toList());
     }  
      
     @Override
     @Transactional
     public SprintBacklogItemDto save(SprintBacklogItemDto dto) {
-        if (dto.getTaskState()==null)dto.setTaskState(TaskState.PENDING);        
-        SprintBacklogItem dao =repository.save(mapToDao(dto));
-        return mapToDto(dao);        
+        if (dto.getTaskState()==null) dto.setTaskState(TaskState.PENDING);        
+        SprintBacklogItem dao =repository.save(SprintBacklogItemMapper.mapToDao(dto));
+        return SprintBacklogItemMapper.mapToDto(dao);        
     }
 
     @Override
     @Transactional
     public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState) {
+
         return repository.findByTaskNumber(taskNumber)
                 .map(dao -> {
-                    dao = actualizeTaskStateAndDate(taskState, dao);
-                    return mapToDto(repository.save(dao));
+                    UUID id = dao.getId();
+                    dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDto(dao)));
+                    dao.setId(id);
+                    return SprintBacklogItemMapper.mapToDto(repository.save(dao));
                 });
     }  
 
@@ -54,7 +60,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     @Transactional(readOnly = true)
     public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
         Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-        return itemOptional.map(this::mapToDto);
+        return itemOptional.map(SprintBacklogItemMapper::mapToDto);
     }          
 
     @Override
@@ -62,46 +68,5 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     public void deleteByTaskNumber(Integer taskNumber) {
         repository.deleteByTaskNumber(taskNumber);
     }      
-
-   private SprintBacklogItem mapToDao( SprintBacklogItemDto dto) {
-        return new SprintBacklogItem( 
-                dto.getTaskNumber(),             
-                dto.getTitle(),
-                dto.getDescription(),
-                dto.getPriority(),
-                dto.getEstimate(),
-                dto.getTaskState()               
-        );
-    }          
-
-    private SprintBacklogItemDto mapToDto(SprintBacklogItem dao) {
-        return new SprintBacklogItemDto(
-                dao.getTaskNumber(),
-                dao.getTitle(),
-                dao.getDescription(),
-                dao.getPriority(),
-                dao.getEstimate(),
-                dao.getTaskState(),
-                dao.getStartDate(),
-                dao.getEndDate(),
-                dao.getCreatedBy(),
-                dao.getCreatedAt()
-        );
-    }
-
-    private SprintBacklogItem actualizeTaskStateAndDate(TaskState taskState, SprintBacklogItem sprintBacklogItem) {
-        if (sprintBacklogItem.getTaskState() == TaskState.PENDING) {
-            if (taskState == TaskState.IN_PROGRESS) {
-                sprintBacklogItem.setTaskState(taskState);
-                sprintBacklogItem.setStartDate(LocalDateTime.now());
-            } else if (taskState == TaskState.DONE) {
-                sprintBacklogItem.setTaskState(taskState);
-                sprintBacklogItem.setEndDate(LocalDateTime.now());
-            }
-        } else if (sprintBacklogItem.getTaskState() == TaskState.IN_PROGRESS && taskState == TaskState.DONE) {
-            sprintBacklogItem.setTaskState(taskState);
-            sprintBacklogItem.setEndDate(LocalDateTime.now());
-        }
-        return sprintBacklogItem;
-    }       
+ 
 }

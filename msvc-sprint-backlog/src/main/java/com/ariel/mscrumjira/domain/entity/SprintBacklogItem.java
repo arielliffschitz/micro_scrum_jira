@@ -56,9 +56,13 @@ public class SprintBacklogItem extends BaseEntity{
         this.taskState = taskState;
     }   
     
-    public UUID getSprintBacklogId() {
+     public UUID getId() {
         return id;
-    }     
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }      
 
     public Integer getTaskNumber() {
         return taskNumber;
@@ -122,5 +126,7 @@ public class SprintBacklogItem extends BaseEntity{
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }        
+    }
+
+     
 }
