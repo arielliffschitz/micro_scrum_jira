@@ -12,7 +12,6 @@ import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 public class ProductBacklogServiceImpl implements ProductBacklogService {
@@ -42,23 +41,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     @Transactional
     public void deleteByTaskNumber(Integer taskNumber) {
        repository.deleteByTaskNumber(taskNumber);
-     }
-
-    @Override
-    @Transactional
-    public ProductBacklogItemDto update(Integer taskNumber, ProductBacklogItemDto dto) {
-        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-        ProductBacklogItem  item = itemOptional.orElseThrow();
-
-        item.setTitle(dto.getTitle());
-        if (StringUtils.hasText(dto.getDescription())) 
-             item.setDescription(dto.getDescription());
-        item.setPriority(dto.getPriority());
-        item.setEstimate(dto.getEstimate());   
-
-        repository.save(item);
-        return mapToDto(item);
-    }
+     }   
 
     @Override
      public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {

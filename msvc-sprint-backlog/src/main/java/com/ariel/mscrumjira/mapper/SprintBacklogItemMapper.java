@@ -19,13 +19,8 @@ public  class SprintBacklogItemMapper {
     }   
 
     public static SprintBacklogItem mapToDaoUpdate( SprintBacklogItemDto dto) {
-        SprintBacklogItem dao  = new SprintBacklogItem();
-                        dao.setTaskNumber(dto.getTaskNumber());            
-                        dao.setTitle( dto.getTitle());
-                        dao.setDescription(dto.getDescription());
-                        dao.setPriority( dto.getPriority());
-                        dao.setEstimate( dto.getEstimate());
-                        dao.setTaskState(dto.getTaskState());
+        SprintBacklogItem dao = mapToDao( dto);  
+                        dao.setId(dto.getId());                                  
                         dao.setStartDate(dto.getStartDate());
                         dao.setEndDate(dto.getEndDate());
                         dao.setCreatedBy(dto.getCreatedBy());
@@ -46,5 +41,11 @@ public  class SprintBacklogItemMapper {
                     dao.getCreatedBy(),
                     dao.getCreatedAt()
             );
-        }  
+        }
+
+    public static SprintBacklogItemDto mapToDtoUpdate(SprintBacklogItem dao) {
+        SprintBacklogItemDto dto =mapToDto( dao);
+        dto.setId(dao.getId()) ;
+        return dto;
+    }  
 }

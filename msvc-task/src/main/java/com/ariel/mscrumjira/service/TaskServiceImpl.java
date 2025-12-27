@@ -8,12 +8,14 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
-
 import com.ariel.mscrumjira.client.ProductBacklogFeignClient;
 import com.ariel.mscrumjira.client.SprintBacklogFeignClient;
+import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
+import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.mapper.TaskItemMapper;
 
 import feign.FeignException;
 @Service
@@ -32,11 +34,11 @@ public class TaskServiceImpl implements TaskService{
     public List<TaskDto> findAll() {
         List<TaskDto> taskProductDtoList = StreamSupport.stream(clientSprint.findAll()
                 .spliterator(),false)
-                .map(this::mapSprintToTask)
+                .map(TaskItemMapper::mapSprintToTask)
                 .collect(Collectors.toList()); 
         List<TaskDto> taskSprintDtoList = StreamSupport.stream(clientProduct.findAll()
                 .spliterator(),false)
-                .map(this::mapProductToTask)
+                .map(TaskItemMapper::mapProductToTask)
                 .collect(Collectors.toList()); 
 
         List<TaskDto> taskDtoList= Stream.concat(taskProductDtoList.stream(), taskSprintDtoList.stream()).toList();
@@ -48,78 +50,58 @@ public class TaskServiceImpl implements TaskService{
     public Optional<TaskDto> findByTaskNumber(Integer taskNumber) {
         try {
              SprintBacklogItemDto  sprintDto = clientSprint.findByTaskNumber(taskNumber);
-             return Optional.of(mapSprintToTask(sprintDto));
+             return Optional.of(TaskItemMapper.mapSprintToTask(sprintDto));
         } catch (FeignException.NotFound e) {
-            return Optional.ofNullable(mapProductToTask(clientProduct.findByTaskNumber(taskNumber)));
+            return Optional.ofNullable(TaskItemMapper.mapProductToTask(clientProduct.findByTaskNumber(taskNumber)));
         }      
     }    
-
     @Override
-    public SprintBacklogItemDto moveFromProductToSprint(Integer taskNumber) {
+        public TaskDto create(ProductCreateDto dto) {
+           return TaskItemMapper.mapProductToTask(clientProduct.save(TaskItemMapper.mapCreateToProductDto(dto)));
+    }
+    
+    @Override
+    public TaskDto moveFromProductToSprint(Integer taskNumber) {
         ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(taskNumber);
-        SprintBacklogItemDto  SprintDto  = clientSprint.save(mapFromProductDtoToSprintDto(productDto));
+        SprintBacklogItemDto  sprintDto  = clientSprint.save(TaskItemMapper.mapFromProductDtoToSprintDto(productDto));
         clientProduct.deleteProductByTaskNumber(taskNumber);
-        return SprintDto;
+        return TaskItemMapper.mapSprintToTask(sprintDto);
     }
 
     @Override
-    public ProductBacklogItemDto moveFromSprintToProduct(Integer taskNumber) {
+    public TaskDto moveFromSprintToProduct(Integer taskNumber) {
         SprintBacklogItemDto  SprintDto  = clientSprint.findByTaskNumber(taskNumber);
-        ProductBacklogItemDto productDto = clientProduct.save(mapFromSprintDtoToProductDto(SprintDto));
+        ProductBacklogItemDto productDto = clientProduct.save(TaskItemMapper.mapFromSprintDtoToProductDto(SprintDto));
         clientSprint.deleteProductByTaskNumber(taskNumber);
-        return productDto;
-    }
-    private TaskDto mapSprintToTask(SprintBacklogItemDto dto) {
-        return new TaskDto( dto.getTaskNumber(), 
-                            dto.getTitle(),
-                            dto.getDescription(),
-                            dto.getPriority(),
-                            dto.getEstimate(),
-                            dto.getTaskState(),
-                            dto.getStartDate(),
-                            dto.getEndDate(),
-                            dto.getCreatedBy(),
-                            dto.getCreatedAt(),
-                            Boolean.TRUE          
-                        );
-    }
-    private TaskDto mapProductToTask(ProductBacklogItemDto dto) {
-        return new TaskDto( dto.getTaskNumber(), 
-                            dto.getTitle(),
-                            dto.getDescription(),
-                            dto.getPriority(),
-                            dto.getEstimate(),
-                            null,
-                            null,
-                            null,
-                            dto.getCreatedBy(),
-                            dto.getCreatedAt(),
-                            Boolean.FALSE          
-                        );
-    }
-    private ProductBacklogItemDto mapFromSprintDtoToProductDto(SprintBacklogItemDto sprintDto) {
-        return new ProductBacklogItemDto(                
-                sprintDto.getTitle(),
-                sprintDto.getDescription(),
-                sprintDto.getPriority(),
-                sprintDto.getEstimate(),              
-                sprintDto.getCreatedBy(),
-                sprintDto.getCreatedAt(),
-                sprintDto.getTaskNumber()
-        );
+        return TaskItemMapper.mapProductToTask(productDto);
     }
 
+    @Override
+    public Optional<TaskDto> update(TaskDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
 
-    private SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
-        return new SprintBacklogItemDto(
-                productDto.getTaskNumber(),
-                productDto.getTitle(),
-                productDto.getDescription(),
-                productDto.getPriority(),
-                productDto.getEstimate(),              
-                productDto.getCreatedBy(),
-                productDto.getCreatedAt()
-                
-        );
-    }   
+    @Override
+    public TaskDto updateState(Integer taskNumber, TaskState taskState) {
+         return TaskItemMapper.mapSprintToTask(clientSprint.updateState(taskNumber, taskState));
+    }
+
+    
+    
+     /* @Override
+    @Transactional
+    public ProductBacklogItemDto update(ProductBacklogItemDto dto) {
+        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
+        ProductBacklogItem  item = itemOptional.orElseThrow();
+
+        item.setTitle(dto.getTitle());
+        if (StringUtils.hasText(dto.getDescription())) 
+             item.setDescription(dto.getDescription());
+        item.setPriority(dto.getPriority());
+        item.setEstimate(dto.getEstimate());   
+
+        repository.save(item);
+        return mapToDto(item);
+    } */
 }

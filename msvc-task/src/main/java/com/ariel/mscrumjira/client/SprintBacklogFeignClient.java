@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 
 @FeignClient(name = "msvc-sprint-backlog", path = "/sprint-backlog-items")
@@ -26,5 +27,8 @@ public interface SprintBacklogFeignClient {
 
     @GetMapping
     List<SprintBacklogItemDto> findAll();
+
+    @PutMapping("/{taskNumber}/state/{taskState}")
+    public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState);
 } 
 

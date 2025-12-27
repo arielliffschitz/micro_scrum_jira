@@ -36,6 +36,12 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     }  
      
     @Override
+    @Transactional(readOnly = true)
+    public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
+        Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
+        return itemOptional.map(SprintBacklogItemMapper::mapToDto);
+    }          
+    @Override
     @Transactional
     public SprintBacklogItemDto save(SprintBacklogItemDto dto) {
         if (dto.getTaskState()==null) dto.setTaskState(TaskState.PENDING);        
@@ -48,25 +54,19 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState) {
 
         return repository.findByTaskNumber(taskNumber)
-                .map(dao -> {
-                    UUID id = dao.getId();
-                    dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDto(dao)));
-                    dao.setId(id);
+                .map(dao -> {                    
+                    dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDtoUpdate(dao)));
+                   
                     return SprintBacklogItemMapper.mapToDto(repository.save(dao));
                 });
     }  
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
-        Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-        return itemOptional.map(SprintBacklogItemMapper::mapToDto);
-    }          
-
-    @Override
     @Transactional
     public void deleteByTaskNumber(Integer taskNumber) {
         repository.deleteByTaskNumber(taskNumber);
-    }      
+    }
+
+      
  
 }

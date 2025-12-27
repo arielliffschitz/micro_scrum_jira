@@ -14,7 +14,4 @@ public interface ProductBacklogService {
     ProductBacklogItemDto save (ProductBacklogItemDto backlogItemDto);  
 
     void deleteByTaskNumber(Integer taskNumber);
-
-    ProductBacklogItemDto update(Integer taskNumber, ProductBacklogItemDto backlogItemDto);
-
 }
