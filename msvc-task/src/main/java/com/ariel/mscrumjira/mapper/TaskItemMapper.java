@@ -1,7 +1,6 @@
 package com.ariel.mscrumjira.mapper;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
-import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 
@@ -63,12 +62,12 @@ public class TaskItemMapper {
         );
     }
 
-    public static ProductBacklogItemDto mapCreateToProductDto(ProductCreateDto createDto) {
+    /* public static ProductBacklogItemDto mapCreateToProductDto(ProductCreateDto createDto) {
         ProductBacklogItemDto productDto  =new ProductBacklogItemDto();               
                 productDto.setTitle(createDto.title());
                 productDto.setDescription(createDto.description());
                 productDto.setPriority(createDto.priority());
                 productDto.setEstimate(createDto.estimate());                            
          return productDto;
-    }   
+    }    */
 }

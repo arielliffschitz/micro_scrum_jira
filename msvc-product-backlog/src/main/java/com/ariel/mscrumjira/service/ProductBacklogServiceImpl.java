@@ -2,6 +2,7 @@ package com.ariel.mscrumjira.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
+import com.ariel.mscrumjira.dto.ProductCreateDto;
+import com.ariel.mscrumjira.mapper.ProductBacklogItemMapper;
 import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +30,21 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     public List<ProductBacklogItemDto> findAll() {
         return StreamSupport.stream(repository.findAll()
                             .spliterator(), false)                
-                            .map(this::mapToDto)
+                            .map(ProductBacklogItemMapper::mapToDto)
                             .collect(Collectors.toList());        
     }   
 
     @Override
     @Transactional
-    public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto) {
-       return mapToDto(repository.save(mapToDao(backlogItemDto)));
-    }   
+    public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto) {                
+        return ProductBacklogItemMapper
+                .mapToDto(repository.save(ProductBacklogItemMapper.mapToDao(backlogItemDto)));
+    }
+    @Override   
+    @Transactional
+    public UUID create(ProductCreateDto Dto) {
+        return  repository.save(ProductBacklogItemMapper.mapToDaoCreate(Dto)).getId();
+    }                 
 
     @Override
     @Transactional
@@ -46,29 +55,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
     @Override
      public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {
        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-       return itemOptional.map(this::mapToDto);
+       return itemOptional.map(ProductBacklogItemMapper::mapToDto);
      }      
-
-    private ProductBacklogItemDto mapToDto(ProductBacklogItem item){
-        return  new ProductBacklogItemDto(                                                 
-                    item.getTitle(),
-                    item.getDescription(),                   
-                    item.getPriority(),
-                    item.getEstimate(),
-                    item.getCreatedBy(),
-                    item.getCreatedAt(),
-                    item.getTaskNumber()
-                );
-    }
-
-     private ProductBacklogItem mapToDao(ProductBacklogItemDto itemDto){
-        return  new ProductBacklogItem(                   
-                    itemDto.getTitle(),
-                    itemDto.getDescription(),                   
-                    itemDto.getPriority(),
-                    itemDto.getEstimate(),
-                    itemDto.getTaskNumber()                                    
-                );
-    }         
+    @Override
+     public Optional<ProductBacklogItemDto> findById(UUID id) {
+        return Optional.of(ProductBacklogItemMapper.mapToDto(repository.findById(id).orElseThrow()));
+     }         
+   
+  
 }
  

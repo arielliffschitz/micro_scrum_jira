@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
-import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
-import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 import com.ariel.mscrumjira.service.TaskService;
 

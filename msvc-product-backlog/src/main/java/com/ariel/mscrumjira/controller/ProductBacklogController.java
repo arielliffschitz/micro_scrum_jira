@@ -1,11 +1,9 @@
 package com.ariel.mscrumjira.controller;
 
 import java.util.List;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
+import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.service.ProductBacklogService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product-backlog-items")
@@ -41,10 +38,16 @@ public class ProductBacklogController {
                         .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));                  
     }
 
-    @PostMapping
-    public ProductBacklogItemDto save(@Valid @RequestBody ProductBacklogItemDto dto) {        
+    @PostMapping("/move")
+    public ProductBacklogItemDto save( @RequestBody ProductBacklogItemDto dto) {        
         return service.save(dto);
-    }    
+    }   
+    @PostMapping
+    public ProductBacklogItemDto create( @RequestBody ProductCreateDto dto) { 
+       UUID id = service.create(dto);
+       return service.findById(id)
+                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }     
 
    @DeleteMapping("/task-number/{taskNumber}")
     public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {      

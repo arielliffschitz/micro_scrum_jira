@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
+import com.ariel.mscrumjira.dto.ProductCreateDto;
 @FeignClient(name = "msvc-product-backlog", path = "/product-backlog-items")
 public interface ProductBacklogFeignClient {   
 
@@ -19,9 +20,12 @@ public interface ProductBacklogFeignClient {
     @DeleteMapping("/task-number/{taskNumber}")
     void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
     
-    @PostMapping
+    @PostMapping("/move")
     ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto);
 
     @GetMapping
     List<ProductBacklogItemDto> findAll();
+    
+    @PostMapping
+    ProductBacklogItemDto create( @RequestBody ProductCreateDto dto);
 }

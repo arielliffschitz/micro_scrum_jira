@@ -57,7 +57,7 @@ public class TaskServiceImpl implements TaskService{
     }    
     @Override
         public TaskDto create(ProductCreateDto dto) {
-           return TaskItemMapper.mapProductToTask(clientProduct.save(TaskItemMapper.mapCreateToProductDto(dto)));
+           return TaskItemMapper.mapProductToTask(clientProduct.create(dto));
     }
     
     @Override

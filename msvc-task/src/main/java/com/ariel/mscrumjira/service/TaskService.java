@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
-import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 
