@@ -2,7 +2,6 @@ package com.ariel.mscrumjira.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.mapper.SprintBacklogItemMapper;
 import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 
@@ -65,6 +65,16 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
     @Transactional
     public void deleteByTaskNumber(Integer taskNumber) {
         repository.deleteByTaskNumber(taskNumber);
+    }
+
+    @Override
+    @Transactional
+    public Optional<SprintBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate) {
+         return repository.findByTaskNumber(taskNumber)
+                .map(dao -> {                    
+                    dao = SprintBacklogItemMapper.applyUpdateToSprint   (dao, taskUpdate);
+                    return SprintBacklogItemMapper.mapToDto(repository.save(dao));
+                });
     }
 
       

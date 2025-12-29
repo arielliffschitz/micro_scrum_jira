@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 
 public interface TaskService {    
 
@@ -17,7 +18,7 @@ public interface TaskService {
 
     TaskDto moveFromSprintToProduct(Integer taskNumber);   
 
-    Optional<TaskDto> update(TaskDto dto);   
+    TaskDto update(Integer taskNumber, UpdateDto dto);   
 
     TaskDto updateState (Integer taskNumber,   TaskState taskState);
 

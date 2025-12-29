@@ -8,7 +8,7 @@ public class TaskItemMapper {
 
     private TaskItemMapper(){}
 
-    public static TaskDto mapSprintToTask(SprintBacklogItemDto dto) {
+    public static TaskDto toTaskDtoFromSprint(SprintBacklogItemDto dto) {
         return new TaskDto( dto.getTaskNumber(), 
                             dto.getTitle(),
                             dto.getDescription(),
@@ -22,7 +22,7 @@ public class TaskItemMapper {
                             Boolean.TRUE          
                         );
     }
-    public static TaskDto mapProductToTask(ProductBacklogItemDto dto) {
+    public static TaskDto toTaskDtoFromProduct(ProductBacklogItemDto dto) {
         return new TaskDto( dto.getTaskNumber(), 
                             dto.getTitle(),
                             dto.getDescription(),
@@ -48,7 +48,6 @@ public class TaskItemMapper {
         );
     }
 
-
     public static SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
         return new SprintBacklogItemDto(
                 productDto.getTaskNumber(),
@@ -57,17 +56,8 @@ public class TaskItemMapper {
                 productDto.getPriority(),
                 productDto.getEstimate(),              
                 productDto.getCreatedBy(),
-                productDto.getCreatedAt()
-                
+                productDto.getCreatedAt()                
         );
-    }
-
-    /* public static ProductBacklogItemDto mapCreateToProductDto(ProductCreateDto createDto) {
-        ProductBacklogItemDto productDto  =new ProductBacklogItemDto();               
-                productDto.setTitle(createDto.title());
-                productDto.setDescription(createDto.description());
-                productDto.setPriority(createDto.priority());
-                productDto.setEstimate(createDto.estimate());                            
-         return productDto;
-    }    */
+    }          
+   
 }

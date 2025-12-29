@@ -3,6 +3,7 @@ package com.ariel.mscrumjira.mapper;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 
 public class ProductBacklogItemMapper {
     
@@ -35,5 +36,16 @@ public class ProductBacklogItemMapper {
                            dao.setEstimate(itemDto.estimate());                                                             
         return dao;
     }
+     public static ProductBacklogItem applyUpdateToProduct(ProductBacklogItem currentTask, UpdateDto taskUpdate) {
+        if (taskUpdate.getTitle() !=null) 
+                                currentTask.setTitle(taskUpdate.getTitle());
+        if (taskUpdate.getDescription() !=null) 
+                            currentTask.setDescription(taskUpdate.getDescription());
+        if (taskUpdate.getPriority() !=null) 
+                            currentTask.setPriority(taskUpdate.getPriority());
+        if (taskUpdate.getEstimate() !=null) 
+                            currentTask.setEstimate(taskUpdate.getEstimate());
+        return currentTask;
 
+    }
 }

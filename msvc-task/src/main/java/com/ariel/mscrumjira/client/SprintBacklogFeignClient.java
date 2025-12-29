@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 
 @FeignClient(name = "msvc-sprint-backlog", path = "/sprint-backlog-items")
 public interface SprintBacklogFeignClient {
@@ -30,5 +31,8 @@ public interface SprintBacklogFeignClient {
 
     @PutMapping("/{taskNumber}/state/{taskState}")
     public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState);
+   
+    @PutMapping("/task-number/{taskNumber}")
+    SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate);
 } 
 

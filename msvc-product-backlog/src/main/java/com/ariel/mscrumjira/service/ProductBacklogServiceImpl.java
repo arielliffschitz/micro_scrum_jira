@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.mapper.ProductBacklogItemMapper;
 import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 
@@ -61,7 +62,15 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
      public Optional<ProductBacklogItemDto> findById(UUID id) {
         return Optional.of(ProductBacklogItemMapper.mapToDto(repository.findById(id).orElseThrow()));
      }         
-   
+    @Override
+    @Transactional
+    public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate) {
+         return repository.findByTaskNumber(taskNumber)
+                .map(dao -> {                    
+                    dao = ProductBacklogItemMapper.applyUpdateToProduct (dao, taskUpdate);
+                    return ProductBacklogItemMapper.mapToDto(repository.save(dao));
+                });
+    }
   
 }
  

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 public interface SprintBacklogItemService {
 
     List<SprintBacklogItemDto> findAll();   
@@ -16,6 +17,8 @@ public interface SprintBacklogItemService {
     SprintBacklogItemDto save(SprintBacklogItemDto dto);
 
     void deleteByTaskNumber(Integer taskNumber);
+
+    Optional<SprintBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate);
 
    
 }

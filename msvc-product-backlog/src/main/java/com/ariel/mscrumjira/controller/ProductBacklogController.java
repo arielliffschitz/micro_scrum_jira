@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.service.ProductBacklogService;
 
 @RestController
@@ -48,6 +49,12 @@ public class ProductBacklogController {
        return service.findById(id)
                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }     
+
+    @PutMapping("/task-number/{taskNumber}")
+    public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate){
+        return service.update(taskNumber, taskUpdate) 
+                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
+    }
 
    @DeleteMapping("/task-number/{taskNumber}")
     public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {      

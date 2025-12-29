@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 
 public interface ProductBacklogService {
 
@@ -20,4 +21,6 @@ public interface ProductBacklogService {
     Optional<ProductBacklogItemDto> findById(UUID id);
 
     public UUID create(ProductCreateDto backlogItemDto);
+
+    Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate);
 }

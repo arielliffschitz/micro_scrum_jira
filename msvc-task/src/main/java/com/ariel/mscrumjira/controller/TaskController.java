@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.service.TaskService;
 
 import jakarta.validation.Valid;
@@ -59,14 +60,19 @@ public class TaskController {
     }
     @PutMapping("/{taskNumber}/state/{taskState}")
     public ResponseEntity<TaskDto> updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState) {
-       logger.info("Updating SprintBacklogItem taskNumber: {} in: {}",taskNumber , taskState);
-
+       logger.info("Updating stated SprintBacklogItem taskNumber: {} in: {}",taskNumber , taskState);
        return ResponseEntity.ok(service.updateState(taskNumber, taskState));                      
     }  
-     @PostMapping 
+
+    @PostMapping 
      public ResponseEntity<TaskDto> create(@RequestBody @Valid ProductCreateDto dto){
         logger.info("creating item ");
-         return ResponseEntity.ok(service.create(dto));
+        return ResponseEntity.ok(service.create(dto));
 
      }
+    @PutMapping("/task-number/{taskNumber}")
+    public ResponseEntity<TaskDto> update(@PathVariable Integer taskNumber,  @RequestBody UpdateDto updateDto) {
+       logger.info("Updating SprintBacklogItem taskNumber: {} in: {}",taskNumber , updateDto);
+       return ResponseEntity.ok(service.update(taskNumber, updateDto));                      
+    }  
 }

@@ -2,6 +2,7 @@ package com.ariel.mscrumjira.mapper;
 
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 
 public  class SprintBacklogItemMapper {
 
@@ -47,5 +48,18 @@ public  class SprintBacklogItemMapper {
         SprintBacklogItemDto dto =mapToDto( dao);
         dto.setId(dao.getId()) ;
         return dto;
-    }  
+    } 
+    public static SprintBacklogItem applyUpdateToSprint(SprintBacklogItem currentTask, UpdateDto taskUpdate) {
+      
+       if (taskUpdate.getTitle() !=null) 
+                             currentTask.setTitle(taskUpdate.getTitle());
+       if (taskUpdate.getDescription() !=null) 
+                         currentTask.setDescription(taskUpdate.getDescription());
+       if (taskUpdate.getPriority() !=null) 
+                         currentTask.setPriority(taskUpdate.getPriority());
+       if (taskUpdate.getEstimate() !=null) 
+                         currentTask.setEstimate(taskUpdate.getEstimate());
+
+       return currentTask;
+    } 
 }

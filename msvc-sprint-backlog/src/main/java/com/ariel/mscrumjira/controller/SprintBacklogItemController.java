@@ -1,10 +1,7 @@
 package com.ariel.mscrumjira.controller;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.service.SprintBacklogItemService;
 @RestController
 @RequestMapping("/sprint-backlog-items")
@@ -49,9 +47,15 @@ public class SprintBacklogItemController {
        return service.updateState(taskNumber, taskState) 
                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));                          
     }  
+    
+    @PutMapping("/task-number/{taskNumber}")
+    public  SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate){
+        return service.update(taskNumber, taskUpdate) 
+                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
+    }
 
     @DeleteMapping("/task-number/{taskNumber}")
-     public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {     
+    public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {     
        service.deleteByTaskNumber( taskNumber);      
    }   
 }

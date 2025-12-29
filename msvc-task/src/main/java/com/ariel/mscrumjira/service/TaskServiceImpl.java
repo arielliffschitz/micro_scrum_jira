@@ -15,6 +15,7 @@ import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.mapper.TaskItemMapper;
 
 import feign.FeignException;
@@ -34,11 +35,11 @@ public class TaskServiceImpl implements TaskService{
     public List<TaskDto> findAll() {
         List<TaskDto> taskProductDtoList = StreamSupport.stream(clientSprint.findAll()
                 .spliterator(),false)
-                .map(TaskItemMapper::mapSprintToTask)
+                .map(TaskItemMapper::toTaskDtoFromSprint)
                 .collect(Collectors.toList()); 
         List<TaskDto> taskSprintDtoList = StreamSupport.stream(clientProduct.findAll()
                 .spliterator(),false)
-                .map(TaskItemMapper::mapProductToTask)
+                .map(TaskItemMapper::toTaskDtoFromProduct)
                 .collect(Collectors.toList()); 
 
         List<TaskDto> taskDtoList= Stream.concat(taskProductDtoList.stream(), taskSprintDtoList.stream()).toList();
@@ -50,14 +51,14 @@ public class TaskServiceImpl implements TaskService{
     public Optional<TaskDto> findByTaskNumber(Integer taskNumber) {
         try {
              SprintBacklogItemDto  sprintDto = clientSprint.findByTaskNumber(taskNumber);
-             return Optional.of(TaskItemMapper.mapSprintToTask(sprintDto));
+             return Optional.of(TaskItemMapper.toTaskDtoFromSprint(sprintDto));
         } catch (FeignException.NotFound e) {
-            return Optional.ofNullable(TaskItemMapper.mapProductToTask(clientProduct.findByTaskNumber(taskNumber)));
+            return Optional.ofNullable(TaskItemMapper.toTaskDtoFromProduct(clientProduct.findByTaskNumber(taskNumber)));
         }      
     }    
     @Override
         public TaskDto create(ProductCreateDto dto) {
-           return TaskItemMapper.mapProductToTask(clientProduct.create(dto));
+           return TaskItemMapper.toTaskDtoFromProduct(clientProduct.create(dto));
     }
     
     @Override
@@ -65,7 +66,7 @@ public class TaskServiceImpl implements TaskService{
         ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(taskNumber);
         SprintBacklogItemDto  sprintDto  = clientSprint.save(TaskItemMapper.mapFromProductDtoToSprintDto(productDto));
         clientProduct.deleteProductByTaskNumber(taskNumber);
-        return TaskItemMapper.mapSprintToTask(sprintDto);
+        return TaskItemMapper.toTaskDtoFromSprint(sprintDto);
     }
 
     @Override
@@ -73,35 +74,22 @@ public class TaskServiceImpl implements TaskService{
         SprintBacklogItemDto  SprintDto  = clientSprint.findByTaskNumber(taskNumber);
         ProductBacklogItemDto productDto = clientProduct.save(TaskItemMapper.mapFromSprintDtoToProductDto(SprintDto));
         clientSprint.deleteProductByTaskNumber(taskNumber);
-        return TaskItemMapper.mapProductToTask(productDto);
+        return TaskItemMapper.toTaskDtoFromProduct(productDto);
     }
 
     @Override
-    public Optional<TaskDto> update(TaskDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
+    public TaskDto update(Integer taskNumber, UpdateDto taskUpdate) {      
+        try {
+              clientSprint.findByTaskNumber(taskNumber);                                                
+              return TaskItemMapper.toTaskDtoFromSprint(clientSprint.update(taskNumber, taskUpdate));
+            
+        } catch (FeignException.NotFound e) {            
+            return TaskItemMapper.toTaskDtoFromProduct(clientProduct.update(taskNumber, taskUpdate));
+        }                                             
+    }   
 
     @Override
     public TaskDto updateState(Integer taskNumber, TaskState taskState) {
-         return TaskItemMapper.mapSprintToTask(clientSprint.updateState(taskNumber, taskState));
-    }
-
-    
-    
-     /* @Override
-    @Transactional
-    public ProductBacklogItemDto update(ProductBacklogItemDto dto) {
-        Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-        ProductBacklogItem  item = itemOptional.orElseThrow();
-
-        item.setTitle(dto.getTitle());
-        if (StringUtils.hasText(dto.getDescription())) 
-             item.setDescription(dto.getDescription());
-        item.setPriority(dto.getPriority());
-        item.setEstimate(dto.getEstimate());   
-
-        repository.save(item);
-        return mapToDto(item);
-    } */
+         return TaskItemMapper.toTaskDtoFromSprint(clientSprint.updateState(taskNumber, taskState));
+    }            
 }
