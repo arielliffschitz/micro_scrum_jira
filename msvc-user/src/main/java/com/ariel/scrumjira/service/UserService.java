@@ -2,12 +2,10 @@ package com.ariel.scrumjira.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import com.ariel.scrumjira.dto.UserCreateDto;
 import com.ariel.scrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserUpdateDto;
-import com.ariel.scrumjira.entity.User;
 
 public interface UserService {
     
@@ -17,7 +15,7 @@ public interface UserService {
 
     UserDto save(UserCreateDto userCreateDto);
 
-    UserDto update(UserUpdateDto userUpdateDto,String username);
+    UserDto update(String username,UserUpdateDto userUpdateDto);
 
     void deleteByUsername(String username);
 }

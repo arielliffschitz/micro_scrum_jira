@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public UserDto update(UserUpdateDto userUpdateDto, String username) {
+    public UserDto update( String username, UserUpdateDto userUpdateDto) {
     	User user = userRepository.findByUsername(username).orElseThrow(); 
     	user = UserMapper.applyUpdateToUser(user, userUpdateDto);
     	if (userUpdateDto.getRoles()!=null)
@@ -69,6 +68,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void deleteByUsername(String username){
         userRepository.deleteByUsername(username);
     }

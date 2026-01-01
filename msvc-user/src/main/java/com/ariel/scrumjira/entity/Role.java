@@ -27,7 +27,11 @@ public class Role extends BaseEntity{
     public Role() {
     }
 
-    public UUID getId() {
+    public Role( RoleName name) {
+		this.name = name;
+	}
+
+	public UUID getId() {
         return id;
     }
 

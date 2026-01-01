@@ -13,4 +13,5 @@ import com.ariel.scrumjira.entity.Role;
 public interface RoleRepository extends CrudRepository<Role, UUID>{
      Optional<Role> findByName(RoleName name);
      List<Role> findByNameIn(Set<RoleName> roleNames);
+	 void deleteByName(RoleName name);
 }
