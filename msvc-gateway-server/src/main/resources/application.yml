@@ -20,3 +20,9 @@ spring:
             - Path=/task/**
           filters:
             - StripPrefix=0
+        - id: user
+          uri: lb://msvc-user
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
