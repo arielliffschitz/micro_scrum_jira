@@ -1,7 +1,8 @@
 package com.ariel.scrumjira.mapper;
 
+import com.ariel.mscrumjira.dto.RoleDto;
 import com.ariel.scrumjira.dto.RoleCreateDto;
-import com.ariel.scrumjira.dto.RoleDto;
+
 import com.ariel.scrumjira.entity.Role;
 
 public class RoleMapper {

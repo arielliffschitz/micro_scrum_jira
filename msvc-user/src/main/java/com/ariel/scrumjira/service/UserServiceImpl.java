@@ -11,14 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
+import com.ariel.mscrumjira.dto.LoginDto;
+import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
-import com.ariel.scrumjira.dto.UserDto;
+
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.entity.Role;
 import com.ariel.scrumjira.entity.User;
 import com.ariel.scrumjira.mapper.UserMapper;
 import com.ariel.scrumjira.repository.RoleRepository;
 import com.ariel.scrumjira.repository.UserRepository;
+
+
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -80,5 +84,16 @@ public class UserServiceImpl implements UserService{
                                 .collect(Collectors.toList());                     
         
         return new HashSet<>(rolesFromDb);
-    }    
+    }
+
+
+	@Override
+	public UserDto login(LoginDto loginDto) {
+		User user = userRepository.findByUsername(loginDto.username()).orElseThrow(() -> new RuntimeException(loginDto.username()));
+		
+		if (!user.getPassword().equals(loginDto.password()))
+			throw new  IllegalArgumentException("Login fail");
+			
+		return UserMapper.fromUsertoUserDto(user);		
+	}    
 }

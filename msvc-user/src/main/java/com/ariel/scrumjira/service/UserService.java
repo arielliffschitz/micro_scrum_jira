@@ -3,8 +3,10 @@ package com.ariel.scrumjira.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ariel.mscrumjira.dto.LoginDto;
+import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
-import com.ariel.scrumjira.dto.UserDto;
+
 import com.ariel.scrumjira.dto.UserUpdateDto;
 
 public interface UserService {
@@ -18,4 +20,6 @@ public interface UserService {
     UserDto update(String username,UserUpdateDto userUpdateDto);
 
     void deleteByUsername(String username);
+    
+    UserDto login(LoginDto loginDto);
 }

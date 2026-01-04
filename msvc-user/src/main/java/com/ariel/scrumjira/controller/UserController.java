@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ariel.mscrumjira.dto.LoginDto;
+import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
-import com.ariel.scrumjira.dto.UserDto;
+
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.service.UserService;
 
@@ -44,6 +46,11 @@ public class UserController {
         return  service.findByUsername(username)
                 .map(dto->ResponseEntity.ok(dto) )
                 .orElseGet(()->ResponseEntity.notFound().build());
+    } 
+    
+    @PostMapping("/login")
+    public  UserDto login(@RequestBody LoginDto loginDto) {    	    	
+    	return service.login(loginDto);
     }
     
     @PostMapping
