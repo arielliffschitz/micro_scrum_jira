@@ -1,0 +1,7 @@
+server:
+  port: 8085
+
+jwt-config:
+  issuer: msvc-oauth
+  expiration: 36000  # segundos
+  secret: super-secret
