@@ -33,7 +33,10 @@ public class TaskController {
     public TaskController(TaskService service) {
         this.service = service;
     }
-
+    @GetMapping("/hello")
+	public ResponseEntity<?> test (){
+		return ResponseEntity.ok("hello word");
+	}
     @PostMapping("/product-to-sprint/{taskNumber}")
     public ResponseEntity<TaskDto> moveFromProductToSprint(@PathVariable Integer taskNumber) {
         TaskDto result = service.moveFromProductToSprint(taskNumber);

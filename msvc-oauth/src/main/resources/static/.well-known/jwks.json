@@ -1,0 +1,12 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "test-key-1",
+      "alg": "RS256",
+      "n": "uQh1LkX2FvZ1HQ6oGvK7sJz2nRTHzXlTQm3A2Xp2m9QWxhJb6aIu1Bh7aR6tJjG2nW2dI5T0mY8X3c5v-Q",
+      "e": "AQAB"
+    }
+  ]
+}
