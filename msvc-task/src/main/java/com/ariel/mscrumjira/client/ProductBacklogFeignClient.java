@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.UpdateDto;
+
 @FeignClient(name = "msvc-product-backlog", path = "/product-backlog-items")
 public interface ProductBacklogFeignClient {   
 
