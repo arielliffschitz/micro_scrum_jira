@@ -9,30 +9,27 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ariel.mscrumjira.dto.LoginDto;
 import com.ariel.mscrumjira.dto.UserDto;
+import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
-
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.service.UserService;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
     private final UserService service;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     
     public UserController(UserService service) {
         this.service = service;       
-    } 
+    }    
     
     @GetMapping
     public ResponseEntity <List<UserDto> >list() {
@@ -48,10 +45,13 @@ public class UserController {
                 .orElseGet(()->ResponseEntity.notFound().build());
     } 
     
-    @PostMapping("/login")
-    public  UserDto login(@RequestBody LoginDto loginDto) {    	    	
-    	return service.login(loginDto);
-    }
+    @GetMapping("/user-login/{username}")
+    public ResponseEntity<UserLoginDto> findForLoginByUsername(@PathVariable String username){
+        logger.info("Fetching User with username={}", username);
+        return  service.findForLoginByUsername(username)
+                .map(ResponseEntity::ok )
+                .orElseGet(()->ResponseEntity.notFound().build());
+    }       
     
     @PostMapping
     public ResponseEntity<UserDto> create(@Valid@RequestBody UserCreateDto userCreateDto) {   

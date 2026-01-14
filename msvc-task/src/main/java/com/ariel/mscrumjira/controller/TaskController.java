@@ -1,12 +1,16 @@
 package com.ariel.mscrumjira.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
@@ -16,15 +20,7 @@ import com.ariel.mscrumjira.service.TaskService;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-
-
 @RestController
-@RequestMapping("/task")
 public class TaskController {
 
     private final TaskService service;
@@ -32,11 +28,20 @@ public class TaskController {
 
     public TaskController(TaskService service) {
         this.service = service;
+    }    
+    @GetMapping
+    public ResponseEntity<List<TaskDto>> findAll() {
+       return ResponseEntity.ok(service.findAll());
     }
-    @GetMapping("/hello")
-	public ResponseEntity<?> test (){
-		return ResponseEntity.ok("hello word");
-	}
+    
+    @GetMapping("/task-number/{taskNumber}")
+    public ResponseEntity<TaskDto> findByTaskNumber(@PathVariable Integer taskNumber){
+        logger.info("Fetching SprintBacklogItem with taskNumber={}", taskNumber);
+        return  service.findByTaskNumber(taskNumber)
+                .map(dto->ResponseEntity.ok(dto) )
+                .orElseGet(()->ResponseEntity.notFound().build());
+    }
+    
     @PostMapping("/product-to-sprint/{taskNumber}")
     public ResponseEntity<TaskDto> moveFromProductToSprint(@PathVariable Integer taskNumber) {
         TaskDto result = service.moveFromProductToSprint(taskNumber);
@@ -50,17 +55,8 @@ public class TaskController {
         logger.info("Task moved Sprint→Product: taskNumber={}", taskNumber);
         return ResponseEntity.ok(result);
     }
-    @GetMapping
-    public ResponseEntity<List<TaskDto>> findAll() {
-       return ResponseEntity.ok(service.findAll());
-    }
-    @GetMapping("/task-number/{taskNumber}")
-    public ResponseEntity<TaskDto> findByTaskNumber(@PathVariable Integer taskNumber){
-        logger.info("Fetching SprintBacklogItem with taskNumber={}", taskNumber);
-        return  service.findByTaskNumber(taskNumber)
-                .map(dto->ResponseEntity.ok(dto) )
-                .orElseGet(()->ResponseEntity.notFound().build());
-    }
+    
+   
     @PutMapping("/{taskNumber}/state/{taskState}")
     public ResponseEntity<TaskDto> updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState) {
        logger.info("Updating stated SprintBacklogItem taskNumber: {} in: {}",taskNumber , taskState);
@@ -73,6 +69,7 @@ public class TaskController {
         return ResponseEntity.ok(service.create(dto));
 
      }
+    
     @PutMapping("/task-number/{taskNumber}")
     public ResponseEntity<TaskDto> update(@PathVariable Integer taskNumber,  @RequestBody UpdateDto updateDto) {
        logger.info("Updating SprintBacklogItem taskNumber: {} in: {}",taskNumber , updateDto);

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
-import com.ariel.mscrumjira.dto.LoginDto;
 import com.ariel.mscrumjira.dto.UserDto;
+import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
 
 import com.ariel.scrumjira.dto.UserUpdateDto;
@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService{
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;       
     }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -59,6 +58,14 @@ public class UserServiceImpl implements UserService{
           Optional<User> user = userRepository.findByUsername(username);
           return user.map(UserMapper::fromUsertoUserDto);
     }   
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UserLoginDto> findForLoginByUsername(String username) {
+    	 Optional<User> user = userRepository.findByUsername(username);
+         return user.map(UserMapper::fromUsertoUserLoginDto);
+         
+    }   
 
     @Override
     @Transactional
@@ -77,23 +84,11 @@ public class UserServiceImpl implements UserService{
         userRepository.deleteByUsername(username);
     }
     
-    private Set<Role> assignRoles(Set<RoleName> roleNames) {
-        
+    private Set<Role> assignRoles(Set<RoleName> roleNames) {        
         List<Role> rolesFromDb = StreamSupport.stream(roleRepository.findByNameIn(roleNames)
                                 .spliterator(), false)                                                                          
-                                .collect(Collectors.toList());                     
-        
+                                .collect(Collectors.toList());                            
         return new HashSet<>(rolesFromDb);
     }
-
-
-	@Override
-	public UserDto login(LoginDto loginDto) {
-		User user = userRepository.findByUsername(loginDto.username()).orElseThrow(() -> new RuntimeException(loginDto.username()));
-		
-		if (!user.getPassword().equals(loginDto.password()))
-			throw new  IllegalArgumentException("Login fail");
-			
-		return UserMapper.fromUsertoUserDto(user);		
-	}    
+	
 }

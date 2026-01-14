@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.UserDto;
+import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
 
 import com.ariel.scrumjira.dto.UserUpdateDto;
@@ -25,12 +26,7 @@ public class UserMapper {
         );
     }
 
-    private static Set<RoleName> getRolesName(Set<Role> roles) {
-         Set<RoleName> nameRoles = new HashSet<>(); 
-         for (Role role:roles)
-             nameRoles.add(role.getName());
-         return nameRoles;
-    }
+   
 
     public static User fromCreateDtoToUser(UserCreateDto userCreateDto) {
         return new User(
@@ -49,5 +45,28 @@ public class UserMapper {
         		
         		return currentUser;      
     }
+    public static UserLoginDto fromUsertoUserLoginDto(User user) {
+    	
+    	return new UserLoginDto(
+    			user.getUsername(),  
+    			user.getPassword(),
+    			user.getActive(),
+    			getRolesNameLogin(user.getRoles())                
+    			);
+    	
+    }
     
+    private static Set<RoleName> getRolesName(Set<Role> roles) {
+        Set<RoleName> nameRoles = new HashSet<>(); 
+        for (Role role:roles)
+            nameRoles.add(role.getName());
+        return nameRoles;
+   }
+    
+    private static Set<String> getRolesNameLogin(Set<Role> roles) {
+        Set<String> nameRoles = new HashSet<>(); 
+        for (Role role:roles)
+            nameRoles.add( role.getName().name());
+        return nameRoles;
+   }
 }

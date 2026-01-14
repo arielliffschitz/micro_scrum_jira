@@ -1,3 +1,4 @@
+
 spring:
   security:
     oauth2:
@@ -14,9 +15,7 @@ spring:
             redirect-uri: http://127.0.0.1:8090/authorized
             scope:
             - openid
-            - profile
-            - write
-            - read
+            - profile           
             client-name: client-app
         provider:
           spring:
@@ -27,31 +26,30 @@ spring:
         - id: product-service
           uri: lb://msvc-product-backlog
           predicates:
-            - Path=/product/**
+            - Path=/mscrumjira/product/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
         - id: sprint-service
           uri: lb://msvc-sprint-backlog
           predicates:
-            - Path=/sprint/**
-          filters:
-            - StripPrefix=1
-        - id: task
-          uri: lb://msvc-task
-          predicates:
-            - Path=/task/**
-          filters:
-            - StripPrefix=1
-        - id: user
-          uri: lb://msvc-user
-          predicates:
-            - Path=/user/**
-          filters:
-            - StripPrefix=1
-        - id: oauth
-          uri: lb://msvc-oauth
-          predicates:
-            - Path=/api/security/**
+            - Path=/mscrumjira/sprint/**
           filters:
             - StripPrefix=2
-  
+        - id: msvc-task
+          uri: lb://msvc-task
+          predicates:
+            - Path=/mscrumjira/task/**
+          filters:
+            - StripPrefix=2
+        - id: msvc-user
+          uri: lb://msvc-user
+          predicates:
+            - Path=/mscrumjira/user/**
+          filters:
+            - StripPrefix=2
+        - id: msvc-oauth
+          uri: lb://msvc-oauth
+          predicates:
+            - Path=/mscrumjira/msvc-oauth/**
+          filters:
+            - StripPrefix=2        

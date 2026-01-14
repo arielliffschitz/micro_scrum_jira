@@ -1,7 +1,9 @@
 package com.ariel.mscrumjira.security;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 
-
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +16,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 import reactor.core.publisher.Mono;
-
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 
 @Configuration
 public class SecurityConfig {
@@ -30,19 +25,28 @@ public class SecurityConfig {
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception{
         return http.authorizeExchange(authz->{
-            authz.pathMatchers("/login","/authorized", "/logout","/hello").permitAll()
-            .pathMatchers(HttpMethod.GET,"/task/**","/hello2" ).hasAnyAuthority("SCOPE_write", "SCOPE_READ")
-            .pathMatchers(HttpMethod.POST,"/task/**" )
-            .hasAuthority("SCOPE_write")                        
-            .anyExchange().authenticated();
-           
+            authz.pathMatchers("/login","/authorized", "/logout").permitAll()
+            .pathMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task").permitAll()
+            .pathMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ).hasAnyRole("USER", "ADMIN", "DEVELOPER")
+            .pathMatchers("/mscrumjira/user/**","/mscrumjira/task/**" ).hasRole("ADMIN")                       
+            .anyExchange().authenticated();           
             
-        }).cors(csrf -> csrf.disable())
-        		.securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+        }).cors(csrf -> csrf.disable())        		
                 .oauth2Login(withDefaults())
                 .oauth2Client(withDefaults())
         		 .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-                         withDefaults()))
+        				 jwt -> jwt.jwtAuthenticationConverter(new Converter<Jwt, Mono<AbstractAuthenticationToken>>() {
+
+                             @Override
+                             public Mono<AbstractAuthenticationToken> convert(Jwt source) {
+                                 Collection<String> roles = source.getClaimAsStringList("roles");
+                                 Collection<GrantedAuthority> authorities = roles.stream()
+                                 .map(SimpleGrantedAuthority::new)
+                                         .collect(Collectors.toList());
+                                 
+                                 return Mono.just(new JwtAuthenticationToken(source, authorities));
+                             }                                                          
+                         })))
           .build();
     }
 }
