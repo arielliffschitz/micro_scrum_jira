@@ -10,41 +10,39 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-
-import reactor.core.publisher.Mono;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception{
-        return http.authorizeExchange(authz->{
-            authz.pathMatchers("/login","/authorized", "/logout").permitAll()
-            .pathMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task").permitAll()
-            .pathMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ).hasAnyRole("USER", "ADMIN", "DEVELOPER")
-            .pathMatchers("/mscrumjira/user/**","/mscrumjira/task/**" ).hasRole("ADMIN")                       
-            .anyExchange().authenticated();           
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        return http.authorizeHttpRequests(authz->{
+            authz.requestMatchers("/login","/authorized", "/logout").permitAll()
+            .requestMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task").permitAll()
+            .requestMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ).hasAnyRole("USER", "ADMIN", "DEVELOPER")
+            .requestMatchers("/mscrumjira/user/**","/mscrumjira/task/**" ).hasRole("ADMIN")                       
+            .anyRequest().authenticated();           
             
         }).cors(csrf -> csrf.disable())        		
-                .oauth2Login(withDefaults())
+        		.oauth2Login(login-> login.loginPage("/oauth2/authorization/client-app"))
                 .oauth2Client(withDefaults())
         		 .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-        				 jwt -> jwt.jwtAuthenticationConverter(new Converter<Jwt, Mono<AbstractAuthenticationToken>>() {
+        				 jwt -> jwt.jwtAuthenticationConverter(new Converter<Jwt, AbstractAuthenticationToken>() {
 
                              @Override
-                             public Mono<AbstractAuthenticationToken> convert(Jwt source) {
+                             public AbstractAuthenticationToken convert(Jwt source) {
                                  Collection<String> roles = source.getClaimAsStringList("roles");
                                  Collection<GrantedAuthority> authorities = roles.stream()
                                  .map(SimpleGrantedAuthority::new)
                                          .collect(Collectors.toList());
                                  
-                                 return Mono.just(new JwtAuthenticationToken(source, authorities));
+                                 return new JwtAuthenticationToken(source, authorities);
                              }                                                          
                          })))
           .build();

@@ -111,7 +111,7 @@ public class SecurityConfig {
                              .scope(OidcScopes.OPENID)
                              .scope(OidcScopes.PROFILE)                            
                              .tokenSettings(TokenSettings.builder()
-                            		 					 .accessTokenTimeToLive(Duration.ofHours(2))
+                            		 					 .accessTokenTimeToLive(Duration.ofHours(4))
                             		 					 .refreshTokenTimeToLive(Duration.ofDays(1))
                             		 					 .build())
                              .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
