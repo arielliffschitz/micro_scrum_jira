@@ -54,7 +54,7 @@ public class UserController {
     }       
     
     @PostMapping
-    public ResponseEntity<UserDto> create(@Valid@RequestBody UserCreateDto userCreateDto) {   
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {   
         logger.info("UseController::create: {}", userCreateDto);         
         return ResponseEntity.ok(service.save(userCreateDto));
     }
@@ -64,11 +64,11 @@ public class UserController {
     	service.deleteByUsername(username);
     	return ResponseEntity.noContent().build();
     }
+    
     @PutMapping("/username/{username}")
     public ResponseEntity<UserDto> update(@PathVariable String username, @RequestBody UserUpdateDto userUpdateDto ) {
     	logger.info("Updating user with username: {} in: {}",username , userUpdateDto);
-        return ResponseEntity.ok(service.update(username, userUpdateDto));                        	
-        
+        return ResponseEntity.ok(service.update(username, userUpdateDto));                      	        
         
     }
 }

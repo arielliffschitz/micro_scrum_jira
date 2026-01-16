@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
 
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -14,15 +13,38 @@ public abstract class BaseEntity {
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    
+    @Column(name = "updated_by")
+    private String updatedBy;
+    
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;          
+  
+    public BaseEntity() {		
+	}
 
-   @PrePersist
-    protected void onCreate(){
-       if (createdAt == null)   this.createdAt = LocalDateTime.now(); 
-      
-       if (createdBy == null)  this.createdBy = "John Doe" +
-        java.util.concurrent.ThreadLocalRandom.current().nextInt(1, 101);     
-    }
-    public String getCreatedBy() {
+	public BaseEntity(String createdBy, LocalDateTime createdAt) {		
+		this.createdBy = createdBy;
+		this.createdAt = createdAt;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getCreatedBy() {
         return createdBy;
     }   
 

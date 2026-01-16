@@ -1,6 +1,7 @@
 package com.ariel.mscrumjira.client;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
@@ -24,14 +26,14 @@ public interface ProductBacklogFeignClient {
     void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
     
     @PostMapping("/move")
-    ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto);
+    ProductBacklogItemDto save(@RequestBody ProductBacklogItemDto dto, @RequestHeader("Authorization") String token);
 
     @GetMapping
     List<ProductBacklogItemDto> findAll();
     
     @PostMapping
-    ProductBacklogItemDto create( @RequestBody ProductCreateDto dto);
+    ProductBacklogItemDto create( @RequestBody ProductCreateDto dto, @RequestHeader("Authorization") String token);
 
     @PutMapping("/task-number/{taskNumber}")
-    ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate);
+    ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate, @RequestHeader("Authorization") String token);
 }

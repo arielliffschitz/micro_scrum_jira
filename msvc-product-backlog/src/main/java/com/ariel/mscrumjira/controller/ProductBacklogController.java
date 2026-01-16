@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,42 +23,43 @@ import com.ariel.mscrumjira.service.ProductBacklogService;
 @RestController
 @RequestMapping("/product-backlog-items")
 public class ProductBacklogController {
-    final private ProductBacklogService service;   
-    
-    public ProductBacklogController(ProductBacklogService service) {
-        this.service = service;
-    }
+	final private ProductBacklogService service;   
 
-    @GetMapping
-    public List<ProductBacklogItemDto> findAll() {       
-        return service.findAll(); 
-    }   
+	public ProductBacklogController(ProductBacklogService service) {
+		this.service = service;
+	}
 
-    @GetMapping("/task-number/{taskNumber}")
-    public ProductBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber)  {            
-        return   service.findByTaskNumber(taskNumber)
-                        .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));                  
-    }
+	@GetMapping
+	public List<ProductBacklogItemDto> findAll() {       
+		return service.findAll(); 
+	}   
 
-    @PostMapping("/move")
-    public ProductBacklogItemDto save( @RequestBody ProductBacklogItemDto dto) {        
-        return service.save(dto);
-    }   
-    @PostMapping
-    public ProductBacklogItemDto create( @RequestBody ProductCreateDto dto) { 
-       UUID id = service.create(dto);
-       return service.findById(id)
-                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }     
+	@GetMapping("/task-number/{taskNumber}")
+	public ProductBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber){    	    	
+		return   service.findByTaskNumber(taskNumber)
+				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));                  
+	}
 
-    @PutMapping("/task-number/{taskNumber}")
-    public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate){
-        return service.update(taskNumber, taskUpdate) 
-                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
-    }
+	@PostMapping("/move")
+	public ProductBacklogItemDto save( @RequestBody ProductBacklogItemDto dto, @RequestHeader("Authorization") String token) {        
+		return service.save(dto, token);
+	}   
+	@PostMapping
+	public ProductBacklogItemDto create( @RequestBody ProductCreateDto dto, @RequestHeader("Authorization") String token) { 
+		UUID id = service.create(dto, token);
+		return service.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}     
 
-   @DeleteMapping("/task-number/{taskNumber}")
-    public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {      
-      service.deleteByTaskNumber( taskNumber);      
-   }
+	@PutMapping("/task-number/{taskNumber}")
+	public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate,
+			@RequestHeader("Authorization") String token){
+		return service.update(taskNumber, taskUpdate, token) 
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
+	}
+
+	@DeleteMapping("/task-number/{taskNumber}")
+	public void deleteByTaskNumber(@PathVariable  Integer taskNumber)  {      
+		service.deleteByTaskNumber( taskNumber);      
+	}
 }

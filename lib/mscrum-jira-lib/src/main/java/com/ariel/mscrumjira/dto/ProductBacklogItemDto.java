@@ -35,13 +35,17 @@ public class ProductBacklogItemDto {
 
     private LocalDateTime createdAt;   
     
+    private String updatedBy;   
+
+    private LocalDateTime updatedAt;   
+    
     private Integer taskNumber;
 
     public ProductBacklogItemDto() {
     }
 
     public ProductBacklogItemDto( String title, String description, Integer priority, Integer estimate, String createdBy,
-            LocalDateTime createdAt, Integer taskNumber) {        
+            LocalDateTime createdAt, String updatedBy, LocalDateTime updatedAt , Integer taskNumber) {        
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -49,6 +53,8 @@ public class ProductBacklogItemDto {
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.taskNumber = taskNumber;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
     }
     
     public String getTitle() {
@@ -107,7 +113,23 @@ public class ProductBacklogItemDto {
         this.taskNumber = taskNumber;
     }
 
-    public UUID getId() {
+    public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public UUID getId() {
         return id;
     }
 

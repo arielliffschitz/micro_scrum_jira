@@ -1,11 +1,8 @@
 package com.ariel.scrumjira.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.ariel.mscrumjira.domain.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,7 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user")

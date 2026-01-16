@@ -15,6 +15,8 @@ public class ProductBacklogItemMapper {
                     item.getEstimate(),
                     item.getCreatedBy(),
                     item.getCreatedAt(),
+                    item.getUpdatedBy(),
+                    item.getUpdatedAt(),
                     item.getTaskNumber()
                 );
     }
@@ -25,6 +27,8 @@ public class ProductBacklogItemMapper {
                     itemDto.getDescription(),                   
                     itemDto.getPriority(),
                     itemDto.getEstimate(),
+                    itemDto.getCreatedBy(),
+                    itemDto.getCreatedAt(),
                     itemDto.getTaskNumber()                                    
                 );
     }
@@ -36,7 +40,7 @@ public class ProductBacklogItemMapper {
                            dao.setEstimate(itemDto.estimate());                                                             
         return dao;
     }
-     public static ProductBacklogItem applyUpdateToProduct(ProductBacklogItem currentTask, UpdateDto taskUpdate) {
+     public static void applyUpdateToProduct(ProductBacklogItem currentTask, UpdateDto taskUpdate) {
         if (taskUpdate.getTitle() !=null) 
                                 currentTask.setTitle(taskUpdate.getTitle());
         if (taskUpdate.getDescription() !=null) 
@@ -45,7 +49,7 @@ public class ProductBacklogItemMapper {
                             currentTask.setPriority(taskUpdate.getPriority());
         if (taskUpdate.getEstimate() !=null) 
                             currentTask.setEstimate(taskUpdate.getEstimate());
-        return currentTask;
+       
 
     }
 }

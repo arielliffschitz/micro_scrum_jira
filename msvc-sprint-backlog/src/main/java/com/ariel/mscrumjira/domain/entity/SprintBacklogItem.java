@@ -47,7 +47,8 @@ public class SprintBacklogItem extends BaseEntity{
     }        
 
     public SprintBacklogItem(Integer taskNumber, String title, String description, Integer priority,
-            Integer estimate, TaskState taskState) {
+            Integer estimate,String createdBy, LocalDateTime createdAt, TaskState taskState) {
+    	super(createdBy,createdAt);
         this. taskNumber =  taskNumber;
         this.title = title;
         this.description = description;

@@ -32,6 +32,10 @@ public class SprintBacklogItemDto {
     private String createdBy;     
 
     private LocalDateTime createdAt;
+    
+    private String updatedBy;   
+
+    private LocalDateTime updatedAt; 
 
     public SprintBacklogItemDto() {
     }
@@ -39,7 +43,7 @@ public class SprintBacklogItemDto {
     
 
     public SprintBacklogItemDto( Integer taskNumber, String title, String description, Integer priority,
-            Integer estimate, String createdBy, LocalDateTime createdAt) {
+            Integer estimate, String createdBy, LocalDateTime createdAt, String updatedBy,LocalDateTime updatedAt) {
         this. taskNumber = taskNumber;
         this.title = title;
         this.description = description;
@@ -47,11 +51,13 @@ public class SprintBacklogItemDto {
         this.estimate = estimate;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
     }    
 
     public SprintBacklogItemDto(  Integer taskNumber, String title, String description, Integer priority,
             Integer estimate, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate, String createdBy,
-            LocalDateTime createdAt) {      
+            LocalDateTime createdAt, String updatedBy,LocalDateTime updatedAt) {      
         this.taskNumber = taskNumber;
         this.title = title;
         this.description = description;
@@ -62,6 +68,8 @@ public class SprintBacklogItemDto {
         this.endDate = endDate;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
     }
    
    public Integer getTaskNumber() {
@@ -144,7 +152,31 @@ public class SprintBacklogItemDto {
 
 
 
-    public UUID getId() {
+    public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+
+
+	public UUID getId() {
         return id;
     }
 

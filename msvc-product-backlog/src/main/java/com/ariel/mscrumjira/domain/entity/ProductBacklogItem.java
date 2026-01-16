@@ -1,5 +1,6 @@
 package com.ariel.mscrumjira.domain.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -33,11 +34,13 @@ public class ProductBacklogItem extends BaseEntity{
     public ProductBacklogItem() {
     }
 
-    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate , Integer taskNumber) {
+    public ProductBacklogItem(String title, String description, Integer priority, Integer estimate ,
+    							String createdBy, LocalDateTime createdAt, Integer taskNumber) {
+    	super(createdBy,createdAt);
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.estimate = estimate;  
+        this.estimate = estimate;         
         this.taskNumber = taskNumber;    
     }
   

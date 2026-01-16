@@ -14,6 +14,8 @@ public record TaskDto(  Integer taskNumber,
                         LocalDateTime endDate,
                         String createdBy,
                         LocalDateTime createdAt,
+                        String updatedBy,
+                        LocalDateTime updateAt,
                         Boolean sprint
                     ) {
 

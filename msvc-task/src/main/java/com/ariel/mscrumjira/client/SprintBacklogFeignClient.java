@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
@@ -17,22 +18,23 @@ import com.ariel.mscrumjira.dto.UpdateDto;
 @FeignClient(name = "msvc-sprint-backlog", path = "/sprint-backlog-items")
 public interface SprintBacklogFeignClient {
 
-    @PostMapping
-    SprintBacklogItemDto save(@RequestBody SprintBacklogItemDto dto);
+	@PostMapping
+	SprintBacklogItemDto save(@RequestBody SprintBacklogItemDto dto, @RequestHeader("Authorization") String token);
 
-    @GetMapping("/task-number/{taskNumber}")
-    SprintBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber);
+	@GetMapping("/task-number/{taskNumber}")
+	SprintBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber);
 
-    @DeleteMapping("/task-number/{taskNumber}")
-    void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
+	@DeleteMapping("/task-number/{taskNumber}")
+	void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
 
-    @GetMapping
-    List<SprintBacklogItemDto> findAll();
+	@GetMapping
+	List<SprintBacklogItemDto> findAll();
 
-    @PutMapping("/{taskNumber}/state/{taskState}")
-    public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState);
-   
-    @PutMapping("/task-number/{taskNumber}")
-    SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate);
+	@PutMapping("/{taskNumber}/state/{taskState}")
+	public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState,
+			@RequestHeader("Authorization") String token);
+
+	@PutMapping("/task-number/{taskNumber}")
+	SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate, @RequestHeader("Authorization") String token);
 } 
 

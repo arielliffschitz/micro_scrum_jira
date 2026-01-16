@@ -19,6 +19,8 @@ public class TaskItemMapper {
                             dto.getEndDate(),
                             dto.getCreatedBy(),
                             dto.getCreatedAt(),
+                            dto.getUpdatedBy(),
+                            dto.getUpdatedAt(),
                             Boolean.TRUE          
                         );
     }
@@ -33,6 +35,8 @@ public class TaskItemMapper {
                             null,
                             dto.getCreatedBy(),
                             dto.getCreatedAt(),
+                            dto.getUpdatedBy(),
+                            dto.getUpdatedAt(),
                             Boolean.FALSE          
                         );
     }
@@ -44,6 +48,8 @@ public class TaskItemMapper {
                 sprintDto.getEstimate(),              
                 sprintDto.getCreatedBy(),
                 sprintDto.getCreatedAt(),
+                sprintDto.getUpdatedBy(),
+                sprintDto.getUpdatedAt(),
                 sprintDto.getTaskNumber()
         );
     }
@@ -56,7 +62,9 @@ public class TaskItemMapper {
                 productDto.getPriority(),
                 productDto.getEstimate(),              
                 productDto.getCreatedBy(),
-                productDto.getCreatedAt()                
+                productDto.getCreatedAt(),
+                productDto.getUpdatedBy(),
+                productDto.getUpdatedAt()
         );
     }          
    

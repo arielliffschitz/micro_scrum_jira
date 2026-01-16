@@ -15,6 +15,8 @@ public  class SprintBacklogItemMapper {
                     dto.getDescription(),
                     dto.getPriority(),
                     dto.getEstimate(),
+                    dto.getCreatedBy(),
+                    dto.getCreatedAt(),
                     dto.getTaskState()               
             );
     }   
@@ -40,7 +42,9 @@ public  class SprintBacklogItemMapper {
                     dao.getStartDate(),
                     dao.getEndDate(),
                     dao.getCreatedBy(),
-                    dao.getCreatedAt()
+                    dao.getCreatedAt(),
+                    dao.getUpdatedBy(),
+                    dao.getUpdatedAt()
             );
         }
 
@@ -49,7 +53,7 @@ public  class SprintBacklogItemMapper {
         dto.setId(dao.getId()) ;
         return dto;
     } 
-    public static SprintBacklogItem applyUpdateToSprint(SprintBacklogItem currentTask, UpdateDto taskUpdate) {
+    public static void applyUpdateToSprint(SprintBacklogItem currentTask, UpdateDto taskUpdate) {
       
        if (taskUpdate.getTitle() !=null) 
                              currentTask.setTitle(taskUpdate.getTitle());
@@ -58,8 +62,6 @@ public  class SprintBacklogItemMapper {
        if (taskUpdate.getPriority() !=null) 
                          currentTask.setPriority(taskUpdate.getPriority());
        if (taskUpdate.getEstimate() !=null) 
-                         currentTask.setEstimate(taskUpdate.getEstimate());
-
-       return currentTask;
+                         currentTask.setEstimate(taskUpdate.getEstimate());      
     } 
 }
