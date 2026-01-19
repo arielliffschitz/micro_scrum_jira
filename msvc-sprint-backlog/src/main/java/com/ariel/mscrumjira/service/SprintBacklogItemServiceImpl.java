@@ -7,7 +7,6 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
@@ -38,27 +37,26 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {
-		Optional<SprintBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-		return itemOptional.map(SprintBacklogItemMapper::mapToDto);
+	public SprintBacklogItemDto findByTaskNumber(Integer taskNumber) {		
+		
+		return repository.findByTaskNumber(taskNumber)
+                .map(SprintBacklogItemMapper::mapToDto)
+                .orElseThrow(null);
 	}     
 
 	@Override
 	@Transactional
 	public SprintBacklogItemDto save(SprintBacklogItemDto dto, String token) {
-
-
 		SprintBacklogItem dao = SprintBacklogItemMapper.mapToDao(dto);
 		dao.setTaskState(TaskState.PENDING); 
-		AuditUtil.BaseEntityUpdateFields(dao, token);
-		repository.save(dao);
-		return SprintBacklogItemMapper.mapToDto(dao);        
+		AuditUtil.BaseEntityUpdateFields(dao, token);		
+		
+		return SprintBacklogItemMapper.mapToDto(repository.save(dao));        
 	}
 
 	@Override
 	@Transactional
-	public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, 
-			@RequestHeader("Authorization") String token) {		
+	public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, String token) {		
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    
 					dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDtoUpdate(dao)));
@@ -75,8 +73,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	@Override
 	@Transactional
-	public Optional<SprintBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate,@RequestHeader("Authorization") String token) {
-
+	public Optional<SprintBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate, String token) {
 
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    

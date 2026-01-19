@@ -47,8 +47,7 @@ public class ProductBacklogController {
 	@PostMapping
 	public ProductBacklogItemDto create( @RequestBody ProductCreateDto dto, @RequestHeader("Authorization") String token) { 
 		UUID id = service.create(dto, token);
-		return service.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return service.findById(id);				
 	}     
 
 	@PutMapping("/task-number/{taskNumber}")

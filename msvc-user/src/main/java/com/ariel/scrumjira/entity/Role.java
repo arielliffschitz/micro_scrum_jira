@@ -2,6 +2,8 @@ package com.ariel.scrumjira.entity;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.ariel.mscrumjira.domain.entity.BaseEntity;
 import com.ariel.mscrumjira.domain.enums.RoleName;
 
@@ -17,10 +19,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "role")
 public class Role extends BaseEntity{
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(columnDefinition = "BINARY(16)")
+	@Id
+	@GeneratedValue
+	@UuidGenerator
+	@Column(columnDefinition = "BINARY(16)")
     private UUID id;
+	
     @Enumerated(EnumType.STRING)
     private RoleName name;
 

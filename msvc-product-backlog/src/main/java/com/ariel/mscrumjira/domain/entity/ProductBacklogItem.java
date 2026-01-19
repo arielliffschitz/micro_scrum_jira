@@ -3,6 +3,8 @@ package com.ariel.mscrumjira.domain.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,9 +15,10 @@ import jakarta.persistence.Table;
 @Table(name = "product_backlog_items")
 public class ProductBacklogItem extends BaseEntity{
     
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+	@Id
+	@GeneratedValue
+	@UuidGenerator
+	@Column(columnDefinition = "BINARY(16)")
     private UUID id;
     
     @Column(name = "task_number", nullable = false, unique = true)

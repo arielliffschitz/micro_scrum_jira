@@ -40,8 +40,7 @@ public class SprintBacklogItemController {
 
 	@GetMapping("/task-number/{taskNumber}")
 	public SprintBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber)  {               
-		return service.findByTaskNumber(taskNumber)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));                  
+		return service.findByTaskNumber(taskNumber);				                 
 	}
 
 	@PutMapping("/{taskNumber}/state/{taskState}")

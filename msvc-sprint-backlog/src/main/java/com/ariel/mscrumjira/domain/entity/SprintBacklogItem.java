@@ -3,6 +3,8 @@ package com.ariel.mscrumjira.domain.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.ariel.mscrumjira.domain.enums.TaskState;
 
 import jakarta.persistence.Column;
@@ -17,9 +19,10 @@ import jakarta.persistence.Table;
 @Table(name = "sprint_backlog_items")
 public class SprintBacklogItem extends BaseEntity{
 
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+	@Id
+	@GeneratedValue
+	@UuidGenerator
+	@Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column(name = "task_number")

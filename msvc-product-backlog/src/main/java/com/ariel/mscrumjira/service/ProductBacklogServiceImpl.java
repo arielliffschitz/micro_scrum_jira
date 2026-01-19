@@ -37,7 +37,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional
-	public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto, @RequestHeader("Authorization") String token) {  			
+	public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto,  String token) {  			
 		ProductBacklogItem dao = ProductBacklogItemMapper.mapToDao(backlogItemDto);
 		AuditUtil.BaseEntityUpdateFields(dao, token);
 
@@ -46,7 +46,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override   
 	@Transactional
-	public UUID create(ProductCreateDto Dto, @RequestHeader("Authorization") String token) {  			  	        
+	public UUID create(ProductCreateDto Dto, String token) {  			  	        
 		ProductBacklogItem dao =  ProductBacklogItemMapper.mapToDaoCreate(Dto);
 		AuditUtil.BaseEntityCreatedFields(dao, token);
 
@@ -69,13 +69,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<ProductBacklogItemDto> findById(UUID id) {
-		return Optional.of(ProductBacklogItemMapper.mapToDto(repository.findById(id).orElseThrow()));
+	public ProductBacklogItemDto findById(UUID id) {
+		return ProductBacklogItemMapper.mapToDto(repository.findById(id).orElseThrow());
 	} 
 
 	@Override
 	@Transactional
-	public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate, @RequestHeader("Authorization") String token) {		
+	public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate,  String token) {		
 
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    

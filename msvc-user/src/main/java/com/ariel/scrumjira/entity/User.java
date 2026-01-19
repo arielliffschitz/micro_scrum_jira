@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.ariel.mscrumjira.domain.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -24,9 +26,10 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "user")
 public class User extends BaseEntity{ 
 
-    @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+	@Id
+	@GeneratedValue
+	@UuidGenerator
+	@Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @NotBlank
