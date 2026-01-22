@@ -53,4 +53,10 @@ spring:
           predicates:
             - Path=/mscrumjira/msvc-oauth/**
           filters:
-            - StripPrefix=2        
+            - StripPrefix=2    
+        - id: msvc-project
+          uri: lb://msvc-project
+          predicates:
+            - Path=/mscrumjira/project/**
+          filters:
+            - StripPrefix=2     

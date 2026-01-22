@@ -47,15 +47,15 @@ public class SprintController {
 	}
 
 	@PostMapping 
-	public ResponseEntity<SprintDto> create (@RequestBody @Valid SprintCreateDto sprintCreateDto){//, @RequestHeader("Authorization") String token ){
+	public ResponseEntity<SprintDto> create (@RequestBody @Valid SprintCreateDto sprintCreateDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating Sprint ");
-		UUID id = service.create(sprintCreateDto, "token");								
+		UUID id = service.create(sprintCreateDto, token);								
 		
 		return ResponseEntity.ok(service.findById(id));
 	}
 	@PutMapping("/sprint-key/{sprintKey}")
-	public ResponseEntity<SprintDto> updateState (@PathVariable Integer sprintKey,@RequestBody SprintState state ){
-		return ResponseEntity.ok(service.updateState(sprintKey, state, "token"));
+	public ResponseEntity<SprintDto> updateState (@PathVariable Integer sprintKey,@RequestBody SprintState state, @RequestHeader("Authorization") String token ){
+		return ResponseEntity.ok(service.updateState(sprintKey, state, token));
 	}
 	
 	@DeleteMapping ("/sprint-key/{sprintKey}")

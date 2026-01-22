@@ -46,19 +46,19 @@ public class ProjectController {
 	}
 
 	@PostMapping 
-	public ResponseEntity<ProjectDto> create (@RequestBody @Valid ProjectCreateDto projectCreateDto){//, @RequestHeader("Authorization") String token ){
+	public ResponseEntity<ProjectDto> create (@RequestBody @Valid ProjectCreateDto projectCreateDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating project ");
-		UUID id = service.create(projectCreateDto, "token");								
+		UUID id = service.create(projectCreateDto, token);								
 		
 		return ResponseEntity.ok(service.findById(id));
 	}
 	
 	@PutMapping("/project-key/{projectKey}")
-	public ResponseEntity<ProjectDto> update(@PathVariable Integer projectKey, @RequestBody ProjectUpdateDto projectUpdateDto){
-			//,@RequestHeader("Authorization") String token){
-		logger.info("Updating task projectKey: {} in: {}", projectKey , projectUpdateDto);
+	public ResponseEntity<ProjectDto> update(@PathVariable Integer projectKey, @RequestBody ProjectUpdateDto projectUpdateDto,
+											      @RequestHeader("Authorization") String token){
+		logger.info("Updating project projectKey: {} in: {}", projectKey , projectUpdateDto);
 		
-		return ResponseEntity.ok(service.update(projectKey, projectUpdateDto,"token"));								
+		return ResponseEntity.ok(service.update(projectKey, projectUpdateDto, token));								
 	}
 	@DeleteMapping ("/project-key/{projectKey}")
 	public ResponseEntity<Void> updateState (@PathVariable Integer projectKey){

@@ -24,9 +24,9 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests(authz->{
             authz.requestMatchers("/login","/authorized", "/logout").permitAll()
-            .requestMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task").permitAll()
-            .requestMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ).hasAnyRole("USER", "ADMIN", "DEVELOPER")
-            .requestMatchers("/mscrumjira/user/**","/mscrumjira/task/**" ).hasRole("ADMIN")                       
+            .requestMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task","/mscrumjira/project").permitAll()
+            .requestMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ,"/mscrumjira/project/**").hasAnyRole("USER", "ADMIN", "DEVELOPER")
+            .requestMatchers("/mscrumjira/user/**","/mscrumjira/task/**","/mscrumjira/project/**" ).hasRole("ADMIN")                       
             .anyRequest().authenticated();           
             
         }).cors(csrf -> csrf.disable())        		
