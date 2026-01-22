@@ -56,7 +56,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {   
         logger.info("UseController::create: {}", userCreateDto);         
-        return ResponseEntity.ok(service.save(userCreateDto));
+        return ResponseEntity.ok(service.create(userCreateDto));
     }
     
     @DeleteMapping("/username/{username}")

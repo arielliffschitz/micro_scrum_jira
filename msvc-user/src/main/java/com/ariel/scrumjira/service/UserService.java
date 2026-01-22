@@ -14,7 +14,7 @@ public interface UserService {
     
     Optional<UserDto> findByUsername(String username);
 
-    UserDto save(UserCreateDto userCreateDto);
+    UserDto create(UserCreateDto userCreateDto);
 
     UserDto update(String username,UserUpdateDto userUpdateDto);
 

@@ -54,7 +54,15 @@ public class User extends BaseEntity{
             joinColumns = { @JoinColumn(name = "id_user") },
             inverseJoinColumns = {@JoinColumn(name = "id_role") },
             uniqueConstraints = {@UniqueConstraint(columnNames = { "id_user", "id_role" }) })
-    private Set<Role> roles;      
+    private Set<Role> roles;  
+    
+    @JsonIgnoreProperties({ "handler", "hibernateLazyInitializer" })
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_team", 
+            joinColumns = { @JoinColumn(name = "id_user") },
+            inverseJoinColumns = {@JoinColumn(name = "id_team") },
+            uniqueConstraints = {@UniqueConstraint(columnNames = { "id_user", "id_team" }) })
+    private Set<Team> teams; 
 
     public User( String username, String password, String displayName, Boolean active) {	
 		this.username = username;
