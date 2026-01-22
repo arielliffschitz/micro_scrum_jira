@@ -12,7 +12,7 @@ public class ProjectMapper {
 		        		dao.getProjectKey(),
 		        		dao.getName(),
 		        		dao.getDescription(),
-		        		dao.getState(),
+		        		dao.getState(),		        		
 		        		dao.getCreatedBy(),
 		        		dao.getCreatedAt(),
 		        		dao.getUpdatedBy(),
@@ -33,5 +33,11 @@ public class ProjectMapper {
 			currentProject.setDescription(projectUpdateDto.getDescription());
 		if (projectUpdateDto.getState() !=null) 
 			currentProject.setState(projectUpdateDto.getState());			
+	}
+	public static Project mapToDao(ProjectDto dto) {
+		 return  new Project(                                               	        		
+	        		dto.getName(),
+	        		dto.getDescription()	        			        		               
+             );
 	}
 }

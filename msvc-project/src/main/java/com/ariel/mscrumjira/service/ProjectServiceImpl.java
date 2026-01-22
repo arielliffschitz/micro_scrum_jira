@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,32 +20,44 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
-	
+
 	final private ProjectRepository repository;
 	
+	final private ProjectSprintService projectSprintService;
 	
 
-	public ProjectServiceImpl(ProjectRepository repository) {		
+	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService) {		
 		this.repository = repository;
+		this.projectSprintService = projectSprintService;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<ProjectDto> findAll() {
-		return StreamSupport.stream(repository.findAll()
-				.spliterator(), false)                
+		
+		List<ProjectDto> projectList = repository.findAll().stream()				                
 				.map(ProjectMapper::mapToDto)
-				.collect(Collectors.toList());        
+				.collect(Collectors.toList());		
+		
+		for (ProjectDto p : projectList) {
+			p.setSprints(projectSprintService.findByProjectKey(p.getProjectKey()));
+		} 
+		
+		return projectList;        
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<ProjectDto> findByProjectKey(Integer projectKey) {
-		return repository.findByProjectKey(projectKey)
-                .map(ProjectMapper::mapToDto);
-                
+	public ProjectDto findById(UUID id) {		
+		return ProjectMapper.mapToDto(repository.findById(id).orElseThrow());
 	}	
 
+	@Override
+	public Optional<ProjectDto> findByProjectKey(Integer projectKey) {
+		return repository.findByProjectKey(projectKey)
+				.map(ProjectMapper::mapToDto);
+	}
+	
 	@Override
 	@Transactional
 	public UUID create(ProjectCreateDto createDto,  String token) {
@@ -57,27 +68,25 @@ public class ProjectServiceImpl implements ProjectService {
 	}	
 
 	@Override
+	@Transactional
 	public void deleteByProjectKey(Integer projectKey) {
 		repository.deleteByProjectKey(projectKey);
 	}	
 
 	@Override
+	@Transactional
 	public ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token) {
-		
+
 		Project dao = repository.findByProjectKey(projectKey)
-		        .orElseThrow(() -> new EntityNotFoundException(
-		            "Project not found for projectKey: " + projectKey));
+				.orElseThrow(() -> new EntityNotFoundException(
+						"Project not found for projectKey: " + projectKey));
 
 		ProjectMapper.applyUpdateToProject(dao, projectUpdateDto);
-		    AuditUtil.BaseEntityUpdateFields(dao, token);
-		    
-		    return ProjectMapper.mapToDto(repository.save(dao));
+		AuditUtil.BaseEntityUpdateFields(dao, token);
+
+		return ProjectMapper.mapToDto(repository.save(dao));
 	}
 
-	@Override
-	public ProjectDto findById(UUID id) {
-		
-		return ProjectMapper.mapToDto(repository.findById(id).orElseThrow());
-	}
+
 
 }

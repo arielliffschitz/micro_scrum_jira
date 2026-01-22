@@ -12,9 +12,9 @@ public interface ProjectService {
 	
 	List<ProjectDto>findAll();
 	
-	ProjectDto findById(UUID id);
-	
 	Optional<ProjectDto> findByProjectKey(Integer projectKey);
+	
+	ProjectDto findById(UUID id);		
 	
 	UUID create(ProjectCreateDto dto, String token);
 	

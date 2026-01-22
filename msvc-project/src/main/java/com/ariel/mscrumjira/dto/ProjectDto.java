@@ -1,8 +1,10 @@
 package com.ariel.mscrumjira.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.ariel.mscrumjira.domain.enums.ProjectState;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,6 +21,9 @@ public class ProjectDto {
 	private String description;
     
 	private ProjectState projectState;
+	
+	@JsonIgnoreProperties("project")
+	private List<SprintDto> sprints;
     
     private String createdBy;   
 
@@ -31,10 +36,6 @@ public class ProjectDto {
 	public ProjectDto() {		
 	}
 
-	
-	
-
-
 	public ProjectDto(Integer projectKey,  String name, String description,
 			ProjectState projectState, String createdBy, LocalDateTime createdAt, String updatedBy,
 			LocalDateTime updatedAt) {		
@@ -45,7 +46,7 @@ public class ProjectDto {
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
 		this.updatedBy = updatedBy;
-		this.updatedAt = updatedAt;
+		this.updatedAt = updatedAt;		
 	}
 
 
@@ -118,7 +119,16 @@ public class ProjectDto {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public List<SprintDto> getSprints() {
+		return sprints;
+	}
+
+	public void setSprints(List<SprintDto> sprints) {
+		this.sprints = sprints;
 	}   
 
+	
     
 }
