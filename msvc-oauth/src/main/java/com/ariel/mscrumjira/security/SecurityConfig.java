@@ -63,14 +63,12 @@ public class SecurityConfig {
  			.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
  			.with(authorizationServerConfigurer, (authorizationServer) ->
  				authorizationServer
- 					.oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
+ 					.oidc(Customizer.withDefaults())	
  			)
  			.authorizeHttpRequests((authorize) ->
  				authorize
  					.anyRequest().authenticated()
- 			)
- 			// Redirect to the login page when not authenticated from the
- 			// authorization endpoint
+ 			) 			
  			.exceptionHandling((exceptions) -> exceptions
  				.defaultAuthenticationEntryPointFor(
  					new LoginUrlAuthenticationEntryPoint("/login"),
@@ -81,16 +79,13 @@ public class SecurityConfig {
  		return http.build();
  	}
 
-
 	 @Bean
      @Order(2)
      SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
                      throws Exception {
              http
                              .authorizeHttpRequests((authorize) -> authorize
-                                             .anyRequest().authenticated())
-                             // Form login handles the redirect to the login page from the
-                             // authorization server filter chain
+                                             .anyRequest().authenticated())                             
                              .csrf(csrf -> csrf.disable())
                              .formLogin(Customizer.withDefaults());
 
@@ -120,7 +115,6 @@ public class SecurityConfig {
              return new InMemoryRegisteredClientRepository(oidcClient);
      }
 
-
 	@Bean
     JWKSource<SecurityContext> jwkSource() {
             KeyPair keyPair = generateRsaKey();
@@ -133,6 +127,7 @@ public class SecurityConfig {
             JWKSet jwkSet = new JWKSet(rsaKey);
             return new ImmutableJWKSet<>(jwkSet);
     }
+	
 	  @Bean
       JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
               return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
@@ -159,12 +154,11 @@ public class SecurityConfig {
               return context -> {
                       if (context.getTokenType().getValue() == OAuth2TokenType.ACCESS_TOKEN.getValue()) {
                               Authentication principal = context.getPrincipal();
-                              context.getClaims()
-                                              .claim("data", "data adicional en el token")
-                                              .claim("roles", principal.getAuthorities()
-                                                              .stream()
-                                                              .map(GrantedAuthority::getAuthority)
-                                                              .collect(Collectors.toList()));
+                              context.getClaims()                                              
+                                      .claim("roles", principal.getAuthorities()
+                                                               .stream()
+                                                               .map(GrantedAuthority::getAuthority)
+                                                               .collect(Collectors.toList()));
                       }
               };
       }

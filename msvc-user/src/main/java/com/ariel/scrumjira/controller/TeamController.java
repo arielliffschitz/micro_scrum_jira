@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,11 +51,15 @@ public class TeamController {
 	}
 	
 	@PostMapping 
-	public ResponseEntity<TeamDto> create (@RequestBody @Valid TeamCreateDto teamCreateDto){//, @RequestHeader("Authorization") String token ){
+	public ResponseEntity<TeamDto> create (@RequestBody @Valid TeamCreateDto teamCreateDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating user {} in the team {} ", teamCreateDto.username(), teamCreateDto.teamKey());
-		UUID id = service.create(teamCreateDto, "token");								
+		UUID id = service.create(teamCreateDto, token);								
 		
 		return ResponseEntity.ok(service.findById(id));
+	}	
+	@DeleteMapping("/team-key/{teamKey}")
+	public ResponseEntity<Void>deleteByteamtKey(@PathVariable String teamKey){
+		service.deleteByTeamKey(teamKey);
+		return ResponseEntity.noContent().build();
 	}
-
 }

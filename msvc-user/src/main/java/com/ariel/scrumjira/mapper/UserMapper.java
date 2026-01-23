@@ -6,8 +6,6 @@ import java.util.Set;
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.mscrumjira.dto.UserLoginDto;
-import com.ariel.scrumjira.dto.UserCreateDto;
-
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.entity.Role;
 import com.ariel.scrumjira.entity.User;
@@ -24,18 +22,7 @@ public class UserMapper {
                     user.getCreatedBy(),
                     user.getCreatedAt()
         );
-    }
-
-   
-
-    public static User fromCreateDtoToUser(UserCreateDto userCreateDto) {
-        return new User(
-        		userCreateDto.getUsername(),
-        		userCreateDto.getPassword(),
-        		userCreateDto.getDisplayName(),
-        		true
-        		);        		
-    }   
+    }     
     
     public static  User  applyUpdateToUser (  User currentUser, UserUpdateDto userUpdate ) {
     	
@@ -51,7 +38,8 @@ public class UserMapper {
     			user.getUsername(),  
     			user.getPassword(),
     			user.getActive(),
-    			getRolesNameLogin(user.getRoles())                
+    			getRolesNameLogin(user.getRoles()),
+    			user.getLastLogin()
     			);
     	
     }

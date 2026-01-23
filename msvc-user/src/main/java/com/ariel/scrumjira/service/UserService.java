@@ -14,9 +14,9 @@ public interface UserService {
     
     Optional<UserDto> findByUsername(String username);
 
-    UserDto create(UserCreateDto userCreateDto);
+    UserDto create(UserCreateDto userCreateDto, String token);
 
-    UserDto update(String username,UserUpdateDto userUpdateDto);
+    UserDto update(String username,UserUpdateDto userUpdateDto, String token);
 
     void deleteByUsername(String username);       
 

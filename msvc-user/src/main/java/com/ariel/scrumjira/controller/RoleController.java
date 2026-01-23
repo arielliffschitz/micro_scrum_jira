@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,9 +39,9 @@ public class RoleController {
 	 }
 	 
 	 @PostMapping
-	 public ResponseEntity<RoleDto> create(@Valid@RequestBody RoleCreateDto roleCreateDto) {   
+	 public ResponseEntity<RoleDto> create(@Valid@RequestBody RoleCreateDto roleCreateDto, @RequestHeader("Authorization") String token) {   
 	        logger.info("RoleController::create: {}", roleCreateDto);         
-	        return ResponseEntity.ok(service.save(roleCreateDto));
+	        return ResponseEntity.ok(service.save(roleCreateDto, token));
 	 }
 	 @DeleteMapping("/role-name/{name}")
 	 public ResponseEntity<?> deleteByUsername(@PathVariable RoleName name){

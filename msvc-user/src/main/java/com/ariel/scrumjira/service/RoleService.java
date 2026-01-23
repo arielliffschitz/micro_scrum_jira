@@ -10,7 +10,7 @@ public interface RoleService {
 	
 	List<RoleDto> findAll();
 	
-	RoleDto save(RoleCreateDto role);
+	RoleDto save(RoleCreateDto roleCreateDto, String token);
 	
 	void deleteByName(RoleName name);
 

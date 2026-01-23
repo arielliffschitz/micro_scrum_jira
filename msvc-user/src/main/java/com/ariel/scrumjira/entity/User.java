@@ -64,11 +64,12 @@ public class User extends BaseEntity{
             uniqueConstraints = {@UniqueConstraint(columnNames = { "id_user", "id_team" }) })
     private Set<Team> teams; 
 
-    public User( String username, String password, String displayName, Boolean active) {	
+    public User( String username, String password, String displayName, Set<Role> roles) {	
 		this.username = username;
 		this.password = password;
 		this.displayName = displayName;
-		this.active = active;
+		this.active = true;
+		this.roles = roles;
 	}
 
 	public User() {

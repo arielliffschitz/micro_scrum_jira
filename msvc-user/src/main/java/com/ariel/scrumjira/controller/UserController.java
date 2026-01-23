@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.dto.UserDto;
@@ -54,9 +55,9 @@ public class UserController {
     }       
     
     @PostMapping
-    public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {   
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto, @RequestHeader("Authorization") String token) {   
         logger.info("UseController::create: {}", userCreateDto);         
-        return ResponseEntity.ok(service.create(userCreateDto));
+        return ResponseEntity.ok(service.create(userCreateDto, token));
     }
     
     @DeleteMapping("/username/{username}")
@@ -66,9 +67,10 @@ public class UserController {
     }
     
     @PutMapping("/username/{username}")
-    public ResponseEntity<UserDto> update(@PathVariable String username, @RequestBody UserUpdateDto userUpdateDto ) {
+    public ResponseEntity<UserDto> update(@PathVariable String username, @RequestBody UserUpdateDto userUpdateDto 
+    										, @RequestHeader("Authorization") String token) {
     	logger.info("Updating user with username: {} in: {}",username , userUpdateDto);
-        return ResponseEntity.ok(service.update(username, userUpdateDto));                      	        
+        return ResponseEntity.ok(service.update(username, userUpdateDto, token));                      	        
         
     }
 }

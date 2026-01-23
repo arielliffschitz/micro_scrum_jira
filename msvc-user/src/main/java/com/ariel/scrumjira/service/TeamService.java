@@ -21,9 +21,7 @@ public interface TeamService {
 	
 	UUID create(TeamCreateDto dto, String token);
 	
-	boolean existsByTeamKey(String teamKey);
-	
-	// TODO TeamDto update(String teamKey, TeamUpdateDto teamUpdateDto, String token);
+	boolean existsByTeamKey(String teamKey);		
 	
 	void deleteByTeamKey(String teamKey);
 

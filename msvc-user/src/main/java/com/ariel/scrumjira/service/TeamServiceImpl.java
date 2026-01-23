@@ -61,6 +61,7 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<TeamDto> findByTeamKeyAndUsername(String teamKey, String username) {
 
 		return repository.findByTeamKeyAndUsername(teamKey, username).map(TeamMapper::mapToDto);
@@ -86,8 +87,7 @@ public class TeamServiceImpl implements TeamService {
 
 	@Override
 	public void deleteByTeamKey(String teamKey) {
-		// TODO Auto-generated method stub
-
+		repository.deleteByTeamKey(teamKey);
 	}
 
 	@Override

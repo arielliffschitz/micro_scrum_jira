@@ -1,6 +1,7 @@
 package com.ariel.mscrumjira.dto;	
 	
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class UserLoginDto {	 	   
@@ -14,19 +15,30 @@ public class UserLoginDto {
 	    private Boolean active; 	   	   
 
 	    
-	    private Set<String> roles;      
+	    private Set<String> roles;   
+	    
+	    private LocalDateTime lastLogin;
 
-	    public UserLoginDto( String username, String password,  Boolean active, Set<String> roles ) {	
+	    public UserLoginDto( String username, String password,  Boolean active, Set<String> roles, LocalDateTime lastLogin) {	
 			this.username = username;
 			this.password = password;			
 			this.active = active;
 			this.roles = roles;
+			this.lastLogin = lastLogin;
 		}
 
 		public UserLoginDto() {
 	    }       	   
 
-	    public String getUsername() {
+	    public LocalDateTime getLastLogin() {
+			return lastLogin;
+		}
+
+		public void setLastLogin(LocalDateTime lastLogin) {
+			this.lastLogin = lastLogin;
+		}
+
+		public String getUsername() {
 	        return username;
 	    }
 
