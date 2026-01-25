@@ -38,7 +38,13 @@ public class SprintBacklogItem extends BaseEntity{
     
     @Enumerated(EnumType.STRING)
     @Column(name = "task_state")
-    private TaskState taskState;        
+    private TaskState taskState;  
+    
+    @Column(name = "project_key", nullable = false)
+    private Integer projectKey;
+    
+    @Column(name = "sprint_key", nullable = false)
+    private Integer sprintKey;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
@@ -50,7 +56,7 @@ public class SprintBacklogItem extends BaseEntity{
     }        
 
     public SprintBacklogItem(Integer taskNumber, String title, String description, Integer priority,
-            Integer estimate,String createdBy, LocalDateTime createdAt, TaskState taskState) {
+            Integer estimate,String createdBy, LocalDateTime createdAt, TaskState taskState,Integer projectKey,Integer sprintKey) {
     	super(createdBy,createdAt);
         this. taskNumber =  taskNumber;
         this.title = title;
@@ -58,6 +64,8 @@ public class SprintBacklogItem extends BaseEntity{
         this.priority = priority;
         this.estimate = estimate;
         this.taskState = taskState;
+        this.projectKey = projectKey;
+        this.sprintKey = sprintKey;
     }   
     
      public UUID getId() {
@@ -116,7 +124,24 @@ public class SprintBacklogItem extends BaseEntity{
         this.taskState = taskState;
     }
 
-    public LocalDateTime getStartDate() {
+    
+    public Integer getProjectKey() {
+		return projectKey;
+	}
+
+	public void setProjectKey(Integer projectKey) {
+		this.projectKey = projectKey;
+	}
+
+	public Integer getSprintKey() {
+		return sprintKey;
+	}
+
+	public void setSprintKey(Integer sprintKey) {
+		this.sprintKey = sprintKey;
+	}
+
+	public LocalDateTime getStartDate() {
         return startDate;
     }
 

@@ -40,12 +40,15 @@ public class ProductBacklogItemDto {
     private LocalDateTime updatedAt;   
     
     private Integer taskNumber;
+    
+    @NotNull
+    private Integer projectKey;
 
     public ProductBacklogItemDto() {
     }
 
     public ProductBacklogItemDto( String title, String description, Integer priority, Integer estimate, String createdBy,
-            LocalDateTime createdAt, String updatedBy, LocalDateTime updatedAt , Integer taskNumber) {        
+            LocalDateTime createdAt, String updatedBy, LocalDateTime updatedAt , Integer taskNumber, Integer projectKey) {        
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -55,9 +58,18 @@ public class ProductBacklogItemDto {
         this.taskNumber = taskNumber;
         this.updatedBy = updatedBy;
         this.updatedAt = updatedAt;
+        this.projectKey = projectKey;
     }
     
-    public String getTitle() {
+    public Integer getProjectKey() {
+		return projectKey;
+	}
+
+	public void setProjectKey(Integer projectKey) {
+		this.projectKey = projectKey;
+	}
+
+	public String getTitle() {
         return title;
     }
 

@@ -16,7 +16,7 @@ public interface SprintService {
 	
 	Optional<SprintDto> findBySprintKey(Integer sprintKey);
 	
-	//List<SprintDto>findByProjectKey(Integer projectKey);
+	boolean existsBySprintKey( Integer sprintKey);
 	
 	UUID create(SprintCreateDto dto, String token);
 	

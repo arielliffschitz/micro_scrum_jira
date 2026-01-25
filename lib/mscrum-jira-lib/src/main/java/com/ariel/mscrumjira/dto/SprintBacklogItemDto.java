@@ -7,7 +7,6 @@ import com.ariel.mscrumjira.domain.enums.TaskState;
 
 import jakarta.validation.constraints.NotNull;
 
-
 public class SprintBacklogItemDto {
    
     private UUID id;
@@ -23,7 +22,11 @@ public class SprintBacklogItemDto {
     private Integer estimate;    
     
     @NotNull
-    private TaskState taskState; 
+    private TaskState taskState;    
+    
+    private Integer projectKey;    
+   
+    private Integer sprintKey;
     
     private LocalDateTime startDate;
     
@@ -43,12 +46,13 @@ public class SprintBacklogItemDto {
     
 
     public SprintBacklogItemDto( Integer taskNumber, String title, String description, Integer priority,
-            Integer estimate, String createdBy, LocalDateTime createdAt, String updatedBy,LocalDateTime updatedAt) {
+            Integer estimate, Integer projectKey, String createdBy, LocalDateTime createdAt, String updatedBy,LocalDateTime updatedAt) {
         this. taskNumber = taskNumber;
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.estimate = estimate;
+        this.projectKey = projectKey;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.updatedBy = updatedBy;
@@ -56,7 +60,7 @@ public class SprintBacklogItemDto {
     }    
 
     public SprintBacklogItemDto(  Integer taskNumber, String title, String description, Integer priority,
-            Integer estimate, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate, String createdBy,
+            Integer estimate, TaskState taskState ,Integer projectKey,Integer sprintKey, LocalDateTime startDate, LocalDateTime endDate, String createdBy,
             LocalDateTime createdAt, String updatedBy,LocalDateTime updatedAt) {      
         this.taskNumber = taskNumber;
         this.title = title;
@@ -64,6 +68,8 @@ public class SprintBacklogItemDto {
         this.priority = priority;
         this.estimate = estimate;
         this.taskState = taskState;
+        this.projectKey = projectKey;
+        this.sprintKey = sprintKey;
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
@@ -118,7 +124,26 @@ public class SprintBacklogItemDto {
         this.taskState = taskState;
     }
 
-    public LocalDateTime getStartDate() {
+    
+    public Integer getProjectKey() {
+		return projectKey;
+	}
+
+	public void setProjectKey(Integer projectKey) {
+		this.projectKey = projectKey;
+	}
+
+	public Integer getSprintKey() {
+		return sprintKey;
+	}
+
+	public void setSprintKey(Integer sprintKey) {
+		this.sprintKey = sprintKey;
+	}
+
+
+
+	public LocalDateTime getStartDate() {
         return startDate;
     }
 

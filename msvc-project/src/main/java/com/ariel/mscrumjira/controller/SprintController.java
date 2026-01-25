@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.domain.enums.SprintState;
@@ -46,6 +47,11 @@ public class SprintController {
 				.orElseGet(()->ResponseEntity.notFound().build());			                
 	}
 
+	@GetMapping("/exist")
+	public boolean existsBySprintKey(@RequestParam Integer sprintKey) {
+		return service.existsBySprintKey(sprintKey);
+	}
+	
 	@PostMapping 
 	public ResponseEntity<SprintDto> create (@RequestBody @Valid SprintCreateDto sprintCreateDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating Sprint ");

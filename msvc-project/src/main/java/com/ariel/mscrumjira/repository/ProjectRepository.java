@@ -12,5 +12,7 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
 	Optional<Project>findByProjectKey(Integer projectKey);
 	
 	void deleteByProjectKey(Integer projectKey);
+	
+	boolean existsByProjectKey(Integer projectKey);
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ariel.mscrumjira.dto.ProjectCreateDto;
@@ -43,6 +44,11 @@ public class ProjectController {
 		return   service.findByProjectKey(projectKey)
 				.map(dto->ResponseEntity.ok(dto) )
 				.orElseGet(()->ResponseEntity.notFound().build());			                
+	}
+	
+	@GetMapping("/exist")
+	public boolean existsByTeamKey(@RequestParam Integer projectKey) {
+		return service.existsByProjectKey(projectKey);
 	}
 
 	@PostMapping 

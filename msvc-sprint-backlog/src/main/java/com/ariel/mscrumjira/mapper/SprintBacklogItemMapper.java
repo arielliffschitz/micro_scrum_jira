@@ -17,7 +17,9 @@ public  class SprintBacklogItemMapper {
                     dto.getEstimate(),
                     dto.getCreatedBy(),
                     dto.getCreatedAt(),
-                    dto.getTaskState()               
+                    dto.getTaskState(),
+                    dto.getProjectKey(),
+                    dto.getSprintKey()
             );
     }   
 
@@ -39,6 +41,8 @@ public  class SprintBacklogItemMapper {
                     dao.getPriority(),
                     dao.getEstimate(),
                     dao.getTaskState(),
+                    dao.getProjectKey(),
+                    dao.getSprintKey(),
                     dao.getStartDate(),
                     dao.getEndDate(),
                     dao.getCreatedBy(),

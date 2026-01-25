@@ -1,13 +1,18 @@
 package com.ariel.mscrumjira.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.ariel.mscrumjira.client.SprintFeignClient;
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
@@ -19,18 +24,27 @@ import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	private final SprintBacklogItemRepository repository;
-	private final SprintTaskStateService stateService;    
+	private final SprintFeignClient sprintClient;
+	
+	private static final Map<TaskState, Set<TaskState>> TASK_STATE_VALID = Map.of(
+						TaskState.PENDING,    Set.of(TaskState.IN_PROGRESS, TaskState.BLOCKED),
+			            TaskState.IN_PROGRESS,Set.of(TaskState.DONE, TaskState.BLOCKED) ,
+			            TaskState.BLOCKED,    Set.of(TaskState.IN_PROGRESS),
+			            TaskState.DONE,       Set.of()
+           ); 
 
-	public SprintBacklogItemServiceImpl(SprintBacklogItemRepository repository, SprintTaskStateService stateService) {
+	
+
+	public SprintBacklogItemServiceImpl(SprintBacklogItemRepository repository, SprintFeignClient sprintClient) {
+		super();
 		this.repository = repository;
-		this.stateService = stateService;
+		this.sprintClient = sprintClient;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<SprintBacklogItemDto> findAll() {
-		return StreamSupport.stream(repository.findAll()
-				.spliterator(),false)
+		return repository.findAll().stream()				
 				.map(SprintBacklogItemMapper::mapToDto)
 				.collect(Collectors.toList());
 	}  
@@ -47,23 +61,58 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 	@Override
 	@Transactional
 	public SprintBacklogItemDto save(SprintBacklogItemDto dto, String token) {
+		if(!sprintClient.existsBySprintKey(dto.getSprintKey())) { 
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "the sprintKey: " + dto.getSprintKey() + " doesn't exist");}
 		SprintBacklogItem dao = SprintBacklogItemMapper.mapToDao(dto);
 		dao.setTaskState(TaskState.PENDING); 
 		AuditUtil.BaseEntityUpdateFields(dao, token);		
 		
 		return SprintBacklogItemMapper.mapToDto(repository.save(dao));        
-	}
+	}	
 
 	@Override
 	@Transactional
 	public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, String token) {		
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    
-					dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDtoUpdate(dao)));
+					applyTransition(taskState, dao);
 					AuditUtil.BaseEntityUpdateFields(dao, token);
 					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
 				});
 	}  
+	
+	private void applyTransition(TaskState next, SprintBacklogItem dao)  {
+	       if (TASK_STATE_VALID.get(dao.getTaskState()).contains(next) ){
+	    	   dao.setTaskState(next);
+	    	   takeAction(next, dao);
+	       }
+	       else { throw new RuntimeException("Invalid transition ") ;}
+	       
+	 }		 
+	 
+	 private void takeAction(TaskState next, SprintBacklogItem dao) {        
+	        switch (next) {
+	            case TaskState.IN_PROGRESS : dao.setStartDate(LocalDateTime.now());                
+	                break;
+	            case TaskState.DONE : dao.setEndDate(LocalDateTime.now());                
+	                break;
+	            case TaskState.BLOCKED : System.out.println("TODO message to boss ");                
+	                break;
+	            default:
+	                break;
+	        } 
+	 }
+	
+//	//@Override
+//	@Transactional
+//	public Optional<SprintBacklogItemDto> updateState2(Integer taskNumber, TaskState taskState, String token) {		
+//		return repository.findByTaskNumber(taskNumber)
+//				.map(dao -> {                    
+//					dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDtoUpdate(dao)));
+//					AuditUtil.BaseEntityUpdateFields(dao, token);
+//					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
+//				});
+//	}  
 
 	@Override
 	@Transactional

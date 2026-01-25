@@ -17,6 +17,7 @@ import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.TaskMoveSprintRequestDto;
 import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.mapper.TaskItemMapper;
 
@@ -46,7 +47,7 @@ public class TaskServiceImpl implements TaskService{
 
 		List<TaskDto> taskDtoList= Stream.concat(taskProductDtoList.stream(), taskSprintDtoList.stream()).toList();
 
-		return  taskDtoList.stream().sorted(Comparator.comparing(TaskDto::taskNumber).reversed()).toList();                                   
+		return  taskDtoList.stream().sorted(Comparator.comparing(TaskDto::getTaskNumber).reversed()).toList();                                   
 	}    
 
 	@Override
@@ -64,10 +65,15 @@ public class TaskServiceImpl implements TaskService{
 	}
 
 	@Override
-	public TaskDto moveFromProductToSprint(Integer taskNumber, String token) {
-		ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(taskNumber);
-		SprintBacklogItemDto  sprintDto  = clientSprint.save(TaskItemMapper.mapFromProductDtoToSprintDto(productDto), token);
-		clientProduct.deleteProductByTaskNumber(taskNumber);
+	public TaskDto moveFromProductToSprint(TaskMoveSprintRequestDto  dto, String token) {
+		ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(dto.taskNumber());
+		
+		SprintBacklogItemDto  sprintDto  = TaskItemMapper.mapFromProductDtoToSprintDto(productDto);
+		sprintDto.setSprintKey(dto.sprintKey());
+		clientSprint.save(sprintDto, token);
+		
+		clientProduct.deleteProductByTaskNumber(dto.taskNumber());
+		
 		return TaskItemMapper.toTaskDtoFromSprint(sprintDto);
 	}
 

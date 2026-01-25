@@ -59,6 +59,11 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
+	public boolean existsByProjectKey(Integer projectKey) {		
+		 return repository.existsByProjectKey(projectKey);
+	}
+	
+	@Override
 	@Transactional
 	public UUID create(ProjectCreateDto createDto,  String token) {
 		Project dao =  ProjectMapper.mapToCreateDao(createDto);
@@ -86,6 +91,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 		return ProjectMapper.mapToDto(repository.save(dao));
 	}
+
+	
 
 
 

@@ -17,7 +17,8 @@ public class ProductBacklogItemMapper {
                     item.getCreatedAt(),
                     item.getUpdatedBy(),
                     item.getUpdatedAt(),
-                    item.getTaskNumber()
+                    item.getTaskNumber(),
+                    item.getProjectKey()
                 );
     }
 
@@ -29,7 +30,8 @@ public class ProductBacklogItemMapper {
                     itemDto.getEstimate(),
                     itemDto.getCreatedBy(),
                     itemDto.getCreatedAt(),
-                    itemDto.getTaskNumber()                                    
+                    itemDto.getTaskNumber(),
+                    itemDto.getProjectKey()
                 );
     }
     public static ProductBacklogItem mapToDaoCreate(ProductCreateDto itemDto){
@@ -37,7 +39,8 @@ public class ProductBacklogItemMapper {
                            dao.setTitle(itemDto.title());
                            dao.setDescription(itemDto.description());                  
                            dao.setPriority(itemDto.priority());
-                           dao.setEstimate(itemDto.estimate());                                                             
+                           dao.setEstimate(itemDto.estimate()); 
+                           dao.setProjectKey(itemDto.projectKey());
         return dao;
     }
      public static void applyUpdateToProduct(ProductBacklogItem currentTask, UpdateDto taskUpdate) {

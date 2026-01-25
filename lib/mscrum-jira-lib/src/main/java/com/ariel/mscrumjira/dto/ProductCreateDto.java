@@ -23,6 +23,9 @@ public record ProductCreateDto (
 
     @NotNull
     @Positive   
-    Integer estimate 
+    Integer estimate,
+    
+    @NotNull
+    Integer projectKey
 
 ){}

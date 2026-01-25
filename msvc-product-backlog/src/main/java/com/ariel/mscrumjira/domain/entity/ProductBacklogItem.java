@@ -21,33 +21,47 @@ public class ProductBacklogItem extends BaseEntity{
 	@Column(columnDefinition = "BINARY(16)")
     private UUID id;
     
+	
     @Column(name = "task_number", nullable = false, unique = true)
     private Integer taskNumber;
 
-
+   
+    @Column( nullable = false)
     private String title;
     
     private String description;
     
     private Integer priority;
     
-    private Integer estimate;     
+    private Integer estimate;  
+    
+    @Column(name = "project_key", nullable = false)
+    private Integer projectKey;
     
 
     public ProductBacklogItem() {
     }
 
     public ProductBacklogItem(String title, String description, Integer priority, Integer estimate ,
-    							String createdBy, LocalDateTime createdAt, Integer taskNumber) {
+    							String createdBy, LocalDateTime createdAt, Integer taskNumber, Integer projectKey) {
     	super(createdBy,createdAt);
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.estimate = estimate;         
-        this.taskNumber = taskNumber;    
+        this.taskNumber = taskNumber; 
+        this.projectKey = projectKey;
     }
   
-    public String getTitle() {
+    public Integer getProjectKey() {
+		return projectKey;
+	}
+
+	public void setProjectKey(Integer projectKey) {
+		this.projectKey = projectKey;
+	}
+
+	public String getTitle() {
         return title;
     }
 

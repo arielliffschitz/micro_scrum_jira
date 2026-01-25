@@ -23,13 +23,10 @@ public class SprintServiceImpl implements SprintService {
 	
 	final private ProjectSprintService projectSprintService;;
 	
-	final private UserFeignClient userClient;
-
-	
+	final private UserFeignClient userClient;	
 
 	public SprintServiceImpl(SprintRepository repository, ProjectSprintService projectSprintService,
-			UserFeignClient userClient) {
-		super();
+			UserFeignClient userClient) {		
 		this.repository = repository;
 		this.projectSprintService = projectSprintService;
 		this.userClient = userClient;
@@ -41,14 +38,7 @@ public class SprintServiceImpl implements SprintService {
 		return repository.findAll().stream()				                
 						 .map(SprintMapper::mapToDto)
 						 .collect(Collectors.toList());        
-	}		
-	
-//	@Override
-//	public List<SprintDto> findByProjectKey(Integer projectKey) {
-//		return repository.findByProject_ProjectKey(projectKey).stream()				                
-//				 .map(SprintMapper::mapToDto)
-//				 .collect(Collectors.toList()); 
-//	}
+	}
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -81,12 +71,7 @@ public class SprintServiceImpl implements SprintService {
 					        createDto.startDate(),
 					        createDto.endDate()				        
 				);		
-	}
-
-	private void validateCreate(String teamKey) {
-		 if ( ! userClient.existsByTeamKey(teamKey)) 
-			 throw new IllegalArgumentException("The team: "+teamKey+ " doesn't exist");		
-	}
+	}	
 
 	@Override
 	@Transactional
@@ -103,8 +88,13 @@ public class SprintServiceImpl implements SprintService {
 		repository.deleteBySprintKey(sprintKey);		
 	}
 
-	
+	private void validateCreate(String teamKey) {
+		 if ( ! userClient.existsByTeamKey(teamKey)) 
+			 throw new IllegalArgumentException("The team: "+teamKey+ " doesn't exist");		
+	}
 
-	
-
+	@Override
+	public boolean existsBySprintKey(Integer sprintKey) {		
+		return repository.existsBySprintKey(sprintKey);
+	}	
 }

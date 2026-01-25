@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.ariel.mscrumjira.client.ProjectFeignClient;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
@@ -21,9 +22,14 @@ import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	final private ProductBacklogRepository repository;
+	final private ProjectFeignClient projectClient;
 
-	public ProductBacklogServiceImpl(ProductBacklogRepository repository) {
+	
+
+	public ProductBacklogServiceImpl(ProductBacklogRepository repository, ProjectFeignClient projectClient) {
+		super();
 		this.repository = repository;
+		this.projectClient = projectClient;
 	}
 
 	@Override
@@ -46,12 +52,13 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override   
 	@Transactional
-	public UUID create(ProductCreateDto Dto, String token) {  			  	        
-		ProductBacklogItem dao =  ProductBacklogItemMapper.mapToDaoCreate(Dto);
+	public UUID create(ProductCreateDto dto, String token) {  
+		validateProjectKey(dto.projectKey());
+		ProductBacklogItem dao =  ProductBacklogItemMapper.mapToDaoCreate(dto);
 		AuditUtil.BaseEntityCreatedFields(dao, token);
 
 		return  repository.save(dao).getId();
-	}                 
+	}               	
 
 	@Override
 	@Transactional
@@ -83,6 +90,10 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 					AuditUtil.BaseEntityUpdateFields(dao, token);
 					return ProductBacklogItemMapper.mapToDto(repository.save(dao));
 				});
+	}
+	private void validateProjectKey( Integer projectKey) {
+		if(!projectClient.existsByTeamKey(projectKey))
+			throw new IllegalArgumentException("The Project: "+projectKey+ " doesn't exist");
 	}
 
 

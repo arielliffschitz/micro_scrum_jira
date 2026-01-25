@@ -10,34 +10,32 @@ public class TaskItemMapper {
 
     public static TaskDto toTaskDtoFromSprint(SprintBacklogItemDto dto) {
         return new TaskDto( dto.getTaskNumber(), 
+        					dto.getProjectKey(),
                             dto.getTitle(),
                             dto.getDescription(),
                             dto.getPriority(),
                             dto.getEstimate(),
-                            dto.getTaskState(),
+                            dto.getTaskState(),                            
+                            dto.getSprintKey(),
                             dto.getStartDate(),
                             dto.getEndDate(),
                             dto.getCreatedBy(),
                             dto.getCreatedAt(),
                             dto.getUpdatedBy(),
-                            dto.getUpdatedAt(),
-                            Boolean.TRUE          
+                            dto.getUpdatedAt()                                                        
                         );
     }
     public static TaskDto toTaskDtoFromProduct(ProductBacklogItemDto dto) {
         return new TaskDto( dto.getTaskNumber(), 
+        					dto.getProjectKey(),
                             dto.getTitle(),
                             dto.getDescription(),
                             dto.getPriority(),
-                            dto.getEstimate(),
-                            null,
-                            null,
-                            null,
+                            dto.getEstimate(),                           
                             dto.getCreatedBy(),
                             dto.getCreatedAt(),
                             dto.getUpdatedBy(),
-                            dto.getUpdatedAt(),
-                            Boolean.FALSE          
+                            dto.getUpdatedAt()                                                        
                         );
     }
     public static ProductBacklogItemDto mapFromSprintDtoToProductDto(SprintBacklogItemDto sprintDto) {
@@ -50,21 +48,24 @@ public class TaskItemMapper {
                 sprintDto.getCreatedAt(),
                 sprintDto.getUpdatedBy(),
                 sprintDto.getUpdatedAt(),
-                sprintDto.getTaskNumber()
+                sprintDto.getTaskNumber(),
+                sprintDto.getProjectKey()
         );
     }
 
     public static SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
         return new SprintBacklogItemDto(
-                productDto.getTaskNumber(),
+                productDto.getTaskNumber(),                
                 productDto.getTitle(),
                 productDto.getDescription(),
                 productDto.getPriority(),
-                productDto.getEstimate(),              
+                productDto.getEstimate(),  
+                productDto.getProjectKey(),
                 productDto.getCreatedBy(),
                 productDto.getCreatedAt(),
                 productDto.getUpdatedBy(),
                 productDto.getUpdatedAt()
+                
         );
     }          
    

@@ -21,6 +21,8 @@ public interface ProjectService {
 	ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token);
 	
 	void deleteByProjectKey(Integer projectKey);
+
+	boolean existsByProjectKey(Integer projectKey);
 	
 	
 	

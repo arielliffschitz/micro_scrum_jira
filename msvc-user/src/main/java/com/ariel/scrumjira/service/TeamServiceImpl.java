@@ -65,7 +65,12 @@ public class TeamServiceImpl implements TeamService {
 	public Optional<TeamDto> findByTeamKeyAndUsername(String teamKey, String username) {
 
 		return repository.findByTeamKeyAndUsername(teamKey, username).map(TeamMapper::mapToDto);
-	}	
+	}
+
+	@Override
+	public boolean existsByTeamKey(String teamKey) {		
+		return repository.existsByTeamKey(teamKey);
+	}
 
 	@Override
 	@Transactional
@@ -89,12 +94,5 @@ public class TeamServiceImpl implements TeamService {
 	public void deleteByTeamKey(String teamKey) {
 		repository.deleteByTeamKey(teamKey);
 	}
-
-	@Override
-	public boolean existsByTeamKey(String teamKey) {		
-		return repository.existsByTeamKey(teamKey);
-	}
-
-
 
 }

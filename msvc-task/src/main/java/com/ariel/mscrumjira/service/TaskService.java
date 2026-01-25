@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.TaskMoveSprintRequestDto;
 import com.ariel.mscrumjira.dto.UpdateDto;
 
 public interface TaskService {    
@@ -16,7 +17,7 @@ public interface TaskService {
 
 	Optional<TaskDto> findByTaskNumber(Integer taskNumber);   
 
-	TaskDto moveFromProductToSprint(Integer taskNumber, String token);
+	TaskDto moveFromProductToSprint(TaskMoveSprintRequestDto  dto, String token);
 
 	TaskDto moveFromSprintToProduct(Integer taskNumber, @RequestHeader("Authorization") String token);   
 

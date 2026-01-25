@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
+import com.ariel.mscrumjira.dto.TaskMoveSprintRequestDto;
 import com.ariel.mscrumjira.dto.UpdateDto;
 import com.ariel.mscrumjira.service.TaskService;
 
@@ -42,11 +43,11 @@ public class TaskController {
 				.orElseGet(()->ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/product-to-sprint/{taskNumber}")
-	public ResponseEntity<TaskDto> moveFromProductToSprint(@PathVariable Integer taskNumber, 
+	@PostMapping("/product-to-sprint")
+	public ResponseEntity<TaskDto> moveFromProductToSprint( @RequestBody TaskMoveSprintRequestDto  dto, 
 			@RequestHeader("Authorization") String token) {
-		TaskDto result = service.moveFromProductToSprint(taskNumber, token);
-		logger.info("Task moved Product→Sprint: taskNumber={}", taskNumber);
+		TaskDto result = service.moveFromProductToSprint(dto, token);
+		logger.info("Task moved Product→Sprint: taskNumber={}", dto.taskNumber());
 		return ResponseEntity.ok(result);
 	}
 
