@@ -52,6 +52,11 @@ public class SprintController {
 		return service.existsBySprintKey(sprintKey);
 	}
 	
+	@GetMapping("/exist-team")
+	public boolean existsByTeamKey(@RequestParam String teamKey) {
+		return service.existsByTeamKey(teamKey);
+	}
+	
 	@PostMapping 
 	public ResponseEntity<SprintDto> create (@RequestBody @Valid SprintCreateDto sprintCreateDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating Sprint ");

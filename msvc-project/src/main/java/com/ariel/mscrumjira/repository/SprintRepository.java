@@ -17,4 +17,6 @@ public interface SprintRepository extends JpaRepository<Sprint, UUID>{
 	void deleteBySprintKey(Integer sprintKey);
 	
 	boolean existsBySprintKey(Integer sprintKey);
+	
+	boolean existsByTeamKey(String teamKey);
 }

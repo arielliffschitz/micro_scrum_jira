@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.RoleDto;
 import com.ariel.mscrumjira.service.AuditUtil;
-import com.ariel.scrumjira.dto.RoleCreateDto;
 import com.ariel.scrumjira.entity.Role;
 import com.ariel.scrumjira.mapper.RoleMapper;
 import com.ariel.scrumjira.repository.RoleRepository;
@@ -34,8 +33,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public RoleDto save(RoleCreateDto roleCreateDto, String token) {
-		Role dao = new Role(roleCreateDto.name());
+	public RoleDto save(RoleName name, String token) {
+		Role dao = new Role(name);
 		
 		AuditUtil.BaseEntityCreatedFields(dao, token);
 		return RoleMapper.fromRoleToRoleDto(repository

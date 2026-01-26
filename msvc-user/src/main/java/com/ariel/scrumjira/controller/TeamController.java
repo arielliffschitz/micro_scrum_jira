@@ -57,8 +57,14 @@ public class TeamController {
 		
 		return ResponseEntity.ok(service.findById(id));
 	}	
+	@DeleteMapping
+	public ResponseEntity<Void>deleteByTeamKeyAndUsername(@RequestBody @Valid TeamCreateDto dto){
+		service.deleteByTeamKeyAndUsername(dto);;
+		return ResponseEntity.noContent().build();
+	}
+	
 	@DeleteMapping("/team-key/{teamKey}")
-	public ResponseEntity<Void>deleteByteamtKey(@PathVariable String teamKey){
+	public ResponseEntity<Void>deleteByteamKey(@PathVariable String teamKey){
 		service.deleteByTeamKey(teamKey);
 		return ResponseEntity.noContent().build();
 	}

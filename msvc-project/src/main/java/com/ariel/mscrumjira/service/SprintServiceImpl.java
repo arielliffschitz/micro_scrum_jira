@@ -96,5 +96,10 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	public boolean existsBySprintKey(Integer sprintKey) {		
 		return repository.existsBySprintKey(sprintKey);
+	}
+
+	@Override
+	public boolean existsByTeamKey(String teamKey) {
+		return repository.existsByTeamKey(teamKey);
 	}	
 }

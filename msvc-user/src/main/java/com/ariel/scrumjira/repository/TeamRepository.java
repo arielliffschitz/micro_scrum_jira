@@ -20,4 +20,6 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
 	Optional<Team>findByTeamKeyAndUsername(String teamKey, String username);
 	
 	void deleteByTeamKey(String teamKey);
+	
+	void deleteByTeamKeyAndUsername(String teamKey, String username);
 }

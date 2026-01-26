@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.service.AuditUtil;
+import com.ariel.scrumjira.client.SprintFeignClient;
 import com.ariel.scrumjira.dto.TeamCreateDto;
 import com.ariel.scrumjira.dto.TeamDto;
 import com.ariel.scrumjira.entity.Team;
@@ -22,12 +23,12 @@ public class TeamServiceImpl implements TeamService {
 	
 	final private UserService  userService;
 
-	
+	private final SprintFeignClient sprintClient;	
 
-	public TeamServiceImpl(TeamRepository repository, UserService userService) {
-		super();
+	public TeamServiceImpl(TeamRepository repository, UserService userService, SprintFeignClient sprintClient) {		
 		this.repository = repository;
 		this.userService = userService;
+		this.sprintClient = sprintClient;
 	}
 
 	@Override
@@ -91,8 +92,19 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteByTeamKey(String teamKey) {
-		repository.deleteByTeamKey(teamKey);
+		if(sprintClient.existsByTeamKey(teamKey)) {
+			throw new IllegalArgumentException("Forbiden delete, exist a sprint asign to this teamKey: "+ teamKey);}
+		else repository.deleteByTeamKey(teamKey);		
+	}
+
+	@Override
+	@Transactional
+	public void deleteByTeamKeyAndUsername(TeamCreateDto dto) {
+		if (findByTeamKey(dto.teamKey()).size() == 1) 
+			deleteByTeamKey(dto.teamKey());
+		else repository.deleteByTeamKeyAndUsername(dto.teamKey(), dto.username());		
 	}
 
 }

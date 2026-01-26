@@ -4,13 +4,12 @@ import java.util.List;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.RoleDto;
-import com.ariel.scrumjira.dto.RoleCreateDto;
 
 public interface RoleService {
 	
 	List<RoleDto> findAll();
 	
-	RoleDto save(RoleCreateDto roleCreateDto, String token);
+	RoleDto save(RoleName name, String token);
 	
 	void deleteByName(RoleName name);
 

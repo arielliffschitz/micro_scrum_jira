@@ -24,5 +24,7 @@ public interface TeamService {
 	boolean existsByTeamKey(String teamKey);		
 	
 	void deleteByTeamKey(String teamKey);
+	
+	void deleteByTeamKeyAndUsername(TeamCreateDto dto);
 
 }

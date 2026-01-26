@@ -23,5 +23,7 @@ public interface SprintService {
 	SprintDto updateState(Integer sprintKey, SprintState stateDto, String token);
 	
 	void deleteBySprintKey(Integer sprintKey);
+	
+	boolean existsByTeamKey(String teamKey);
 
 }

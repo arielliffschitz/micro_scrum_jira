@@ -1,7 +1,7 @@
 package com.ariel.scrumjira.mapper;
 
 import com.ariel.mscrumjira.dto.RoleDto;
-import com.ariel.scrumjira.dto.RoleCreateDto;
+
 
 import com.ariel.scrumjira.entity.Role;
 
@@ -13,8 +13,6 @@ public class RoleMapper {
 							role.getCreatedAt());
 	}
 
-	public static Role fromRoleCreateDtoToRole(RoleCreateDto roleCreateDto) {
-		return new Role(roleCreateDto.name());
-	}
+	
 
 }
