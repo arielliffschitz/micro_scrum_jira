@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
-import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.mscrumjira.dto.UserLoginDto;
+import com.ariel.scrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.entity.Role;
 import com.ariel.scrumjira.entity.User;

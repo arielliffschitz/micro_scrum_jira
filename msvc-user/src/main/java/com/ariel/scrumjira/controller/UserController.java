@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
+import com.ariel.scrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.service.UserService;
 

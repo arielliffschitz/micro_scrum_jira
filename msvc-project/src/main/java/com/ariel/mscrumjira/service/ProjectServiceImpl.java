@@ -53,12 +53,18 @@ public class ProjectServiceImpl implements ProjectService {
 	}	
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<ProjectDto> findByProjectKey(Integer projectKey) {
 		return repository.findByProjectKey(projectKey)
-				.map(ProjectMapper::mapToDto);
+				.map(dao->{					
+					ProjectDto dto = ProjectMapper.mapToDto(dao);
+					dto.setSprints(projectSprintService.findByProjectKey(projectKey));
+					return dto;
+				});
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public boolean existsByProjectKey(Integer projectKey) {		
 		 return repository.existsByProjectKey(projectKey);
 	}
@@ -75,7 +81,10 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional
 	public void deleteByProjectKey(Integer projectKey) {
-		repository.deleteByProjectKey(projectKey);
+		if(projectSprintService.existSprintByProjectKey(projectKey)) {
+			throw new IllegalArgumentException("Forbiden delete, exist a sprint asign to this  projectKey: "+ projectKey);
+		}
+		else repository.deleteByProjectKey(projectKey);
 	}	
 
 	@Override

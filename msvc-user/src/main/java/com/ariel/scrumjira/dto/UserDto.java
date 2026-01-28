@@ -1,4 +1,4 @@
-package com.ariel.mscrumjira.dto;
+package com.ariel.scrumjira.dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;

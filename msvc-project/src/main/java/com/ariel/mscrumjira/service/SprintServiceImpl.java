@@ -21,7 +21,7 @@ public class SprintServiceImpl implements SprintService {
 	
 	final private SprintRepository repository;
 	
-	final private ProjectSprintService projectSprintService;;
+	final private ProjectSprintService projectSprintService;
 	
 	final private UserFeignClient userClient;	
 

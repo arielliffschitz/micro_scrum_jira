@@ -12,5 +12,7 @@ public interface ProjectSprintService {
 	List<SprintDto>findByProjectKey(Integer projectKey);
 
 	Optional<Project> findProjectByProjectKey(Integer projectKey);
+	
+	boolean existSprintByProjectKey(Integer projectKey);
 
 }

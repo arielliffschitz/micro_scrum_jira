@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
-import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.mscrumjira.service.AuditUtil;
 import com.ariel.scrumjira.dto.UserCreateDto;
+import com.ariel.scrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserUpdateDto;
 import com.ariel.scrumjira.entity.Role;
 import com.ariel.scrumjira.entity.User;

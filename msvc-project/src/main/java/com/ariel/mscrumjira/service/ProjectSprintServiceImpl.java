@@ -39,4 +39,10 @@ public class ProjectSprintServiceImpl implements ProjectSprintService {
 		return projectRepository.findByProjectKey(projectKey);				
 	}
 
+	@Override
+	public boolean existSprintByProjectKey(Integer projectKey) {
+		
+		return sprintRepository.existsByProject_ProjectKey(projectKey);
+	}
+
 }

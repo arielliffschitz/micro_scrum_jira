@@ -3,9 +3,10 @@ package com.ariel.scrumjira.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.ariel.mscrumjira.dto.UserDto;
 import com.ariel.mscrumjira.dto.UserLoginDto;
 import com.ariel.scrumjira.dto.UserCreateDto;
+import com.ariel.scrumjira.dto.UserDto;
+
 import com.ariel.scrumjira.dto.UserUpdateDto;
 
 public interface UserService {
