@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/team")
 public class TeamController {
 	
-	final private TeamService service;
+	private final  TeamService service;
 	private final Logger logger = LoggerFactory.getLogger(TeamController.class);
 	
 	

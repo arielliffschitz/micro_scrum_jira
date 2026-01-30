@@ -10,7 +10,7 @@ public interface SprintBacklogItemService {
 
 	List<SprintBacklogItemDto> findAll();   
 
-	SprintBacklogItemDto findByTaskNumber(Integer taskNumber);
+	Optional<SprintBacklogItemDto> findByTaskNumber(Integer taskNumber);
 
 	Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, String token);
 

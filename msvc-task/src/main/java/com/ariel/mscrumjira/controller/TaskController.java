@@ -46,16 +46,16 @@ public class TaskController {
 	@PostMapping("/product-to-sprint")
 	public ResponseEntity<TaskDto> moveFromProductToSprint( @RequestBody TaskMoveSprintRequestDto  dto, 
 			@RequestHeader("Authorization") String token) {
-		TaskDto result = service.moveFromProductToSprint(dto, token);
+		TaskDto taskDto = service.moveFromProductToSprint(dto, token);
 		logger.info("Task moved Product→Sprint: taskNumber={}", dto.taskNumber());
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(taskDto);
 	}
 
 	@PostMapping("/sprint-to-product/{taskNumber}")
 	public ResponseEntity<TaskDto> moveFromSprintToProduct(@PathVariable Integer taskNumber, @RequestHeader("Authorization") String token) {
-		TaskDto result = service.moveFromSprintToProduct(taskNumber, token);
+		TaskDto taskDto = service.moveFromSprintToProduct(taskNumber, token);
 		logger.info("Task moved Sprint→Product: taskNumber={}", taskNumber);
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(taskDto);
 	}    
 
 	@PutMapping("/{taskNumber}/state/{taskState}")

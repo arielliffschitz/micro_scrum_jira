@@ -8,7 +8,6 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.client.ProjectFeignClient;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
@@ -68,10 +67,8 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {
-		Optional<ProductBacklogItem> itemOptional = repository.findByTaskNumber(taskNumber);
-
-		return itemOptional.map(ProductBacklogItemMapper::mapToDto);
+	public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {		
+		return	repository.findByTaskNumber(taskNumber).map(ProductBacklogItemMapper::mapToDto);		 
 	}  
 
 	@Override

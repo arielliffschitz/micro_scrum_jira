@@ -6,26 +6,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class BaseEntity {
-    
-    @Column(name = "created_by")
-    private String createdBy;
-    
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+public abstract class BaseEntity extends BaseCreateEntity{    
     
     @Column(name = "updated_by")
     private String updatedBy;
     
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;          
-  
-    public BaseEntity() {		
-	}
+    private LocalDateTime updatedAt;            	
 
-	public BaseEntity(String createdBy, LocalDateTime createdAt) {		
-		this.createdBy = createdBy;
-		this.createdAt = createdAt;
+	public BaseEntity(String createdBy, LocalDateTime createdAt) {
+		super( createdBy,  createdAt);		
+	}
+	
+	public BaseEntity() {		
 	}
 
 	public String getUpdatedBy() {
@@ -44,18 +37,6 @@ public abstract class BaseEntity {
 		this.updatedAt = updatedAt;
 	}
 
-	public String getCreatedBy() {
-        return createdBy;
-    }   
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }   
+	
                
 }

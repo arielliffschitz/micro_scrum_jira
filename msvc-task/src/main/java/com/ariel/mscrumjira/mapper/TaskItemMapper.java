@@ -1,7 +1,11 @@
 package com.ariel.mscrumjira.mapper;
 
+import com.ariel.mscrumjira.domain.enums.AuditTaskState;
+import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
+import com.ariel.mscrumjira.dto.TaskAuditCreateDto;
+import com.ariel.mscrumjira.dto.TaskAuditDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 
 public class TaskItemMapper {
@@ -67,6 +71,49 @@ public class TaskItemMapper {
                 productDto.getUpdatedAt()
                 
         );
-    }          
+    }
+
+    public static AuditTaskState fromTaskStateToAuditTaskState(TaskState taskState) {
+    	return switch (taskState) {
+    	case BLOCKED -> AuditTaskState.BLOCKED;
+    	case IN_PROGRESS -> AuditTaskState.IN_PROGRESS;
+    	case ARCHIVED -> AuditTaskState.ARCHIVED;
+    	case DONE -> AuditTaskState.DONE;
+    	case REVIEW -> AuditTaskState.REVIEW;
+    	case CANCELED -> AuditTaskState.CANCELED;
+    	case ON_HOLD -> AuditTaskState.ON_HOLD;		
+
+    	default -> throw new IllegalArgumentException("Unknown TaskState: " + taskState);
+    	};
+    }
+
+	public static  TaskAuditCreateDto toTaskCreateDtoFromTaskDto(TaskDto taskDto) {
+		
+		return new TaskAuditCreateDto(
+				taskDto.getTaskNumber(),
+				taskDto.getProjectKey(),
+				taskDto.getTitle(),
+				taskDto.getDescription(),
+				taskDto.getEstimate(),
+				taskDto.getSprintKey(),
+				taskDto.getCreatedBy(),
+				taskDto.getCreatedAt()
+				
+				);
+		
+	}
+
+	public static TaskDto toTaskDtoFromAudit(TaskAuditDto dto) {
+		 return new TaskDto(
+				 dto.getTaskNumber(), 
+				 dto.getProjectKey(),
+                 dto.getTitle(),
+                 dto.getDescription(),                 
+                 dto.getEstimate(), 
+                 TaskState.ARCHIVED,
+                 dto.getCreatedBy(),
+                 dto.getCreatedAt()                                                                     
+             );
+	}          
    
 }

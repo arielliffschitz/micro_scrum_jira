@@ -1,6 +1,7 @@
 package com.ariel.mscrumjira.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 
@@ -14,6 +15,7 @@ public class TaskDto {
 	private Integer estimate;	
 	private TaskState taskState;	
 	private Integer sprintKey;	
+	private List<TaskMovementAuditDto> taskMovements;
 	private LocalDateTime startDate;	
 	private LocalDateTime endDate;	
 	private String createdBy;	
@@ -57,6 +59,19 @@ public class TaskDto {
 		this.updatedBy = updatedBy;
 		this.updateAt = updateAt;
 		this.sprint = false;
+	}
+
+	
+	public TaskDto(Integer taskNumber, Integer projectKey, String title, String description, Integer estimate,
+			TaskState taskState, String createdBy, LocalDateTime createdAt) {		
+		this.taskNumber = taskNumber;
+		this.projectKey = projectKey;
+		this.title = title;
+		this.description = description;
+		this.estimate = estimate;
+		this.taskState = taskState;
+		this.createdBy = createdBy;
+		this.createdAt = createdAt;
 	}
 
 	public Integer getTaskNumber() {
@@ -119,13 +134,12 @@ public class TaskDto {
 		return sprint;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
+	public List<TaskMovementAuditDto> getTaskMovements() {
+		return taskMovements;
+	}
+
+	public void setTaskMovements(List<TaskMovementAuditDto> taskMovements) {
+		this.taskMovements = taskMovements;
+	}			
 
 }

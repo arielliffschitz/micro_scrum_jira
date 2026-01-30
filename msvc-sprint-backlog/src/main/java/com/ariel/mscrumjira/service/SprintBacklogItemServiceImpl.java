@@ -27,10 +27,10 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 	private final SprintFeignClient sprintClient;
 	
 	private static final Map<TaskState, Set<TaskState>> TASK_STATE_VALID = Map.of(
-						TaskState.PENDING,    Set.of(TaskState.IN_PROGRESS, TaskState.BLOCKED),
-			            TaskState.IN_PROGRESS,Set.of(TaskState.DONE, TaskState.BLOCKED) ,
-			            TaskState.BLOCKED,    Set.of(TaskState.IN_PROGRESS),
-			            TaskState.DONE,       Set.of()
+						TaskState.PENDING,    Set.of(TaskState.IN_PROGRESS, TaskState.BLOCKED,TaskState.ARCHIVED),
+			            TaskState.IN_PROGRESS,Set.of(TaskState.DONE, TaskState.BLOCKED,TaskState.ARCHIVED) ,
+			            TaskState.BLOCKED,    Set.of(TaskState.IN_PROGRESS,TaskState.ARCHIVED),
+			            TaskState.DONE,       Set.of(TaskState.ARCHIVED)
            ); 
 
 	
@@ -51,11 +51,8 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SprintBacklogItemDto findByTaskNumber(Integer taskNumber) {		
-		
-		return repository.findByTaskNumber(taskNumber)
-                .map(SprintBacklogItemMapper::mapToDto)
-                .orElseThrow(null);
+	public Optional <SprintBacklogItemDto> findByTaskNumber(Integer taskNumber) {			
+		return repository.findByTaskNumber(taskNumber) .map(SprintBacklogItemMapper::mapToDto);                
 	}     
 
 	@Override
