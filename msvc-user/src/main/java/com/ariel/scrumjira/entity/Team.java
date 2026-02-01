@@ -32,14 +32,15 @@ public class Team extends BaseEntity{
 	@Column(nullable = false)	
 	private String username;	
 	
-
+	private Boolean active;
 
 	public Team() {		
 	}
 	
-	public Team( String teamKey, String username) {		
+	public Team( String teamKey, String username, Boolean active) {		
 		this.teamKey = teamKey;
 		this.username = username;
+		this.active = active;
 	}
 
 	public String getUsername() {
@@ -58,5 +59,13 @@ public class Team extends BaseEntity{
 		return id;
 	}
 
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
 		
 }

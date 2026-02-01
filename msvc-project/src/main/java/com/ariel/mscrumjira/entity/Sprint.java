@@ -56,11 +56,7 @@ public class Sprint extends BaseEntity {
 	private LocalDateTime endDate;
 
 	public Sprint() {			
-	}
-
-
-	
-
+	}	
 
 	public Sprint( Project project,  String teamKey,  SprintState state,
 			 LocalDateTime startDate,  LocalDateTime endDate) {		

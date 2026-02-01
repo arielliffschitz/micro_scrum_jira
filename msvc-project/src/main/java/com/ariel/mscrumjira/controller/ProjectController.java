@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ariel.mscrumjira.domain.enums.ProjectState;
+import com.ariel.mscrumjira.domain.enums.SprintState;
 import com.ariel.mscrumjira.dto.ProjectCreateDto;
 import com.ariel.mscrumjira.dto.ProjectDto;
 import com.ariel.mscrumjira.dto.ProjectUpdateDto;
@@ -66,9 +68,8 @@ public class ProjectController {
 		
 		return ResponseEntity.ok(service.update(projectKey, projectUpdateDto, token));								
 	}
-	@DeleteMapping ("/project-key/{projectKey}")
-	public ResponseEntity<Void> updateState (@PathVariable Integer projectKey){
-		service.deleteByProjectKey(projectKey);
-		return ResponseEntity.noContent().build();
+	@PutMapping ("/project-key/{projectKey}/state")
+	public ResponseEntity<ProjectDto> updateState (@PathVariable Integer projectKey,@RequestBody ProjectState state, @RequestHeader("Authorization") String token){
+		return ResponseEntity.ok(service.updateState(projectKey, state, token));
 	}
 }

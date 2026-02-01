@@ -1,5 +1,6 @@
 package com.ariel.mscrumjira.mapper;
 
+import com.ariel.mscrumjira.dto.SprintCreateAuditDto;
 import com.ariel.mscrumjira.dto.SprintDto;
 import com.ariel.mscrumjira.entity.Sprint;
 
@@ -19,7 +20,16 @@ public class SprintMapper {
 				dao.getUpdatedBy(),
 				dao.getUpdatedAt() 
 				);
+	}
 
+	public static SprintCreateAuditDto mapToSprintCreateAuditDto(Sprint dao) {
+		return  new SprintCreateAuditDto(
+				dao.getSprintKey(),
+				dao.getProject().getProjectKey(),
+				dao.getTeamKey(),				
+				dao.getStartDate(),
+				dao.getEndDate()						
+				);
 	}
 
 }

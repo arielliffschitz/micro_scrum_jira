@@ -23,13 +23,13 @@ public class TaskAuditServiceImpl implements TaskAuditService {
 
 	@Transactional(readOnly = true)
 	public Optional<TaskAuditDto> findByTaskNumber(Integer taskNumber) {
-		return	repository.findByTaskNumber(taskNumber).map(TaskAuditMapper::mapToDto);
+		return	repository.findByTaskNumber(taskNumber).map(TaskAuditMapper::mapToTaskDto);
 	}
 
 	@Override
 	public TaskAuditDto create(TaskAuditCreateDto createDto) {
-		TaskAudit dao = TaskAuditMapper.mapToDaoFromCreate(createDto);
-		return  TaskAuditMapper.mapToDto(repository.save(dao));
+		TaskAudit dao = TaskAuditMapper.mapToTaskDaoFromCreate(createDto);
+		return  TaskAuditMapper.mapToTaskDto(repository.save(dao));
 	}
 
 }

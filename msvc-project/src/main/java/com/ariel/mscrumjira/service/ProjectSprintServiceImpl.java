@@ -6,10 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.ariel.mscrumjira.dto.ProjectDto;
 import com.ariel.mscrumjira.dto.SprintDto;
 import com.ariel.mscrumjira.entity.Project;
-import com.ariel.mscrumjira.mapper.ProjectMapper;
 import com.ariel.mscrumjira.mapper.SprintMapper;
 import com.ariel.mscrumjira.repository.ProjectRepository;
 import com.ariel.mscrumjira.repository.SprintRepository;

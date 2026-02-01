@@ -99,17 +99,6 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 	                break;
 	        } 
 	 }
-	
-//	//@Override
-//	@Transactional
-//	public Optional<SprintBacklogItemDto> updateState2(Integer taskNumber, TaskState taskState, String token) {		
-//		return repository.findByTaskNumber(taskNumber)
-//				.map(dao -> {                    
-//					dao = SprintBacklogItemMapper.mapToDaoUpdate(stateService.applyTransition(taskState, SprintBacklogItemMapper.mapToDtoUpdate(dao)));
-//					AuditUtil.BaseEntityUpdateFields(dao, token);
-//					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
-//				});
-//	}  
 
 	@Override
 	@Transactional

@@ -77,7 +77,7 @@ public class TeamServiceImpl implements TeamService {
 	@Transactional
 	public UUID create(TeamCreateDto createDto, String token) {		 
 		validateCreate(createDto);		
-		Team dao =  new Team(createDto.teamKey(),createDto.username());						
+		Team dao =  new Team(createDto.teamKey(),createDto.username(), true);						
 		AuditUtil.BaseEntityCreatedFields(dao, token);
 
 		return  repository.save(dao).getId();
@@ -96,7 +96,7 @@ public class TeamServiceImpl implements TeamService {
 	public void deleteByTeamKey(String teamKey) {
 		if(sprintClient.existsByTeamKey(teamKey)) {
 			throw new IllegalArgumentException("Forbiden delete, exist a sprint asign to this teamKey: "+ teamKey);}
-		else repository.deleteByTeamKey(teamKey);		
+		else repository.deactivateTeam(teamKey);		
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class TeamServiceImpl implements TeamService {
 	public void deleteByTeamKeyAndUsername(TeamCreateDto dto) {
 		if (findByTeamKey(dto.teamKey()).size() == 1) 
 			deleteByTeamKey(dto.teamKey());
-		else repository.deleteByTeamKeyAndUsername(dto.teamKey(), dto.username());		
+		else repository.deactivateUsernameInTeam(dto.teamKey(), dto.username());		
 	}
 
 }

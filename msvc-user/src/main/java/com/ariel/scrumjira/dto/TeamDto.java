@@ -6,9 +6,11 @@ public record TeamDto (
 	
 	   String teamKey,		
 		
-	   String username,					 
+	   String username,	
+	   
+	   Boolean active,
 	  
-	   String createdBy,   
+	   String createdBy,	   	  
 
 	   LocalDateTime createdAt,   
 	    

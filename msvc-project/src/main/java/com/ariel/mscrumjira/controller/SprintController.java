@@ -70,7 +70,7 @@ public class SprintController {
 	}
 	
 	@DeleteMapping ("/sprint-key/{sprintKey}")
-	public ResponseEntity<Void> updateState (@PathVariable Integer sprintKey){
+	public ResponseEntity<Void> delete (@PathVariable Integer sprintKey){
 		service.deleteBySprintKey(sprintKey);
 		return ResponseEntity.noContent().build();
 	}

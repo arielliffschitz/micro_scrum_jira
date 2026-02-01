@@ -8,7 +8,8 @@ public class TeamMapper {
 	public static TeamDto mapToDto(Team dao) {		
 		return new TeamDto(
 				dao.getTeamKey(),
-				dao.getUsername(),				
+				dao.getUsername(),	
+				dao.getActive(),
 				dao.getCreatedBy(),
 				dao.getCreatedAt(),
 				dao.getUpdatedBy(),

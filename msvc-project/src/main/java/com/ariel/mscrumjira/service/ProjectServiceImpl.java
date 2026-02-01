@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ariel.mscrumjira.client.AuditProjectFeignClient;
 import com.ariel.mscrumjira.domain.enums.ProjectState;
 import com.ariel.mscrumjira.dto.ProjectCreateDto;
 import com.ariel.mscrumjira.dto.ProjectDto;
@@ -25,10 +26,13 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	final private ProjectSprintService projectSprintService;
 	
+	final private AuditProjectFeignClient auditProjectClient;	
 
-	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService) {		
+	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService,
+			AuditProjectFeignClient auditProjectClient) {		
 		this.repository = repository;
 		this.projectSprintService = projectSprintService;
+		this.auditProjectClient = auditProjectClient;
 	}
 
 	@Override
@@ -71,8 +75,8 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public UUID create(ProjectCreateDto createDto,  String token) {
-		Project dao =  ProjectMapper.mapToCreateDao(createDto);
+	public UUID create(ProjectCreateDto dto,  String token) {
+		Project dao =  new Project(dto.name(),dto.description() );
 		dao.setState(ProjectState.CREATED);
 		AuditUtil.BaseEntityCreatedFields(dao, token);
 		return  repository.save(dao).getId();
@@ -99,6 +103,22 @@ public class ProjectServiceImpl implements ProjectService {
 		AuditUtil.BaseEntityUpdateFields(dao, token);
 
 		return ProjectMapper.mapToDto(repository.save(dao));
+	}
+
+	@Override
+	public ProjectDto updateState(Integer projectKey, ProjectState state, String token) {
+		Project dao = repository.findByProjectKey(projectKey).orElseThrow();				
+		dao.setState(state);
+		AuditUtil.BaseEntityUpdateFields(dao, token);
+		
+		if(state.equals(ProjectState.ARCHIVED)) {
+			auditProjectClient.createProject(ProjectMapper.mapToProjectCreateAuditDto(dao), token);			
+			repository.delete(dao);
+		}
+		else 				
+			repository.save(dao);
+
+		return ProjectMapper.mapToDto(dao);
 	}
 
 	
