@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ariel.mscrumjira.client.AuditProjectFeignClient;
+import com.ariel.mscrumjira.client.AuditFeignClient;
 import com.ariel.mscrumjira.client.UserFeignClient;
 import com.ariel.mscrumjira.domain.enums.SprintState;
 import com.ariel.mscrumjira.dto.SprintCreateDto;
@@ -25,14 +25,14 @@ public class SprintServiceImpl implements SprintService {
 	final private ProjectSprintService projectSprintService;
 	
 	final private UserFeignClient userClient;
-	final private AuditProjectFeignClient auditProjectClient;
+	final private AuditFeignClient auditClient;
 
 	public SprintServiceImpl(SprintRepository repository, ProjectSprintService projectSprintService,
-			UserFeignClient userClient,AuditProjectFeignClient auditProjectClient) {		
+			UserFeignClient userClient,AuditFeignClient auditClient) {		
 		this.repository = repository;
 		this.projectSprintService = projectSprintService;
 		this.userClient = userClient;
-		this.auditProjectClient =auditProjectClient;
+		this.auditClient =auditClient;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class SprintServiceImpl implements SprintService {
 		AuditUtil.BaseEntityUpdateFields(dao, token);
 		
 		if(state.equals(SprintState.ARCHIVED)) {
-			auditProjectClient.createSprint(SprintMapper.mapToSprintCreateAuditDto(dao), token);			
+			auditClient.createSprint(SprintMapper.mapToSprintCreateAuditDto(dao), token);			
 			repository.delete(dao);
 		}
 		else 				

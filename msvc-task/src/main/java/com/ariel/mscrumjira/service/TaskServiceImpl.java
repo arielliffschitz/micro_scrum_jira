@@ -2,11 +2,12 @@ package com.ariel.mscrumjira.service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.client.AuditFeignClient;
 import com.ariel.mscrumjira.client.ProductBacklogFeignClient;
@@ -52,16 +53,18 @@ public class TaskServiceImpl implements TaskService{
 	}    
 
 	@Override
-	public Optional<TaskDto> findByTaskNumber(Integer taskNumber) {
+	public TaskDto findByTaskNumber(Integer taskNumber) {
 		TaskDto taskDto = tryFindInSprint(taskNumber);
 		if (taskDto == null)
 			taskDto = tryFindInProduct(taskNumber);
 		if (taskDto == null)
 			taskDto = tryFindInAudit(taskNumber);
-		if (taskDto != null)
+		if (taskDto != null) {
 			taskDto.setTaskMovements(clientAudit.findMovementByTaskNumber(taskNumber));
-		return Optional.ofNullable(taskDto);	
-	}  	    	    	   	    		
+			return taskDto;	
+		} 
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+	}
 
 	@Override
 	public TaskDto create(ProductCreateDto dto,  String token ) {
@@ -70,23 +73,32 @@ public class TaskServiceImpl implements TaskService{
 
 	@Override
 	public TaskDto moveFromProductToSprint(TaskMoveSprintRequestDto  dto, String token) {
-		ProductBacklogItemDto productDto = clientProduct.findByTaskNumber(dto.taskNumber());
-		
+		ProductBacklogItemDto productDto;
+		try {
+			productDto = clientProduct.findByTaskNumber(dto.taskNumber());
+		} catch (FeignException.NotFound e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found inProduct");
+		}
 		SprintBacklogItemDto  sprintDto  = TaskItemMapper.mapFromProductDtoToSprintDto(productDto);
 		sprintDto.setSprintKey(dto.sprintKey());
 		clientSprint.save(sprintDto, token);
-		
+
 		clientProduct.deleteProductByTaskNumber(dto.taskNumber());
-		
+
 		clientAudit.createMovement(new TaskMovementAuditCreateDto(dto.taskNumber(), AuditTaskState.MOVE_TO_SPRINT), token);
-		
+
 		return TaskItemMapper.toTaskDtoFromSprint(sprintDto);
 	}
 
 	@Override
 	public TaskDto moveFromSprintToProduct(Integer taskNumber,  String token) {
-		SprintBacklogItemDto  SprintDto  = clientSprint.findByTaskNumber(taskNumber);
-		ProductBacklogItemDto productDto = clientProduct.save(TaskItemMapper.mapFromSprintDtoToProductDto(SprintDto), token);
+		SprintBacklogItemDto sprintDto;
+		try {
+		    sprintDto = clientSprint.findByTaskNumber(taskNumber);
+		} catch (FeignException.NotFound e) {
+		    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found in Sprint");
+		}
+		ProductBacklogItemDto productDto = clientProduct.save(TaskItemMapper.mapFromSprintDtoToProductDto(sprintDto), token);
 		
 		clientSprint.deleteProductByTaskNumber(taskNumber);
 		
@@ -96,14 +108,17 @@ public class TaskServiceImpl implements TaskService{
 	}
 
 	@Override
-	public TaskDto update(Integer taskNumber, UpdateDto taskUpdate,  String token) {      
-		try {
-			clientSprint.findByTaskNumber(taskNumber);                                                
-			return TaskItemMapper.toTaskDtoFromSprint(clientSprint.update(taskNumber, taskUpdate,token));
-
-		} catch (FeignException.NotFound e) {            
-			return TaskItemMapper.toTaskDtoFromProduct(clientProduct.update(taskNumber, taskUpdate, token));
-		}                                             
+	public TaskDto update(Integer taskNumber, UpdateDto taskUpdate,  String token) {  
+		TaskDto taskDto = tryFindInSprint(taskNumber); 
+		if (taskDto != null) {
+			clientSprint.update(taskNumber, taskUpdate,token);
+			return taskDto;
+		}
+		taskDto = tryFindInProduct(taskNumber);						
+		if (taskDto != null) {clientProduct.update(taskNumber, taskUpdate, token);
+		return taskDto;
+		}
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
 	}   
 
 	@Override

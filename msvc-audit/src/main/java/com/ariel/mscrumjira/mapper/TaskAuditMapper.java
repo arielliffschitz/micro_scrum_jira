@@ -1,13 +1,8 @@
 package com.ariel.mscrumjira.mapper;
 
-import com.ariel.mscrumjira.dto.ProjectCreateAuditDto;
-import com.ariel.mscrumjira.dto.SprintAuditDto;
-import com.ariel.mscrumjira.dto.SprintCreateAuditDto;
 import com.ariel.mscrumjira.dto.TaskAuditCreateDto;
 import com.ariel.mscrumjira.dto.TaskAuditDto;
 import com.ariel.mscrumjira.dto.TaskMovementAuditDto;
-import com.ariel.mscrumjira.entity.ProjectAudit;
-import com.ariel.mscrumjira.entity.SprintAudit;
 import com.ariel.mscrumjira.entity.TaskAudit;
 import com.ariel.mscrumjira.entity.TaskMovementAudit;
 
@@ -46,26 +41,5 @@ public class TaskAuditMapper {
 				createDto.createdBy(),
 				createDto.createdAt()				
 				);
-	}
-
-	public static SprintAudit mapToSprintDaoFromCreate(SprintCreateAuditDto createDto) {
-		
-		return new SprintAudit (
-				createDto.sprintKey(),
-				createDto.projectKey(),
-				createDto.teamKey(),
-				createDto.startDate(),
-				createDto.endDate()				
-				);					
-	}
-
-	public static ProjectAudit mapToProjectDaoFromCreate(ProjectCreateAuditDto createDto) {
-		
-		return new ProjectAudit(
-				createDto.projectKey(),
-				createDto.name(),
-				createDto.description()
-				);
 	}	
-
 }

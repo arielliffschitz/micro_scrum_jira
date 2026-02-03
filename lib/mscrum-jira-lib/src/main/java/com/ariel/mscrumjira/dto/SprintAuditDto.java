@@ -3,7 +3,6 @@ package com.ariel.mscrumjira.dto;
 import java.time.LocalDateTime;
 
 public record SprintAuditDto (
-
 	
 	 Integer sprintKey, 	
 	
@@ -17,11 +16,8 @@ public record SprintAuditDto (
 	
 	 String archivedBy,
 	
-	 LocalDateTime archivedAt,
+	 LocalDateTime archivedAt	
 	
-	 String createdBy,
-	
-	 LocalDateTime createdAt
 	 )
 {
 }

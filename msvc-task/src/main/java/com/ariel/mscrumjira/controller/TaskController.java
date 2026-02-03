@@ -38,9 +38,7 @@ public class TaskController {
 
 	@GetMapping("/task-number/{taskNumber}")
 	public ResponseEntity<TaskDto> findByTaskNumber(@PathVariable Integer taskNumber){                          
-		return  service.findByTaskNumber(taskNumber)
-				.map(dto->ResponseEntity.ok(dto) )
-				.orElseGet(()->ResponseEntity.notFound().build());
+		 return ResponseEntity.ok (service.findByTaskNumber(taskNumber));			
 	}
 
 	@PostMapping("/product-to-sprint")

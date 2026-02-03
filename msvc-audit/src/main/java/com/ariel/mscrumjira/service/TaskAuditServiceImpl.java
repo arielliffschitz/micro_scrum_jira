@@ -2,8 +2,10 @@ package com.ariel.mscrumjira.service;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.dto.TaskAuditCreateDto;
 import com.ariel.mscrumjira.dto.TaskAuditDto;
@@ -22,14 +24,15 @@ public class TaskAuditServiceImpl implements TaskAuditService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<TaskAuditDto> findByTaskNumber(Integer taskNumber) {
-		return	repository.findByTaskNumber(taskNumber).map(TaskAuditMapper::mapToTaskDto);
+	public TaskAuditDto findByTaskNumber(Integer taskNumber) {
+		return	repository.findByTaskNumber(taskNumber).map(TaskAuditMapper::mapToTaskDto) 
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
 	}
 
 	@Override
-	public TaskAuditDto create(TaskAuditCreateDto createDto) {
+	public void create(TaskAuditCreateDto createDto) {
 		TaskAudit dao = TaskAuditMapper.mapToTaskDaoFromCreate(createDto);
-		return  TaskAuditMapper.mapToTaskDto(repository.save(dao));
+		repository.save(dao);		
 	}
 
 }

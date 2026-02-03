@@ -3,6 +3,7 @@ package com.ariel.mscrumjira.mapper;
 import com.ariel.mscrumjira.dto.ProjectCreateAuditDto;
 import com.ariel.mscrumjira.dto.ProjectDto;
 import com.ariel.mscrumjira.dto.ProjectUpdateDto;
+import com.ariel.mscrumjira.dto.SprintAuditDto;
 import com.ariel.mscrumjira.entity.Project;
 
 public class ProjectMapper {
@@ -21,24 +22,18 @@ public class ProjectMapper {
     }	
 	
 	public static void applyUpdateToProject(Project currentProject, ProjectUpdateDto projectUpdateDto) {
-		if (projectUpdateDto.getName() !=null) 
-			currentProject.setName(projectUpdateDto.getName());
-		if (projectUpdateDto.getDescription() !=null) 
-			currentProject.setDescription(projectUpdateDto.getDescription());
-		if (projectUpdateDto.getState() !=null) 
-			currentProject.setState(projectUpdateDto.getState());			
+		if (projectUpdateDto.name() !=null) 
+			currentProject.setName(projectUpdateDto.name());
+		if (projectUpdateDto.description() !=null) 
+			currentProject.setDescription(projectUpdateDto.description());				
 	}
-	public static Project mapToDao(ProjectDto dto) {
-		 return  new Project(                                               	        		
-	        		dto.getName(),
-	        		dto.getDescription()	        			        		               
-             );
-	}
+
 	public static ProjectCreateAuditDto mapToProjectCreateAuditDto(Project dao) {
 		 return  new ProjectCreateAuditDto(
 				 dao.getProjectKey(),
 				 dao.getName(),
 				 dao.getDescription()
 				 );
-	}
+	}	
+	
 }
