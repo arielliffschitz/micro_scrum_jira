@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,14 +66,6 @@ public class SprintController {
 	@PutMapping("/sprint-key/{sprintKey}")
 	public ResponseEntity<SprintDto> updateState (@PathVariable Integer sprintKey,@RequestBody SprintState state, @RequestHeader("Authorization") String token ){
 		return ResponseEntity.ok(service.updateState(sprintKey, state, token));
-	}
-	
-	@DeleteMapping ("/sprint-key/{sprintKey}")
-	public ResponseEntity<Void> delete (@PathVariable Integer sprintKey){
-		service.deleteBySprintKey(sprintKey);
-		return ResponseEntity.noContent().build();
-	}
-	
-	
+	}		
 	
 }

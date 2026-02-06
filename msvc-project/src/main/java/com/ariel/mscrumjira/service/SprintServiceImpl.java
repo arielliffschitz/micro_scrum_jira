@@ -5,8 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.client.AuditFeignClient;
 import com.ariel.mscrumjira.client.UserFeignClient;
@@ -20,12 +22,12 @@ import com.ariel.mscrumjira.repository.SprintRepository;
 @Service
 public class SprintServiceImpl implements SprintService {
 	
-	final private SprintRepository repository;
+	 private SprintRepository repository;
 	
-	final private ProjectSprintService projectSprintService;
+	 private ProjectSprintService projectSprintService;
 	
-	final private UserFeignClient userClient;
-	final private AuditFeignClient auditClient;
+	 private UserFeignClient userClient;
+	 private AuditFeignClient auditClient;
 
 	public SprintServiceImpl(SprintRepository repository, ProjectSprintService projectSprintService,
 			UserFeignClient userClient,AuditFeignClient auditClient) {		
@@ -61,34 +63,11 @@ public class SprintServiceImpl implements SprintService {
 	public UUID create(SprintCreateDto createDto, String token) {
 		validateCreate(createDto.teamKey());
 		Sprint dao = createDao(createDto);		
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 		
 		return repository.save(dao).getId();
-	}
-
-	@Override
-	@Transactional
-	public SprintDto updateState(Integer sprintKey, SprintState state, String token) {
-		Sprint dao = repository.findBySprintKey(sprintKey).orElseThrow();
-		dao.setState(state);
-		AuditUtil.BaseEntityUpdateFields(dao, token);
-		
-		if(state.equals(SprintState.ARCHIVED)) {
-			auditClient.createSprint(SprintMapper.mapToSprintCreateAuditDto(dao), token);			
-			repository.delete(dao);
-		}
-		else 				
-			repository.save(dao);
-
-		return SprintMapper.mapToDto(dao);
-	}
-
-	@Override
-	@Transactional
-	public void deleteBySprintKey(Integer sprintKey) {
-		repository.deleteBySprintKey(sprintKey);		
 	}	
-	
+		
 	@Override
 	public boolean existsBySprintKey(Integer sprintKey) {		
 		return repository.existsBySprintKey(sprintKey);
@@ -98,6 +77,32 @@ public class SprintServiceImpl implements SprintService {
 	public boolean existsByTeamKey(String teamKey) {
 		return repository.existsByTeamKey(teamKey);
 	}	
+	
+	@Override
+	@Transactional
+	public SprintDto updateState(Integer sprintKey, SprintState state, String token) {
+		Sprint dao = findSprint(sprintKey);
+		dao.setState(state);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
+
+		if(state.equals(SprintState.ARCHIVED))
+			archiveSprint(dao,token );					
+		else 				
+			repository.save(dao);
+
+		return SprintMapper.mapToDto(dao);
+	}
+
+	private void archiveSprint(Sprint dao, String token) {
+		auditClient.createSprint(SprintMapper.mapToSprintCreateAuditDto(dao), token);			
+		repository.delete(dao);
+		
+	}
+
+	private Sprint findSprint(Integer sprintKey) {
+		return repository.findBySprintKey(sprintKey)
+		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sprint: "+ sprintKey+" not found"));
+	}
 	
 	private void validateCreate(String teamKey) {
 		 if ( ! userClient.existsByTeamKey(teamKey)) 

@@ -42,17 +42,15 @@ public class TaskAuditController {
 	} 
 	
 	@PostMapping ("/movement")
-	public ResponseEntity<TaskMovementAuditDto> createMovement(@RequestBody @Valid  TaskMovementAuditCreateDto dto ,
+	public void createMovement(@RequestBody @Valid  TaskMovementAuditCreateDto dto ,
 																@RequestHeader("Authorization") String token ){
 		logger.info("creating taskAuditMovementState {} taskNumber {} ",dto.auditTaskState(),dto.taskNumber());
-		
-		return ResponseEntity.ok(movementTaskService.create(dto, token));		
+		movementTaskService.create(dto, token);			
 	}
 	
 	@GetMapping("/task-number/{taskNumber}")
 	public TaskAuditDto findByTaskNumber(@PathVariable Integer taskNumber) {       
-		return   taskService.findByTaskNumber(taskNumber);
-				 
+		return   taskService.findByTaskNumber(taskNumber);				 
 	} 
 	
 	@PostMapping 

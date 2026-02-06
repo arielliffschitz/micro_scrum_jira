@@ -14,7 +14,7 @@ public interface SprintBacklogItemService {
 
 	Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, String token);
 
-	SprintBacklogItemDto save(SprintBacklogItemDto dto, String token);
+	void save(SprintBacklogItemDto dto, String token);
 
 	void deleteByTaskNumber(Integer taskNumber);
 

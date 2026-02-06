@@ -57,14 +57,13 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	@Override
 	@Transactional
-	public SprintBacklogItemDto save(SprintBacklogItemDto dto, String token) {
+	public void save(SprintBacklogItemDto dto, String token) {
 		if(!sprintClient.existsBySprintKey(dto.getSprintKey())) { 
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "the sprintKey: " + dto.getSprintKey() + " doesn't exist");}
 		SprintBacklogItem dao = SprintBacklogItemMapper.mapToDao(dto);
 		dao.setTaskState(TaskState.PENDING); 
-		AuditUtil.BaseEntityUpdateFields(dao, token);		
-		
-		return SprintBacklogItemMapper.mapToDto(repository.save(dao));        
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);		
+		repository.save(dao);		        
 	}	
 
 	@Override
@@ -73,7 +72,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    
 					applyTransition(taskState, dao);
-					AuditUtil.BaseEntityUpdateFields(dao, token);
+					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
 				});
 	}  
@@ -113,7 +112,7 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    
 					SprintBacklogItemMapper.applyUpdateToSprint (dao, taskUpdate);
-					AuditUtil.BaseEntityUpdateFields(dao, token);
+					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
 				});
 	}

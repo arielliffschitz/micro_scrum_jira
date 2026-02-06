@@ -42,7 +42,7 @@ public class TaskItemMapper {
                             dto.getUpdatedAt()                                                        
                         );
     }
-    public static ProductBacklogItemDto mapFromSprintDtoToProductDto(SprintBacklogItemDto sprintDto) {
+    public static ProductBacklogItemDto toProductDtoFromSprintDto(SprintBacklogItemDto sprintDto) {
         return new ProductBacklogItemDto(                
                 sprintDto.getTitle(),
                 sprintDto.getDescription(),
@@ -57,7 +57,7 @@ public class TaskItemMapper {
         );
     }
 
-    public static SprintBacklogItemDto mapFromProductDtoToSprintDto(ProductBacklogItemDto productDto) {
+    public static SprintBacklogItemDto toSprintDtoFromProductDto(ProductBacklogItemDto productDto) {
         return new SprintBacklogItemDto(
                 productDto.getTaskNumber(),                
                 productDto.getTitle(),
@@ -71,9 +71,9 @@ public class TaskItemMapper {
                 productDto.getUpdatedAt()
                 
         );
-    }
-
-    public static AuditTaskState fromTaskStateToAuditTaskState(TaskState taskState) {
+    }   
+    
+    public static AuditTaskState toAuditTaskStateFromTaskState(TaskState taskState) {
     	return switch (taskState) {
     	case BLOCKED -> AuditTaskState.BLOCKED;
     	case IN_PROGRESS -> AuditTaskState.IN_PROGRESS;

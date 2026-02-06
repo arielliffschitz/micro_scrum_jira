@@ -21,12 +21,12 @@ public class TaskDto {
 	private String createdBy;	
 	private LocalDateTime createdAt;	
 	private String updatedBy;	
-	private LocalDateTime updateAt;	
+	private LocalDateTime updatedAt;	
 	private Boolean sprint;
 	
 	public TaskDto(Integer taskNumber, Integer projectKey, String title, String description, Integer priority,
 			Integer estimate, TaskState taskState, Integer sprintKey, LocalDateTime startDate, LocalDateTime endDate,
-			String createdBy, LocalDateTime createdAt, String updatedBy, LocalDateTime updateAt) {
+			String createdBy, LocalDateTime createdAt, String updatedBy, LocalDateTime updatedAt) {
 		
 		this.taskNumber = taskNumber;
 		this.projectKey = projectKey;
@@ -41,7 +41,7 @@ public class TaskDto {
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
 		this.updatedBy = updatedBy;
-		this.updateAt = updateAt;
+		this.updatedAt = updatedAt;
 		this.sprint = true;
 	}
 
@@ -57,7 +57,7 @@ public class TaskDto {
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
 		this.updatedBy = updatedBy;
-		this.updateAt = updateAt;
+		this.updatedAt = updateAt;
 		this.sprint = false;
 	}
 
@@ -126,8 +126,8 @@ public class TaskDto {
 		return updatedBy;
 	}
 
-	public LocalDateTime getUpdateAt() {
-		return updateAt;
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
 	}
 
 	public Boolean getSprint() {

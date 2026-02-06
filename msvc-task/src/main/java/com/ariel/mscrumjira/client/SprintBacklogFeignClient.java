@@ -19,13 +19,13 @@ import com.ariel.mscrumjira.dto.UpdateDto;
 public interface SprintBacklogFeignClient {
 
 	@PostMapping
-	SprintBacklogItemDto save(@RequestBody SprintBacklogItemDto dto, @RequestHeader("Authorization") String token);
+	void save(@RequestBody SprintBacklogItemDto dto, @RequestHeader("Authorization") String token);
 
 	@GetMapping("/task-number/{taskNumber}")
 	SprintBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber);
 
 	@DeleteMapping("/task-number/{taskNumber}")
-	void deleteProductByTaskNumber(@PathVariable Integer taskNumber);
+	void deleteByTaskNumber(@PathVariable Integer taskNumber);
 
 	@GetMapping
 	List<SprintBacklogItemDto> findAll();

@@ -24,7 +24,7 @@ public interface AuditFeignClient {
 	 List<TaskMovementAuditDto> findMovementByTaskNumber(@PathVariable Integer taskNumber);    			
 	
 	@PostMapping("/movement")
-	TaskMovementAuditDto createMovement(@RequestBody @Valid  TaskMovementAuditCreateDto dto ,@RequestHeader("Authorization") String token );
+	void createMovement(@RequestBody @Valid  TaskMovementAuditCreateDto dto ,@RequestHeader("Authorization") String token );
 	
 	@GetMapping("/task-number/{taskNumber}")
 	public TaskAuditDto findByTaskNumber(@PathVariable Integer taskNumber);

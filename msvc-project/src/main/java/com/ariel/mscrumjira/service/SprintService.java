@@ -20,9 +20,7 @@ public interface SprintService {
 	
 	UUID create(SprintCreateDto dto, String token);
 	
-	SprintDto updateState(Integer sprintKey, SprintState stateDto, String token);
-	
-	void deleteBySprintKey(Integer sprintKey);
+	SprintDto updateState(Integer sprintKey, SprintState stateDto, String token);	
 	
 	boolean existsByTeamKey(String teamKey);
 

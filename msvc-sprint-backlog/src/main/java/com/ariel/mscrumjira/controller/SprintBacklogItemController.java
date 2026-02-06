@@ -29,8 +29,8 @@ public class SprintBacklogItemController {
 	}
 
 	@PostMapping
-	public SprintBacklogItemDto save (@RequestBody SprintBacklogItemDto dto, @RequestHeader("Authorization") String token) {         
-		return service.save(dto, token);
+	public void save (@RequestBody SprintBacklogItemDto dto, @RequestHeader("Authorization") String token) {         
+		service.save(dto, token);
 	}
 
 	@GetMapping

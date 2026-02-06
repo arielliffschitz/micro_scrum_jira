@@ -32,7 +32,7 @@ public class ProjectAuditServiceImpl implements ProjectAuditService {
 	@Transactional
 	public void createProject(ProjectCreateAuditDto createDto, String token) {
 		ProjectAudit  dao = ProjectAuditMapper.mapToProjectDaoFromCreate(createDto);		
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 		projectRepository.save(dao);	
 		
 	}
@@ -40,7 +40,7 @@ public class ProjectAuditServiceImpl implements ProjectAuditService {
 	@Transactional
 	public void createSprint(SprintCreateAuditDto createDto, String token) {
 		SprintAudit  dao = ProjectAuditMapper.mapToSprintDaoFromCreate(createDto);		
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 		sprintRepository.save(dao);		
 	}
 

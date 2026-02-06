@@ -44,7 +44,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 	@Transactional
 	public ProductBacklogItemDto save(ProductBacklogItemDto backlogItemDto,  String token) {  			
 		ProductBacklogItem dao = ProductBacklogItemMapper.mapToDao(backlogItemDto);
-		AuditUtil.BaseEntityUpdateFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 
 		return ProductBacklogItemMapper.mapToDto(repository.save(dao));
 	}
@@ -54,7 +54,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 	public UUID create(ProductCreateDto dto, String token) {  
 		validateProjectKey(dto.projectKey());
 		ProductBacklogItem dao =  ProductBacklogItemMapper.mapToDaoCreate(dto);
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 
 		return  repository.save(dao).getId();
 	}               	
@@ -84,7 +84,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    
 					ProductBacklogItemMapper.applyUpdateToProduct (dao, taskUpdate);
-					AuditUtil.BaseEntityUpdateFields(dao, token);
+					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 					return ProductBacklogItemMapper.mapToDto(repository.save(dao));
 				});
 	}

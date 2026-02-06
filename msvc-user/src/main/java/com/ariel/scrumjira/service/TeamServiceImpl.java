@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ariel.mscrumjira.service.AuditUtil;
+import com.ariel.mscrumjira.service.PersistenceMetadataUtil;
 import com.ariel.scrumjira.client.SprintFeignClient;
 import com.ariel.scrumjira.dto.TeamCreateDto;
 import com.ariel.scrumjira.dto.TeamDto;
@@ -78,7 +78,7 @@ public class TeamServiceImpl implements TeamService {
 	public UUID create(TeamCreateDto createDto, String token) {		 
 		validateCreate(createDto);		
 		Team dao =  new Team(createDto.teamKey(),createDto.username(), true);						
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 
 		return  repository.save(dao).getId();
 	}

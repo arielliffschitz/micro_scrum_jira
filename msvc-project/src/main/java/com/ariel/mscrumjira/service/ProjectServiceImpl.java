@@ -22,14 +22,14 @@ import com.ariel.mscrumjira.repository.ProjectRepository;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-	final private ProjectRepository repository;
+	 private ProjectRepository repository;
 
-	final private ProjectSprintService projectSprintService;
+	 private ProjectSprintService projectSprintService;
 
-	final private AuditFeignClient auditClient;	
+	 private AuditFeignClient auditClient;	
 
-	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService,
-			AuditFeignClient auditClient) {		
+	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService, 
+								AuditFeignClient auditClient) {		
 		this.repository = repository;
 		this.projectSprintService = projectSprintService;
 		this.auditClient = auditClient;
@@ -38,17 +38,14 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ProjectDto> findAll() {
-
-		List<ProjectDto> projectList = repository.findAll().stream()				                
-				.map(ProjectMapper::mapToDto)
-				.collect(Collectors.toList());		
-
-		for (ProjectDto p : projectList) {
-			p.setSprints(projectSprintService.findByProjectKey(p.getProjectKey()));
-		} 
-
-		return projectList;        
-	}
+		return repository.findAll().stream()				                
+				.map(dao->{
+					ProjectDto dto = ProjectMapper.mapToDto(dao);
+					dto.setSprints(projectSprintService.findByProjectKey(dto.getProjectKey()));
+					return dto;
+				})
+				.collect(Collectors.toList());				
+	}	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -88,30 +85,26 @@ public class ProjectServiceImpl implements ProjectService {
 	public UUID create(ProjectCreateDto dto,  String token) {
 		Project dao =  new Project(dto.name(),dto.description() );
 		dao.setState(ProjectState.CREATED);
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 		return  repository.save(dao).getId();
 	}	
 
 	@Override
 	@Transactional
 	public ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token) {
-
-		Project dao = repository.findByProjectKey(projectKey)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project: "+ projectKey+" not found"));
-
+		Project dao = findProject(projectKey);
 		ProjectMapper.applyUpdateToProject(dao, projectUpdateDto);
-		AuditUtil.BaseEntityUpdateFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 
 		return ProjectMapper.mapToDto(repository.save(dao));
-	}
+	}	
 
 	@Override
 	@Transactional
 	public ProjectDto updateState(Integer projectKey, ProjectState state, String token) {
-		Project dao = repository.findByProjectKey(projectKey)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project: "+ projectKey+" not found"));			
+		Project dao = findProject(projectKey);		
 		dao.setState(state);
-		AuditUtil.BaseEntityUpdateFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 
 		if(state.equals(ProjectState.ARCHIVED)) 
 			archiveProject(dao, token);		
@@ -121,14 +114,23 @@ public class ProjectServiceImpl implements ProjectService {
 		return ProjectMapper.mapToDto(dao);
 	}
 
-	private void archiveProject(Project dao, String token) {
-		if(projectSprintService.existSprintByProjectKey(dao.getProjectKey())) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Project: "+ dao.getProjectKey()+
-					"  has active sprints and cannot be archived"	 );	
-		}else {
-			auditClient.createProject(ProjectMapper.mapToProjectCreateAuditDto(dao), token);			
-			repository.delete(dao);	
-		}
+	private Project findProject(Integer projectKey) {
+		return repository.findByProjectKey(projectKey)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project: "+ projectKey+" not found"));
 	}
+
+	private void archiveProject(Project dao, String token) {
+		existSprintByProjectKey(dao.getProjectKey());		
+		auditClient.createProject(ProjectMapper.mapToProjectCreateAuditDto(dao), token);			
+		repository.delete(dao);	
+	}
+
+	private void existSprintByProjectKey(Integer projectKey) {
+		if(projectSprintService.existSprintByProjectKey(projectKey)) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Project: "+projectKey+
+					"  has active sprints and cannot be archived"	 );	
+		}		
+	}
+	
 
 }

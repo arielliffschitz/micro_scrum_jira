@@ -31,10 +31,9 @@ public class TaskMovementAuditServiceImpl implements TaskMovementAuditService {
 
 	@Override
 	@Transactional
-	public TaskMovementAuditDto create(TaskMovementAuditCreateDto dto, String token) {
+	public void create(TaskMovementAuditCreateDto dto, String token) {
 		TaskMovementAudit dao =  new TaskMovementAudit(dto.taskNumber(), dto.auditTaskState());						
-		AuditUtil.BaseEntityCreatedFields(dao, token);
-
-		return  TaskAuditMapper.mapToMovementDto(repository.save(dao));
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
+		repository.save(dao);	
 	}
 }

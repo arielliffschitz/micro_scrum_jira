@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.UserLoginDto;
-import com.ariel.mscrumjira.service.AuditUtil;
+import com.ariel.mscrumjira.service.PersistenceMetadataUtil;
 import com.ariel.scrumjira.dto.UserCreateDto;
 import com.ariel.scrumjira.dto.UserDto;
 import com.ariel.scrumjira.dto.UserUpdateDto;
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public UserDto create(UserCreateDto userCreateDto, String token) {
 		User dao = createDao(userCreateDto);       		  
-		AuditUtil.BaseEntityCreatedFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 		
 		return UserMapper.fromUsertoUserDto(userRepository.save(dao));
 	} 	
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService{
 		dao = UserMapper.applyUpdateToUser(dao, userUpdateDto);
 		if (userUpdateDto.getRoles()!=null)
 			dao.setRoles(assignRoles(userUpdateDto.getRoles()));   	    	
-		AuditUtil.BaseEntityUpdateFields(dao, token);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 		return UserMapper.fromUsertoUserDto(userRepository.save(dao));    	        
 	}
 
