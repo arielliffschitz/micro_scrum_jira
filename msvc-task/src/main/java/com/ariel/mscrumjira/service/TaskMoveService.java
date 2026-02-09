@@ -1,10 +1,13 @@
 package com.ariel.mscrumjira.service;
 
+import org.springframework.stereotype.*;
+
 import com.ariel.mscrumjira.client.*;
 import com.ariel.mscrumjira.domain.enums.*;
 import com.ariel.mscrumjira.dto.*;
 import com.ariel.mscrumjira.mapper.*;
 
+@Service
 public class TaskMoveService {
 	
 	private  ProductBacklogFeignClient clientProduct;

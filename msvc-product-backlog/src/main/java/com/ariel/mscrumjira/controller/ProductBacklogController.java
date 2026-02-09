@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 import com.ariel.mscrumjira.service.ProductBacklogService;
 
 @RestController
@@ -51,7 +51,7 @@ public class ProductBacklogController {
 	}     
 
 	@PutMapping("/task-number/{taskNumber}")
-	public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate,
+	public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateSprintBacklogDto taskUpdate,
 			@RequestHeader("Authorization") String token){
 		return service.update(taskNumber, taskUpdate, token) 
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   

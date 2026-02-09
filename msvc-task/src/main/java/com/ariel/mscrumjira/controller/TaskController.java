@@ -17,7 +17,7 @@ import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 import com.ariel.mscrumjira.dto.TaskMoveSprintRequestDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 import com.ariel.mscrumjira.service.TaskService;
 
 import jakarta.validation.Valid;
@@ -70,7 +70,7 @@ public class TaskController {
 	}
 
 	@PutMapping("/task-number/{taskNumber}")
-	public ResponseEntity<TaskDto> update(@PathVariable Integer taskNumber,  @RequestBody UpdateDto updateDto,
+	public ResponseEntity<TaskDto> update(@PathVariable Integer taskNumber,  @RequestBody UpdateSprintBacklogDto updateDto,
 			@RequestHeader("Authorization") String token) {
 		logger.info("Updating task taskNumber: {} in: {}",taskNumber , updateDto);
 		return ResponseEntity.ok(service.update(taskNumber, updateDto, token));                      

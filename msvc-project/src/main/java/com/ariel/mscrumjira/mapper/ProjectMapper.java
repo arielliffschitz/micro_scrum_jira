@@ -25,7 +25,9 @@ public class ProjectMapper {
 		if (projectUpdateDto.name() !=null) 
 			currentProject.setName(projectUpdateDto.name());
 		if (projectUpdateDto.description() !=null) 
-			currentProject.setDescription(projectUpdateDto.description());				
+			currentProject.setDescription(projectUpdateDto.description());	
+		if (projectUpdateDto.state() !=null) 
+			currentProject.setState(projectUpdateDto.state());
 	}
 
 	public static ProjectCreateAuditDto mapToProjectCreateAuditDto(Project dao) {

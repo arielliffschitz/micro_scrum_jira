@@ -77,7 +77,7 @@ public class TeamServiceImpl implements TeamService {
 	@Transactional
 	public UUID create(TeamCreateDto createDto, String token) {		 
 		validateCreate(createDto);		
-		Team dao =  new Team(createDto.teamKey(),createDto.username(), true);						
+		Team dao =  new Team(createDto.teamKey(),createDto.username());						
 		PersistenceMetadataUtil.BaseEntityCreatedFields(dao, token);
 
 		return  repository.save(dao).getId();

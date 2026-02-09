@@ -23,9 +23,7 @@ public interface ProjectService {
 	
 	UUID create(ProjectCreateDto dto, String token);
 	
-	ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token);
-	
-	ProjectDto updateState(Integer projectKey, ProjectState state, String token);		
+	ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token);				
 
 	boolean existsByProjectKey(Integer projectKey);
 	

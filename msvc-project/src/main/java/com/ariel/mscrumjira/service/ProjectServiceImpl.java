@@ -27,12 +27,14 @@ public class ProjectServiceImpl implements ProjectService {
 	 private ProjectSprintService projectSprintService;
 
 	 private AuditFeignClient auditClient;	
+	 private ProjectUpdateService updateService;	
 
-	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService, 
-								AuditFeignClient auditClient) {		
+	public ProjectServiceImpl(ProjectRepository repository, ProjectSprintService projectSprintService,
+			AuditFeignClient auditClient, ProjectUpdateService updateService) {		
 		this.repository = repository;
 		this.projectSprintService = projectSprintService;
 		this.auditClient = auditClient;
+		this.updateService = updateService;
 	}
 
 	@Override
@@ -91,46 +93,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	@Transactional
-	public ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token) {
-		Project dao = findProject(projectKey);
-		ProjectMapper.applyUpdateToProject(dao, projectUpdateDto);
-		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
-
-		return ProjectMapper.mapToDto(repository.save(dao));
-	}	
-
-	@Override
-	@Transactional
-	public ProjectDto updateState(Integer projectKey, ProjectState state, String token) {
-		Project dao = findProject(projectKey);		
-		dao.setState(state);
-		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
-
-		if(state.equals(ProjectState.ARCHIVED)) 
-			archiveProject(dao, token);		
-		else 				
-			repository.save(dao);
-
-		return ProjectMapper.mapToDto(dao);
-	}
-
-	private Project findProject(Integer projectKey) {
-		return repository.findByProjectKey(projectKey)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project: "+ projectKey+" not found"));
-	}
-
-	private void archiveProject(Project dao, String token) {
-		existSprintByProjectKey(dao.getProjectKey());		
-		auditClient.createProject(ProjectMapper.mapToProjectCreateAuditDto(dao), token);			
-		repository.delete(dao);	
-	}
-
-	private void existSprintByProjectKey(Integer projectKey) {
-		if(projectSprintService.existSprintByProjectKey(projectKey)) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Project: "+projectKey+
-					"  has active sprints and cannot be archived"	 );	
-		}		
-	}
-	
+	public ProjectDto update(Integer projectKey, ProjectUpdateDto projectUpdateDto, String token) {		
+		return updateService.update(projectKey, projectUpdateDto, token);
+	}		
 
 }

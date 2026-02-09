@@ -13,7 +13,7 @@ import com.ariel.mscrumjira.client.ProjectFeignClient;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 import com.ariel.mscrumjira.mapper.ProductBacklogItemMapper;
 import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 
@@ -79,7 +79,7 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional
-	public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate,  String token) {		
+	public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token) {		
 
 		return repository.findByTaskNumber(taskNumber)
 				.map(dao -> {                    

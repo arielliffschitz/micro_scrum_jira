@@ -6,7 +6,7 @@ import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
 import com.ariel.mscrumjira.dto.TaskDto;
 import com.ariel.mscrumjira.dto.TaskMoveSprintRequestDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 
 
 public interface TaskService {    
@@ -19,7 +19,7 @@ public interface TaskService {
 
 	TaskDto moveFromSprintToProduct(Integer taskNumber,  String token);   
 
-	TaskDto update(Integer taskNumber, UpdateDto dto,  String token);   
+	TaskDto update(Integer taskNumber, UpdateSprintBacklogDto dto,  String token);   
 
 	TaskDto updateState (Integer taskNumber,   TaskState taskState,  String token);
 

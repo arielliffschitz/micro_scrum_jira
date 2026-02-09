@@ -1,6 +1,7 @@
 package com.ariel.mscrumjira.service;
 
 import org.springframework.http.*;
+import org.springframework.stereotype.*;
 import org.springframework.web.server.*;
 
 import com.ariel.mscrumjira.client.*;
@@ -8,6 +9,7 @@ import com.ariel.mscrumjira.domain.enums.*;
 import com.ariel.mscrumjira.dto.*;
 import com.ariel.mscrumjira.mapper.*;
 
+@Service
 public class TaskUpdateService {
 	
 	private  ProductBacklogFeignClient clientProduct;
@@ -23,7 +25,7 @@ public class TaskUpdateService {
 		this.finderService = finderService;
 	}
 
-	public TaskDto update(Integer taskNumber, UpdateDto taskUpdate,  String token) {  
+	public TaskDto update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token) {  
 		TaskDto taskDto = finderService.tryFindInSprint(taskNumber); 
 		if (taskDto != null) {
 			clientSprint.update(taskNumber, taskUpdate,token);
@@ -38,7 +40,7 @@ public class TaskUpdateService {
 	}  
 	
 	public TaskDto updateState(Integer taskNumber, TaskState taskState,  String token) {
-		TaskDto taskDto =TaskItemMapper.toTaskDtoFromSprint(clientSprint.updateState(taskNumber, taskState, token));
+		TaskDto taskDto =TaskItemMapper.toTaskDtoFromSprint(clientSprint.update(taskNumber, new UpdateSprintBacklogDto(taskState), token));
 		clientAudit.createMovement(new TaskMovementAuditCreateDto(taskNumber,TaskItemMapper.toAuditTaskStateFromTaskState(taskState)), token);
 		
 		if (taskDto.getTaskState().equals(TaskState.ARCHIVED)) {

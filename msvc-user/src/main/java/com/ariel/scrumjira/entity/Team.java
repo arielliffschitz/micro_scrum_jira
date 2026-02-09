@@ -37,10 +37,10 @@ public class Team extends BaseEntity{
 	public Team() {		
 	}
 	
-	public Team( String teamKey, String username, Boolean active) {		
+	public Team( String teamKey, String username) {		
 		this.teamKey = teamKey;
 		this.username = username;
-		this.active = active;
+		this.active = true;
 	}
 
 	public String getUsername() {

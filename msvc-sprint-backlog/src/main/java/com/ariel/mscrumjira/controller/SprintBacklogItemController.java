@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 import com.ariel.mscrumjira.service.SprintBacklogItemService;
 
 @RestController
@@ -42,20 +42,12 @@ public class SprintBacklogItemController {
 	public SprintBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber)  {               
 		return   service.findByTaskNumber(taskNumber)
 				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));				                 
-	}
-
-	@PutMapping("/{taskNumber}/state/{taskState}")
-	public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState,
-			@RequestHeader("Authorization") String token) {     
-		return service.updateState(taskNumber, taskState, token) 
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));                          
-	}  
+	} 
 
 	@PutMapping("/task-number/{taskNumber}")
-	public  SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate,
+	public  SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateSprintBacklogDto taskUpdate,
 			@RequestHeader("Authorization") String token){
-		return service.update(taskNumber, taskUpdate, token) 
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
+		return service.update(taskNumber, taskUpdate, token);  
 	}
 
 	@DeleteMapping("/task-number/{taskNumber}")

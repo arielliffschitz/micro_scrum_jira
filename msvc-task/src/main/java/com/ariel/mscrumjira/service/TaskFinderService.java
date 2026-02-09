@@ -1,6 +1,7 @@
 package com.ariel.mscrumjira.service;
 
 import org.springframework.http.*;
+import org.springframework.stereotype.*;
 import org.springframework.web.server.*;
 
 import com.ariel.mscrumjira.client.*;
@@ -9,6 +10,7 @@ import com.ariel.mscrumjira.mapper.*;
 
 import feign.*;
 
+@Service
 public class TaskFinderService {
 	
 	private  ProductBacklogFeignClient clientProduct;

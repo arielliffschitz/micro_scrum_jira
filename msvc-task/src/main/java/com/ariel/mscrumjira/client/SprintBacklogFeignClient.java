@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 
 @FeignClient(name = "msvc-sprint-backlog", path = "/sprint-backlog-items")
 public interface SprintBacklogFeignClient {
@@ -30,11 +30,11 @@ public interface SprintBacklogFeignClient {
 	@GetMapping
 	List<SprintBacklogItemDto> findAll();
 
-	@PutMapping("/{taskNumber}/state/{taskState}")
-	public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState,
-			@RequestHeader("Authorization") String token);
+//	@PutMapping("/{taskNumber}/state/{taskState}")
+//	public SprintBacklogItemDto updateState(@PathVariable Integer taskNumber,  @PathVariable TaskState taskState,
+//			@RequestHeader("Authorization") String token);
 
 	@PutMapping("/task-number/{taskNumber}")
-	SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate, @RequestHeader("Authorization") String token);
+	SprintBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateSprintBacklogDto taskUpdate, @RequestHeader("Authorization") String token);
 } 
 

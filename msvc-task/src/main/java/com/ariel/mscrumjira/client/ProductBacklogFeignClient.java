@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 
 @FeignClient(name = "msvc-product-backlog", path = "/product-backlog-items")
 public interface ProductBacklogFeignClient {   
@@ -34,5 +34,5 @@ public interface ProductBacklogFeignClient {
     ProductBacklogItemDto create( @RequestBody ProductCreateDto dto, @RequestHeader("Authorization") String token);
 
     @PutMapping("/task-number/{taskNumber}")
-    ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateDto taskUpdate, @RequestHeader("Authorization") String token);
+    ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateSprintBacklogDto taskUpdate, @RequestHeader("Authorization") String token);
 }

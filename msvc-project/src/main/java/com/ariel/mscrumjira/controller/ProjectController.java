@@ -74,10 +74,6 @@ public class ProjectController {
 		logger.info("Updating project projectKey: {} in: {}", projectKey , projectUpdateDto);
 		
 		return ResponseEntity.ok(service.update(projectKey, projectUpdateDto, token));								
-	}
+	}	
 	
-	@PutMapping ("/project-key/{projectKey}/state")
-	public ResponseEntity<ProjectDto> updateState (@PathVariable Integer projectKey,@RequestBody ProjectState state, @RequestHeader("Authorization") String token){
-		return ResponseEntity.ok(service.updateState(projectKey, state, token));
-	}
 }

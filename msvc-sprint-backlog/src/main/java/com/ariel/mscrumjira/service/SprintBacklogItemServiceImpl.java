@@ -16,29 +16,24 @@ import com.ariel.mscrumjira.client.SprintFeignClient;
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.domain.enums.TaskState;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 import com.ariel.mscrumjira.mapper.SprintBacklogItemMapper;
 import com.ariel.mscrumjira.repository.SprintBacklogItemRepository;
 
 @Service
 public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
-	private final SprintBacklogItemRepository repository;
-	private final SprintFeignClient sprintClient;
-	
-	private static final Map<TaskState, Set<TaskState>> TASK_STATE_VALID = Map.of(
-						TaskState.PENDING,    Set.of(TaskState.IN_PROGRESS, TaskState.BLOCKED,TaskState.ARCHIVED),
-			            TaskState.IN_PROGRESS,Set.of(TaskState.DONE, TaskState.BLOCKED,TaskState.ARCHIVED) ,
-			            TaskState.BLOCKED,    Set.of(TaskState.IN_PROGRESS,TaskState.ARCHIVED),
-			            TaskState.DONE,       Set.of(TaskState.ARCHIVED)
-           ); 
+	private  SprintBacklogItemRepository repository;
+	private  SprintFeignClient sprintClient;
+	private SprintBacklogUpdateService sprintUpdateService;
 
 	
 
-	public SprintBacklogItemServiceImpl(SprintBacklogItemRepository repository, SprintFeignClient sprintClient) {
-		super();
+	public SprintBacklogItemServiceImpl(SprintBacklogItemRepository repository, SprintFeignClient sprintClient,
+			SprintBacklogUpdateService sprintUpdateService) {		
 		this.repository = repository;
 		this.sprintClient = sprintClient;
+		this.sprintUpdateService = sprintUpdateService;
 	}
 
 	@Override
@@ -58,46 +53,12 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 	@Override
 	@Transactional
 	public void save(SprintBacklogItemDto dto, String token) {
-		if(!sprintClient.existsBySprintKey(dto.getSprintKey())) { 
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "the sprintKey: " + dto.getSprintKey() + " doesn't exist");}
+		validateSprintKey(dto.getSprintKey());		
 		SprintBacklogItem dao = SprintBacklogItemMapper.mapToDao(dto);
 		dao.setTaskState(TaskState.PENDING); 
 		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);		
 		repository.save(dao);		        
 	}	
-
-	@Override
-	@Transactional
-	public Optional<SprintBacklogItemDto> updateState(Integer taskNumber, TaskState taskState, String token) {		
-		return repository.findByTaskNumber(taskNumber)
-				.map(dao -> {                    
-					applyTransition(taskState, dao);
-					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
-					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
-				});
-	}  
-	
-	private void applyTransition(TaskState next, SprintBacklogItem dao)  {
-	       if (TASK_STATE_VALID.get(dao.getTaskState()).contains(next) ){
-	    	   dao.setTaskState(next);
-	    	   takeAction(next, dao);
-	       }
-	       else { throw new RuntimeException("Invalid transition ") ;}
-	       
-	 }		 
-	 
-	 private void takeAction(TaskState next, SprintBacklogItem dao) {        
-	        switch (next) {
-	            case TaskState.IN_PROGRESS : dao.setStartDate(LocalDateTime.now());                
-	                break;
-	            case TaskState.DONE : dao.setEndDate(LocalDateTime.now());                
-	                break;
-	            case TaskState.BLOCKED : System.out.println("TODO message to boss ");                
-	                break;
-	            default:
-	                break;
-	        } 
-	 }
 
 	@Override
 	@Transactional
@@ -107,15 +68,17 @@ public class SprintBacklogItemServiceImpl implements SprintBacklogItemService {
 
 	@Override
 	@Transactional
-	public Optional<SprintBacklogItemDto> update(Integer taskNumber, UpdateDto taskUpdate, String token) {
+	public SprintBacklogItemDto update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate, String token) {
 
-		return repository.findByTaskNumber(taskNumber)
-				.map(dao -> {                    
-					SprintBacklogItemMapper.applyUpdateToSprint (dao, taskUpdate);
-					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
-					return SprintBacklogItemMapper.mapToDto(repository.save(dao));
-				});
+		
+		return sprintUpdateService.update(taskNumber, taskUpdate, token);
+	}	
+	
+	private void validateSprintKey(Integer sprintKey) {
+		if(!sprintClient.existsBySprintKey(sprintKey)) { 
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "the sprintKey: " + sprintKey + " doesn't exist");}		
 	}
+
 
 
 

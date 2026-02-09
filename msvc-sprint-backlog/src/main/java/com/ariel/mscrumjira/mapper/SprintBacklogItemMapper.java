@@ -2,7 +2,7 @@ package com.ariel.mscrumjira.mapper;
 
 import com.ariel.mscrumjira.domain.entity.SprintBacklogItem;
 import com.ariel.mscrumjira.dto.SprintBacklogItemDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 
 public  class SprintBacklogItemMapper {
 
@@ -57,15 +57,15 @@ public  class SprintBacklogItemMapper {
         dto.setId(dao.getId()) ;
         return dto;
     } 
-    public static void applyUpdateToSprint(SprintBacklogItem currentTask, UpdateDto taskUpdate) {
+    public static void applyUpdateToSprint(SprintBacklogItem currentTask, UpdateSprintBacklogDto taskUpdate) {
       
-       if (taskUpdate.getTitle() !=null) 
-                             currentTask.setTitle(taskUpdate.getTitle());
-       if (taskUpdate.getDescription() !=null) 
-                         currentTask.setDescription(taskUpdate.getDescription());
-       if (taskUpdate.getPriority() !=null) 
-                         currentTask.setPriority(taskUpdate.getPriority());
-       if (taskUpdate.getEstimate() !=null) 
-                         currentTask.setEstimate(taskUpdate.getEstimate());      
+       if (taskUpdate.title() !=null) 
+                             currentTask.setTitle(taskUpdate.title());
+       if (taskUpdate.description() !=null) 
+                         currentTask.setDescription(taskUpdate.description());
+       if (taskUpdate.priority() !=null) 
+                         currentTask.setPriority(taskUpdate.priority());
+       if (taskUpdate.estimate() !=null) 
+                         currentTask.setEstimate(taskUpdate.estimate());      
     } 
 }

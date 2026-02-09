@@ -78,7 +78,7 @@ public class TaskServiceImpl implements TaskService{
 	}	
 
 	@Override
-	public TaskDto update(Integer taskNumber, UpdateDto taskUpdate,  String token) { 		
+	public TaskDto update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token) { 		
 		return updateService.update(taskNumber, taskUpdate, token);			
 	}   
 

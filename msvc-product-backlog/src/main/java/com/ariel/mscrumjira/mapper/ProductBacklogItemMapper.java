@@ -3,7 +3,7 @@ package com.ariel.mscrumjira.mapper;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
 import com.ariel.mscrumjira.dto.ProductBacklogItemDto;
 import com.ariel.mscrumjira.dto.ProductCreateDto;
-import com.ariel.mscrumjira.dto.UpdateDto;
+import com.ariel.mscrumjira.dto.UpdateSprintBacklogDto;
 
 public class ProductBacklogItemMapper {
     
@@ -43,15 +43,15 @@ public class ProductBacklogItemMapper {
                            dao.setProjectKey(itemDto.projectKey());
         return dao;
     }
-     public static void applyUpdateToProduct(ProductBacklogItem currentTask, UpdateDto taskUpdate) {
-        if (taskUpdate.getTitle() !=null) 
-                                currentTask.setTitle(taskUpdate.getTitle());
-        if (taskUpdate.getDescription() !=null) 
-                            currentTask.setDescription(taskUpdate.getDescription());
-        if (taskUpdate.getPriority() !=null) 
-                            currentTask.setPriority(taskUpdate.getPriority());
-        if (taskUpdate.getEstimate() !=null) 
-                            currentTask.setEstimate(taskUpdate.getEstimate());
+     public static void applyUpdateToProduct(ProductBacklogItem currentTask, UpdateSprintBacklogDto taskUpdate) {
+        if (taskUpdate.title() !=null) 
+                                currentTask.setTitle(taskUpdate.title());
+        if (taskUpdate.description() !=null) 
+                            currentTask.setDescription(taskUpdate.description());
+        if (taskUpdate.priority() !=null) 
+                            currentTask.setPriority(taskUpdate.priority());
+        if (taskUpdate.estimate() !=null) 
+                            currentTask.setEstimate(taskUpdate.estimate());
        
 
     }
