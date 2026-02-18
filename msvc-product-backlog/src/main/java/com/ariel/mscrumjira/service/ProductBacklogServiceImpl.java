@@ -6,8 +6,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.*;
 
 import com.ariel.mscrumjira.client.ProjectFeignClient;
 import com.ariel.mscrumjira.domain.entity.ProductBacklogItem;
@@ -20,13 +22,12 @@ import com.ariel.mscrumjira.repository.ProductBacklogRepository;
 @Service
 public class ProductBacklogServiceImpl implements ProductBacklogService {
 
-	final private ProductBacklogRepository repository;
-	final private ProjectFeignClient projectClient;
+	private ProductBacklogRepository repository;
+	private ProjectFeignClient projectClient;
 
 	
 
-	public ProductBacklogServiceImpl(ProductBacklogRepository repository, ProjectFeignClient projectClient) {
-		super();
+	public ProductBacklogServiceImpl(ProductBacklogRepository repository, ProjectFeignClient projectClient) {	
 		this.repository = repository;
 		this.projectClient = projectClient;
 	}
@@ -67,8 +68,8 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber) {		
-		return	repository.findByTaskNumber(taskNumber).map(ProductBacklogItemMapper::mapToDto);		 
+	public ProductBacklogItemDto findByTaskNumber(Integer taskNumber) {		
+		return	ProductBacklogItemMapper.mapToDto(tryfindByTaskNumber(taskNumber));		 
 	}  
 
 	@Override
@@ -79,18 +80,24 @@ public class ProductBacklogServiceImpl implements ProductBacklogService {
 
 	@Override
 	@Transactional
-	public Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token) {		
+	public ProductBacklogItemDto update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate, String token) {
 
-		return repository.findByTaskNumber(taskNumber)
-				.map(dao -> {                    
-					ProductBacklogItemMapper.applyUpdateToProduct (dao, taskUpdate);
-					PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
-					return ProductBacklogItemMapper.mapToDto(repository.save(dao));
-				});
+		ProductBacklogItem dao = tryfindByTaskNumber(taskNumber);
+		ProductBacklogItemMapper.applyUpdateToProduct(dao, taskUpdate);
+		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
+		
+		return ProductBacklogItemMapper.mapToDto(repository.save(dao));
 	}
+	
+	private ProductBacklogItem tryfindByTaskNumber(Integer taskNumber) {
+		return repository.findByTaskNumber(taskNumber)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Product with taskNumber: " +taskNumber+" not found"));
+	}
+
 	private void validateProjectKey( Integer projectKey) {
 		if(!projectClient.existsByTeamKey(projectKey))
-			throw new IllegalArgumentException("The Project: "+projectKey+ " doesn't exist");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This projectKey: "+projectKey + " doesn't exist");
 	}
 
 

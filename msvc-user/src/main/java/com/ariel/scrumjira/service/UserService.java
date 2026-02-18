@@ -21,5 +21,5 @@ public interface UserService {
 
     void deleteByUsername(String username);       
 
-	Optional<UserLoginDto> findForLoginByUsername(String username);
+	UserLoginDto findForLoginByUsername(String username);
 }

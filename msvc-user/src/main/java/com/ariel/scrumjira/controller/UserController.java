@@ -47,11 +47,9 @@ public class UserController {
     } 
     
     @GetMapping("/user-login/{username}")
-    public ResponseEntity<UserLoginDto> findForLoginByUsername(@PathVariable String username){
+    public UserLoginDto findForLoginByUsername(@PathVariable String username){
         logger.info("Fetching User with username={}", username);
-        return  service.findForLoginByUsername(username)
-                .map(ResponseEntity::ok )
-                .orElseGet(()->ResponseEntity.notFound().build());
+        return  service.findForLoginByUsername(username);               
     }       
     
     @PostMapping

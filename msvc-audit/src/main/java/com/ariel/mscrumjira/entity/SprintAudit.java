@@ -47,8 +47,7 @@ public class SprintAudit extends BaseCreateEntity {
 	}		
 
 	public SprintAudit(Integer sprintKey, Integer projectKey, String teamKey, LocalDateTime startDate,
-			LocalDateTime endDate) {
-		super();
+			LocalDateTime endDate) {		
 		this.sprintKey = sprintKey;
 		this.projectKey = projectKey;
 		this.teamKey = teamKey;

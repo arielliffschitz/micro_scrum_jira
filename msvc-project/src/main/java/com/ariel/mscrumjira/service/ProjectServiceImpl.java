@@ -57,19 +57,19 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional(readOnly = true)
 	public ProjectDto findById(UUID id) {		
-		return ProjectMapper.mapToDto(repository.findById(id).orElseThrow());
+		return ProjectMapper.mapToDto(repository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found")));
 	}	
 
 	@Override
 	@Transactional(readOnly = true)
 	public ProjectDto findByProjectKey(Integer projectKey) {
-		Project dao = repository.findByProjectKey(projectKey)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
+		Project dao = tryToFindByProjectKey(projectKey); 
 		ProjectDto dto = ProjectMapper.mapToDto(dao);
 		dto.setSprints(projectSprintService.findByProjectKey(projectKey));	
 
 		return dto;			  				
-	}
+	}	
 
 	@Transactional(readOnly = true)
 	public ProjectAuditDto findByProjectKeyArchived(Integer projectKey) {		
@@ -97,4 +97,8 @@ public class ProjectServiceImpl implements ProjectService {
 		return updateService.update(projectKey, projectUpdateDto, token);
 	}		
 
+	private Project tryToFindByProjectKey(Integer projectKey) {		
+		return  repository.findByProjectKey(projectKey)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
+	}
 }

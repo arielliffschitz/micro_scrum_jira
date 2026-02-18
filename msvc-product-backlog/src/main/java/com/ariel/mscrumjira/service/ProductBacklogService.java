@@ -12,7 +12,7 @@ public interface ProductBacklogService {
 
     List<ProductBacklogItemDto> findAll();   
 
-    Optional<ProductBacklogItemDto> findByTaskNumber(Integer taskNumber);
+    ProductBacklogItemDto findByTaskNumber(Integer taskNumber);
 
     ProductBacklogItemDto save (ProductBacklogItemDto backlogItemDto,  String token);  
 
@@ -22,5 +22,5 @@ public interface ProductBacklogService {
 
     public UUID create(ProductCreateDto backlogItemDto, String token);
 
-    Optional<ProductBacklogItemDto> update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token);
+    ProductBacklogItemDto update(Integer taskNumber, UpdateSprintBacklogDto taskUpdate,  String token);
 }

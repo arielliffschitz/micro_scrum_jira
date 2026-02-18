@@ -1,23 +1,19 @@
 package com.ariel.mscrumjira.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.*;
+import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.web.server.*;
 
-import com.ariel.mscrumjira.client.AuditFeignClient;
-import com.ariel.mscrumjira.client.UserFeignClient;
-import com.ariel.mscrumjira.domain.enums.SprintState;
-import com.ariel.mscrumjira.dto.SprintCreateDto;
-import com.ariel.mscrumjira.dto.SprintDto;
-import com.ariel.mscrumjira.entity.Sprint;
-import com.ariel.mscrumjira.mapper.SprintMapper;
-import com.ariel.mscrumjira.repository.SprintRepository;
+import com.ariel.mscrumjira.client.*;
+import com.ariel.mscrumjira.domain.enums.*;
+import com.ariel.mscrumjira.dto.*;
+import com.ariel.mscrumjira.entity.*;
+import com.ariel.mscrumjira.mapper.*;
+import com.ariel.mscrumjira.repository.*;
 
 @Service
 public class SprintServiceImpl implements SprintService {
@@ -54,10 +50,10 @@ public class SprintServiceImpl implements SprintService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<SprintDto> findBySprintKey(Integer sprintKey) {
-		return repository.findBySprintKey(sprintKey).map(SprintMapper::mapToDto);
-	}
-
+	public SprintDto findBySprintKey(Integer sprintKey) {		
+		return SprintMapper.mapToDto(tryTofindBySprintKey(sprintKey));
+	}	
+	
 	@Override
 	@Transactional
 	public UUID create(SprintCreateDto createDto, String token) {
@@ -81,7 +77,7 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	@Transactional
 	public SprintDto updateState(Integer sprintKey, SprintState state, String token) {
-		Sprint dao = findSprint(sprintKey);
+		Sprint dao = tryTofindBySprintKey(sprintKey);
 		dao.setState(state);
 		PersistenceMetadataUtil.BaseEntityUpdateFields(dao, token);
 
@@ -97,9 +93,9 @@ public class SprintServiceImpl implements SprintService {
 		auditClient.createSprint(SprintMapper.mapToSprintCreateAuditDto(dao), token);			
 		repository.delete(dao);
 		
-	}
+	}	
 
-	private Sprint findSprint(Integer sprintKey) {
+	private Sprint tryTofindBySprintKey(Integer sprintKey) {
 		return repository.findBySprintKey(sprintKey)
 		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sprint: "+ sprintKey+" not found"));
 	}

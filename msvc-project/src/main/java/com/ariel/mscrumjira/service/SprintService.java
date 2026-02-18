@@ -1,12 +1,9 @@
 package com.ariel.mscrumjira.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-import com.ariel.mscrumjira.domain.enums.SprintState;
-import com.ariel.mscrumjira.dto.SprintCreateDto;
-import com.ariel.mscrumjira.dto.SprintDto;
+import com.ariel.mscrumjira.domain.enums.*;
+import com.ariel.mscrumjira.dto.*;
 
 public interface SprintService {
 	
@@ -14,7 +11,7 @@ public interface SprintService {
 	
 	SprintDto findById(UUID id);
 	
-	Optional<SprintDto> findBySprintKey(Integer sprintKey);
+	SprintDto findBySprintKey(Integer sprintKey);
 	
 	boolean existsBySprintKey( Integer sprintKey);
 	

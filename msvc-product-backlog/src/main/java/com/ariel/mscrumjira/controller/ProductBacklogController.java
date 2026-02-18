@@ -36,8 +36,7 @@ public class ProductBacklogController {
 
 	@GetMapping("/task-number/{taskNumber}")
 	public ProductBacklogItemDto findByTaskNumber(@PathVariable Integer taskNumber){    	    	
-		return   service.findByTaskNumber(taskNumber)
-				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));                  
+		return   service.findByTaskNumber(taskNumber);				                 
 	}
 
 	@PostMapping("/move")
@@ -53,8 +52,8 @@ public class ProductBacklogController {
 	@PutMapping("/task-number/{taskNumber}")
 	public  ProductBacklogItemDto update(@PathVariable Integer taskNumber, @RequestBody UpdateSprintBacklogDto taskUpdate,
 			@RequestHeader("Authorization") String token){
-		return service.update(taskNumber, taskUpdate, token) 
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));   
+		return service.update(taskNumber, taskUpdate, token);
+				  
 	}
 
 	@DeleteMapping("/task-number/{taskNumber}")

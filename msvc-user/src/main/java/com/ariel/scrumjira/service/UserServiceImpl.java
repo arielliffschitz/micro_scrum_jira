@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.*;
 
 import com.ariel.mscrumjira.domain.enums.RoleName;
 import com.ariel.mscrumjira.dto.UserLoginDto;
@@ -28,9 +30,9 @@ import com.ariel.scrumjira.repository.UserRepository;
 @Service
 public class UserServiceImpl implements UserService{
 
-	private final UserRepository userRepository;
-	private final RoleRepository roleRepository;  
-	private final PasswordEncoder passwordEncoder; 		
+	private  UserRepository userRepository;
+	private  RoleRepository roleRepository;  
+	private  PasswordEncoder passwordEncoder; 		
 
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
 			PasswordEncoder passwordEncoder) {		
@@ -56,13 +58,17 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public Optional<UserLoginDto> findForLoginByUsername(String username) {
-	    return userRepository.findByUsername(username)
-	                         .map(user -> {
-	                             user.setLastLogin(LocalDateTime.now());
-	                             userRepository.save(user);
-	                             return UserMapper.fromUsertoUserLoginDto(user);
-	                         });
+	public UserLoginDto findForLoginByUsername(String username) {
+		User user = tryTofindByUsername(username);
+		user.setLastLogin(LocalDateTime.now());
+		userRepository.save(user);
+		return UserMapper.fromUsertoUserLoginDto(user);
+	}
+
+	private User tryTofindByUsername(String username) {		
+		return userRepository.findByUsername(username)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				"User with username: " +username+" not found"));
 	}
 
 	@Override

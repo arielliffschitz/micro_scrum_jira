@@ -1,33 +1,20 @@
 package com.ariel.mscrumjira.controller;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
-import com.ariel.mscrumjira.domain.enums.ProjectState;
-import com.ariel.mscrumjira.dto.ProjectAuditDto;
-import com.ariel.mscrumjira.dto.ProjectCreateDto;
-import com.ariel.mscrumjira.dto.ProjectDto;
-import com.ariel.mscrumjira.dto.ProjectUpdateDto;
-import com.ariel.mscrumjira.service.ProjectService;
+import com.ariel.mscrumjira.dto.*;
+import com.ariel.mscrumjira.service.*;
 
-import jakarta.validation.Valid;
+import jakarta.validation.*;
 
 @RestController
 public class ProjectController {
 	
-	final private ProjectService service;
+	private ProjectService service;
 	
 	private final Logger logger = LoggerFactory.getLogger(ProjectController.class);	
 	

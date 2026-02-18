@@ -41,9 +41,7 @@ public class SprintController {
 	
 	@GetMapping("/sprint-key/{sprintKey}")
 	public ResponseEntity<SprintDto> findBySprintKey(@PathVariable Integer sprintKey){   	    	
-		return   service.findBySprintKey( sprintKey)
-				.map(dto->ResponseEntity.ok(dto) )
-				.orElseGet(()->ResponseEntity.notFound().build());			                
+		return   ResponseEntity.ok(service.findBySprintKey( sprintKey));						                
 	}
 
 	@GetMapping("/exist")

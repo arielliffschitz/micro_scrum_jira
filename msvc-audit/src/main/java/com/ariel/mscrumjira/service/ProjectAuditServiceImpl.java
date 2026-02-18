@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ariel.mscrumjira.dto.ProjectAuditDto;
-import com.ariel.mscrumjira.dto.ProjectCreateAuditDto;
-import com.ariel.mscrumjira.dto.SprintCreateAuditDto;
+import com.ariel.mscrumjira.dto.*;
 import com.ariel.mscrumjira.entity.ProjectAudit;
 import com.ariel.mscrumjira.entity.SprintAudit;
 import com.ariel.mscrumjira.mapper.ProjectAuditMapper;
@@ -20,8 +18,8 @@ import com.ariel.mscrumjira.repository.SprintAuditRepository;
 @Service
 public class ProjectAuditServiceImpl implements ProjectAuditService {
 
-	final private   ProjectAuditRepository projectRepository;	
-	final private SprintAuditRepository sprintRepository;		
+	 private ProjectAuditRepository projectRepository;	
+	 private SprintAuditRepository  sprintRepository;		
 
 	public ProjectAuditServiceImpl(ProjectAuditRepository projectRepository, SprintAuditRepository sprintRepository) {		
 		this.projectRepository = projectRepository;
@@ -56,14 +54,22 @@ public class ProjectAuditServiceImpl implements ProjectAuditService {
 	@Override
 	@Transactional(readOnly = true)
 	public ProjectAuditDto findByProjectKey(Integer projectKey) {
-		ProjectAudit dao = projectRepository.findByProjectKey(projectKey)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
-
+		ProjectAudit dao = tryTofindByProjectKey(projectKey);
 		ProjectAuditDto dto = ProjectAuditMapper.mapToProjectDtoFromDao(dao);			
-		dto.setSprints(sprintRepository.findByProjectKey(projectKey)
+		dto.setSprints(getSprintsByProjectKey(projectKey));
+		
+		return dto;
+	}
+
+	private List<SprintAuditDto> getSprintsByProjectKey(Integer projectKey) {		
+		return sprintRepository.findByProjectKey(projectKey)
 				.stream()
 				.map(ProjectAuditMapper::mapToSprintDtoFromDao)
-				.toList());
-		return dto;
+				.toList();
+	}
+
+	private ProjectAudit tryTofindByProjectKey(Integer projectKey) {		
+		return  projectRepository.findByProjectKey(projectKey)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProjectKey: " +projectKey+ " not found"));
 	}
 }
