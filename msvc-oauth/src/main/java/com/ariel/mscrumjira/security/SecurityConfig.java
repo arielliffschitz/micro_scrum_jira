@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -148,7 +148,8 @@ public class SecurityConfig {
 	  @Bean
       AuthorizationServerSettings authorizationServerSettings() {
               return AuthorizationServerSettings.builder().build();
-      }
+      }	  	 
+	  
 	  @Bean
       OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
               return context -> {

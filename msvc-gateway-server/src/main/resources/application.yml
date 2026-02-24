@@ -4,7 +4,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8085
+          issuer-uri: ${IP_ADDR:http://127.0.0.1:8085}
       client:
         registration:
           client-app:
@@ -19,23 +19,11 @@ spring:
             client-name: client-app
         provider:
           spring:
-            issuer-uri: http://127.0.0.1:8085
+            issuer-uri: ${IP_ADDR:http://127.0.0.1:8085}
   cloud:
     gateway:
      mvc:
-      routes:
-        - id: product-service
-          uri: lb://msvc-product-backlog
-          predicates:
-            - Path=/mscrumjira/product/**
-          filters:
-            - StripPrefix=2
-        - id: sprint-service
-          uri: lb://msvc-sprint-backlog
-          predicates:
-            - Path=/mscrumjira/sprint/**
-          filters:
-            - StripPrefix=2
+      routes:                
         - id: msvc-task
           uri: lb://msvc-task
           predicates:
@@ -59,10 +47,5 @@ spring:
           predicates:
             - Path=/mscrumjira/project/**
           filters:
-            - StripPrefix=2  
-        - id: msvc-audit
-          uri: lb://msvc-audit
-          predicates:
-            - Path=/mscrumjira/audit/**
-          filters:
-            - StripPrefix=2    
+            - StripPrefix=2        
+              

@@ -1,0 +1,141 @@
+version: "3.9"
+
+networks:
+  mscrumjira:
+
+services:
+  mysql8:
+    image: mysql:8.0.45
+    container_name: mysql8
+    environment:
+      - MYSQL_ROOT_PASSWORD=sasa
+      - MYSQL_DATABASE=db_mscrum_jira      
+    ports:
+      - "3307:3306"
+    restart: always
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - mscrumjira
+
+  eureka-server:
+    image: eureka-server:v1
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  msvc-gateway-server:
+    image: msvc-gateway-server:v1
+    container_name: msvc-gateway-server
+    ports:
+      - "8090:8090"
+    restart: always
+    networks:
+      - mscrumjira
+    environment:
+      - IP_ADDR=http://192.168.1.225:8085
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+      - msvc-oauth
+
+  msvc-oauth:
+    image: msvc-oauth:v1
+    container_name: msvc-oauth
+    ports:
+      - "8085:8085"
+    restart: always
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+
+  msvc-project:
+    image: msvc-project:v1
+    restart: always
+    container_name: msvc-project
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+
+  msvc-product-backlog:
+    image: msvc-product-backlog:v1
+    restart: always
+    container_name: msvc-product-backlog
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+      - msvc-project
+      - msvc-oauth
+
+  msvc-sprint-backlog:
+    image: msvc-sprint-backlog:v1
+    restart: always
+    container_name: msvc-sprint-backlog
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+      - msvc-project
+      - msvc-product-backlog
+      - msvc-oauth
+
+  msvc-task:
+    image: msvc-task:v1
+    restart: always
+    container_name: msvc-task
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+      - msvc-project
+      - msvc-product-backlog
+      - msvc-sprint-backlog
+      - msvc-oauth
+
+  msvc-user:
+    image: msvc-user:v1
+    restart: always
+    container_name: msvc-user
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+      - msvc-oauth
+  msvc-audit:
+    image: msvc-audit:v1
+    restart: always
+    container_name: msvc-audit
+    networks:
+      - mscrumjira
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql8
+      - eureka-server
+      - msvc-oauth
