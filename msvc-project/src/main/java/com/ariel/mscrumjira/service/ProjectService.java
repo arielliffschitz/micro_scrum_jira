@@ -1,13 +1,8 @@
 package com.ariel.mscrumjira.service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import com.ariel.mscrumjira.domain.enums.ProjectState;
-import com.ariel.mscrumjira.dto.ProjectAuditDto;
-import com.ariel.mscrumjira.dto.ProjectCreateDto;
-import com.ariel.mscrumjira.dto.ProjectDto;
-import com.ariel.mscrumjira.dto.ProjectUpdateDto;
+import com.ariel.mscrumjira.dto.*;
 
 public interface ProjectService {
 	

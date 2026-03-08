@@ -6,13 +6,12 @@ import com.ariel.mscrumjira.domain.enums.RoleName;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class UserCreateDto {
 
     @NotNull
-    @Size(min=5, max=254)   
+    @Email
     private String username;
    
     @NotNull   

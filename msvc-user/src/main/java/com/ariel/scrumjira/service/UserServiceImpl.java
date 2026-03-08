@@ -64,7 +64,11 @@ public class UserServiceImpl implements UserService{
 		userRepository.save(user);
 		return UserMapper.fromUsertoUserLoginDto(user);
 	}
-
+	@Override
+	public boolean existsByUsername(String username) {		
+		return userRepository.existsByUsername(username);
+	}		
+	
 	private User tryTofindByUsername(String username) {		
 		return userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -111,6 +115,8 @@ public class UserServiceImpl implements UserService{
 											   .stream()				                                                                         
 											   .collect(Collectors.toList());                            
 		return new HashSet<>(rolesFromDb);
-	}				
+	}
+
+			
 
 }

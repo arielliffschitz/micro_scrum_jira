@@ -26,9 +26,10 @@ public class SecurityConfig {
             authz.requestMatchers("/login","/authorized", "/logout").permitAll()
             .requestMatchers(HttpMethod.GET,"/mscrumjira/user","/mscrumjira/task","/mscrumjira/user/team",
             		"/mscrumjira/project","/mscrumjira/project/sprint").permitAll()
-            .requestMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ,"/mscrumjira/project/**")
-            		.hasAnyRole("USER", "ADMIN", "DEVELOPER")
-            .requestMatchers("/mscrumjira/user/**","/mscrumjira/task/**","/mscrumjira/project/**" ).hasRole("ADMIN")                       
+            .requestMatchers(HttpMethod.GET,"/mscrumjira/user/**","/mscrumjira/task/**" ,"/mscrumjira/project/**",
+            						"/mscrumjira/message/**").hasAnyRole("USER", "ADMIN", "DEVELOPER")
+            .requestMatchers("/mscrumjira/user/**","/mscrumjira/task/**","/mscrumjira/project/**","/mscrumjira/message/**" )
+            				.hasRole("ADMIN")            
             .anyRequest().authenticated();           
             
         }).cors(csrf -> csrf.disable())        		

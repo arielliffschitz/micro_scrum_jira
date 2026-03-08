@@ -14,6 +14,8 @@ public interface UserService {
     List<UserDto> findAll();
     
     Optional<UserDto> findByUsername(String username);
+    
+    boolean existsByUsername(String username);
 
     UserDto create(UserCreateDto userCreateDto, String token);
 
