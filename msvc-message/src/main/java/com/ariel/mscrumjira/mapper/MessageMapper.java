@@ -16,6 +16,17 @@ public class MessageMapper {
 				dao.getCreatedAt()								
 				);
 	}
+	
+	public static MessageListDto mapToListDto(Message dao) {
+		return new MessageListDto(				
+				dao.getMessageKey(),
+				dao.getReceiver(),
+				dao.getSubject(),				
+				dao.isReadFlag(),
+				dao.getCreatedBy(),
+				dao.getCreatedAt()								
+				);
+	}
 
 	public static Message mapFromCreateToDao(MessageCreateDto dto) {		
 		return new Message(

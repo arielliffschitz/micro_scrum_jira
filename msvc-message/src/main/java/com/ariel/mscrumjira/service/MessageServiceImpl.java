@@ -28,10 +28,10 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<MessageDto> findByReceiverAndReadFlag(String token, boolean readFlag) {
+	public List<MessageListDto> findByReceiverAndReadFlag(String token, boolean readFlag) {
 		String receiver = PersistenceMetadataUtil.decodeToUsername(token);
 		return repository.findByReceiverAndReadFlag(receiver, readFlag).stream()				                
-				.map(MessageMapper::mapToDto)
+				.map(MessageMapper::mapToListDto)
 				 .collect(Collectors.toList()); 
 	}
 
@@ -43,6 +43,17 @@ public class MessageServiceImpl implements MessageService {
 				 .collect(Collectors.toList()); 
 	}
 
+	@Override
+	@Transactional
+	public MessageDto findByMessageKey(Integer messageKey) {
+		Message dao = repository.findByMessageKey(messageKey)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Message not found"));
+		dao.setReadFlag(true);
+		repository.save(dao);
+
+		return MessageMapper.mapToDto(dao);
+	}
+	
 	@Override
 	@Transactional(readOnly = true)
 	public MessageDto findById(UUID id) {		
@@ -62,15 +73,22 @@ public class MessageServiceImpl implements MessageService {
 		
 	@Override
 	@Transactional 
-	public void toggleRead(Integer messageKey, boolean readFlag) {
+	public void toggleRead(Integer messageKey) {
 		Message dao = repository.findByMessageKey(messageKey)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Message not found"));
-		dao.setReadFlag(readFlag);
+		dao.setReadFlag(!dao.isReadFlag());
 		repository.save(dao);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteByMessageKey(Integer messageKey) {
+		repository.deleteByMessageKey(messageKey);		
 	}
 	
 	private void validateCreate( String receiver) {		
 		 if ( ! userClient.existByUsername(receiver)) 
 			 throw new IllegalArgumentException("The username: "+receiver+ " doesn't exist");		
 	}	
+	
 }

@@ -22,9 +22,16 @@ public class MessageController {
 		this.service = service;
 	}
 	@GetMapping
-	public ResponseEntity< List<MessageDto>> findByReceiverAndRead(@RequestParam(defaultValue = "false") boolean readFlag , @RequestHeader("Authorization") String token ) {       
+	public ResponseEntity< List<MessageListDto>> findByReceiverAndReadFlag(@RequestParam(defaultValue = "false") boolean readFlag , 
+			@RequestHeader("Authorization") String token ) {       
 		return ResponseEntity.ok(service.findByReceiverAndReadFlag( token, readFlag)); 
 	} 
+	
+	@GetMapping("/message-key/{messageKey}")
+	public ResponseEntity <MessageDto> findByMessageKey(@PathVariable Integer messageKey , @RequestHeader("Authorization") String token ) {       
+		return ResponseEntity.ok(service.findByMessageKey(messageKey));
+	} 
+	
 	@PostMapping 
 	public ResponseEntity<MessageDto> create (@RequestBody @Valid MessageCreateDto createDto, @RequestHeader("Authorization") String token ){
 		logger.info("creating Message to: {} " , createDto.receiver());
@@ -33,4 +40,13 @@ public class MessageController {
 		return ResponseEntity.ok(service.findById(id));
 	}
 	
+	@PutMapping("/message-key/{messageKey}")
+	public void toogleReadFlag(@PathVariable  Integer messageKey)  {      
+		service.toggleRead(messageKey);
+	}
+	
+	@DeleteMapping("/message-key/{messageKey}")
+	public void deleteByMessageKey(@PathVariable  Integer messageKey)  {      
+		service.deleteByMessageKey(messageKey);
+	}
 }

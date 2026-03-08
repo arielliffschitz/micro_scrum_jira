@@ -6,14 +6,18 @@ import com.ariel.mscrumjira.dto.*;
 
 public interface MessageService {	
 	
-	List<MessageDto>findByReceiverAndReadFlag(String token, boolean readFlag);
+	List<MessageListDto>findByReceiverAndReadFlag(String token, boolean readFlag);
 	
 	List<MessageDto>findByCreatedBy(String createdBy);
+	
+	MessageDto findByMessageKey(Integer  messageKey);
 	
 	MessageDto findById(UUID id);
 	
 	UUID create(MessageCreateDto createDto, String token);
 	
-	void toggleRead( Integer messageKey, boolean readFlag);		
+	void toggleRead( Integer messageKey);		
+	
+	void deleteByMessageKey(Integer messageKey);
 	
 }
