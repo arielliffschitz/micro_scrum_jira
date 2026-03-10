@@ -10,6 +10,8 @@ public interface MessageService {
 	
 	List<MessageDto>findByCreatedBy(String createdBy);
 	
+	Integer getUnreadMessagesCount(String username);
+	
 	MessageDto findByMessageKey(Integer  messageKey);
 	
 	MessageDto findById(UUID id);

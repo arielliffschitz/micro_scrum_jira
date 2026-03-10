@@ -42,6 +42,12 @@ public class MessageServiceImpl implements MessageService {
 				.map(MessageMapper::mapToDto)
 				 .collect(Collectors.toList()); 
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Integer getUnreadMessagesCount(String username) {		
+		return repository.findByReceiverAndReadFlag(username, false).size() ;
+	}	
 
 	@Override
 	@Transactional

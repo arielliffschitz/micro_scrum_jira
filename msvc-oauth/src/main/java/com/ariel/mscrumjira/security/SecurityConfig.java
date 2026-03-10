@@ -39,11 +39,16 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
+import com.ariel.mscrumjira.client.*;
+//import com.ariel.mscrumjira.service.*;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+
+//import ch.qos.logback.core.net.*;
+//import jdk.internal.org.jline.terminal.TerminalBuilder.*;
 
 
 @Configuration
@@ -51,6 +56,8 @@ public class SecurityConfig {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private MessageFeignClient messageClient;
 	
 	@Bean 
  	@Order(1)
@@ -155,14 +162,16 @@ public class SecurityConfig {
               return context -> {
                       if (context.getTokenType().getValue() == OAuth2TokenType.ACCESS_TOKEN.getValue()) {
                               Authentication principal = context.getPrincipal();
+                             
                               context.getClaims()                                              
                                       .claim("roles", principal.getAuthorities()
                                                                .stream()
                                                                .map(GrantedAuthority::getAuthority)
                                                                .collect(Collectors.toList()));
+                              context.getClaims().claim("unreadMessagesCount",String.valueOf(messageClient.getUnreadMessagesCount(principal.getName())));
                       }
               };
-      }
+      }	 
 }  	
 	 
 	
