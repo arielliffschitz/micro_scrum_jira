@@ -1,6 +1,6 @@
                                                                     English bellow
 
-                                                                        Micro-Scrum-Jira – Proyecto Portfolio
+                                                           Micro-Scrum-Jira – Proyecto Portfolio
 Idea general:
 Micro-Scrum-Jira es un backend de microservicios que gestiona proyectos, sprints y tareas al estilo Scrum/Jira.
 Su arquitectura desacoplada permite escalar cada servicio según la necesidad, centralizando accesos y rutas a través de un gateway con autenticación segura basada en tokens y login encriptado.
