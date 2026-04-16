@@ -9,11 +9,17 @@ Incluye tests unitarios que cubren lo más relevante de cada microservicio y tes
 Fue desarrollado en 10 semanas como proyecto de portfolio, con unas 8.000 líneas de código, suficiente para mostrar funcionalidad completa sin ser una aplicación a escala real tipo Atlassian.
 El proyecto está en continua evolución. Cualquier sugerencia será más que bienvenida.
 
-Documentación y repositorios:
-Instrucciones técnicas y guía de ejecución: https://docs.google.com/document/d/1UTwRGD18WAeIJ0sS4-FN5FSXGm1__N0t8S0YQBSuR_Q/edit?tab=t.0
-Configuraciones y archivos Docker/BD comprimidos, para uso con imagenes publicadas: https://github.com/arielliffschitz/docker-setup-mscrum-jira
+Documentación y repositorios:                                                                
+Instrucciones técnicas y guía de ejecución:
+https://docs.google.com/document/d/1UTwRGD18WAeIJ0sS4-FN5FSXGm1__N0t8S0YQBSuR_Q/edit?tab=t.0
+
+Configuraciones y archivos Docker/BD comprimidos, para uso con imagenes publicadas:
+https://github.com/arielliffschitz/docker-setup-mscrum-jira
+
 Imágenes Docker publicadas: https://hub.docker.com/repository/docker/aliffschitz/mscrumjira/tags
+
 Documentación de endpoints : https://docs.google.com/document/d/1KDAECAmoGt9KdEl6zFSWx-yUWjdf-Ur7fQB6gbo_TQU
+
 Tests y resultados: https://docs.google.com/spreadsheets/d/1m5KRascTl62w08mZkUSUscqvskn4TFI2TlAQrmn8cuM/edit?gid=0#gid=0
 
 Especificaciones técnicas:  
