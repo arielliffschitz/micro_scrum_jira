@@ -65,10 +65,16 @@ It includes unit tests covering the most relevant parts of each microservice and
 It was developed over 10 weeks as a portfolio project, with approximately 8,000 lines of code—enough to demonstrate full functionality without being a large-scale enterprise application like Atlassian.
 
 Documentation and Repositories:
-Technical guide and execution instructions: https://docs.google.com/document/d/1W1b3Xv23ONioh3TEFAy0VqbTiChldj4JW0wzbjhg2-A/edit?tab=t.0
-Compressed Docker/DB configuration files for use with Docker Hub images: https://github.com/arielliffschitz/docker-setup-mscrum-jira
+Technical guide and execution instructions:
+https://docs.google.com/document/d/1W1b3Xv23ONioh3TEFAy0VqbTiChldj4JW0wzbjhg2-A/edit?tab=t.0
+
+Compressed Docker/DB configuration files for use with Docker Hub images: 
+https://github.com/arielliffschitz/docker-setup-mscrum-jira
+
 Published Docker images: https://hub.docker.com/repository/docker/aliffschitz/mscrumjira/tags
+
 Endpoints documentation: https://docs.google.com/document/d/1KDAECAmoGt9KdEl6zFSWx-yUWjdf-Ur7fQB6gbo_TQU
+
 Tests and results : https://docs.google.com/spreadsheets/d/1m5KRascTl62w08mZkUSUscqvskn4TFI2TlAQrmn8cuM/edit?gid=0#gid=0
 
 Technical Specifications
