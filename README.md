@@ -55,8 +55,7 @@ Relaciones entre servicios
  Project notifica a Audit al archivar.
  User valida equipos utilizados por Sprint.La arquitectura mantiene separación estricta de responsabilidades, comunicación explícita entre servicios y control de estados en cada agregado.
 
-                                                                            ENGLISH
-                                                                            
+                                                                                                                                                      
                                                                 Micro-Scrum-Jira – Portfolio Project
                                                                 
 General Idea:
