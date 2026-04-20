@@ -55,8 +55,10 @@ Relaciones entre servicios
  Project notifica a Audit al archivar.
  User valida equipos utilizados por Sprint.La arquitectura mantiene separación estricta de responsabilidades, comunicación explícita entre servicios y control de estados en cada agregado.
 
-ENGLISH
+                                                                            ENGLISH
+                                                                            
                                                                 Micro-Scrum-Jira – Portfolio Project
+                                                                
 General Idea:
 Micro-Scrum-Jira is a microservices backend that manages projects, sprints, and tasks in a Scrum/Jira style.
 Its decoupled architecture allows each service to scale according to demand, centralizing access and routing through a gateway with secure token-based authentication and encrypted login.
